@@ -1,0 +1,8 @@
+{
+  "name": "SUST FES Academic Resource Library",
+  "description": "Digital library, previous year questions archive, and lecture resource directory for the Department of Forestry and Environmental Science at SUST, Sylhet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

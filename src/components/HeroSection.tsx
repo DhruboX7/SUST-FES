@@ -1,0 +1,182 @@
+import React from 'react';
+import { Search, X, BookOpen, FileCheck, Layers, TreePine, Sparkles } from 'lucide-react';
+import { ResourceCategory } from '../types';
+
+interface HeroSectionProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  totalResources: number;
+  totalCourses: number;
+  totalPyqs: number;
+  selectedCategory: ResourceCategory | 'all';
+  onSelectCategory: (cat: ResourceCategory | 'all') => void;
+  onSwitchToExamBank: () => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  searchQuery,
+  onSearchChange,
+  totalResources,
+  totalCourses,
+  totalPyqs,
+  selectedCategory,
+  onSelectCategory,
+  onSwitchToExamBank,
+}) => {
+  return (
+    <div className="relative mb-8 rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-800 shadow-sm bg-stone-900 text-white">
+      {/* Background Image Asset with measured contrast scrim */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/src/assets/images/hero_forestry_sust_1793437781125.jpg"
+          alt="SUST Forestry and Environmental Science Canopy"
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
+        />
+        {/* Measured scrim to ensure 4.5:1 WCAG AA text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/95 via-stone-950/85 to-stone-950/65" />
+      </div>
+
+      {/* Content Container */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-10 md:py-14 text-center md:text-left">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-emerald-300 text-xs font-semibold tracking-wider uppercase mb-2">
+              <TreePine className="w-4 h-4 text-emerald-400" />
+              <span>Shahjalal University of Science and Technology</span>
+            </div>
+            
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight mb-3">
+              Department of Forestry & Environmental Science
+            </h1>
+            
+            <p className="text-stone-300 text-sm md:text-base leading-relaxed mb-6 font-normal">
+              Official academic archive for lecture slides, class handouts, previous year exam questions, and field practical manuals.
+            </p>
+
+            {/* Instant Search Bar */}
+            <div className="relative max-w-xl">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <Search className="w-4 h-4" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder="Search by course code (e.g. FES 08211121, Silviculture), topic, or teacher..."
+                className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/95 dark:bg-stone-900/90 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 text-sm border border-stone-200 dark:border-stone-700 shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => onSearchChange('')}
+                  aria-label="Clear search query"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Keyword Search Quick Cloud */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mt-2.5 text-[11px]">
+              <span className="text-emerald-400/80 font-medium text-[10px] uppercase tracking-wider flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-emerald-400" />
+                Scan Keywords:
+              </span>
+              {[
+                'Silviculture',
+                'Remote Sensing',
+                'PYQ 2023',
+                'Mensuration',
+                'Forest Soils',
+                'Dendrology',
+                'EIA',
+                'Wildlife',
+                'Forest Act',
+                'Belal Uddin',
+              ].map((kw) => (
+                <button
+                  key={kw}
+                  type="button"
+                  onClick={() => onSearchChange(kw)}
+                  className={`px-2 py-0.5 rounded-md font-mono text-[10px] transition-all ${
+                    searchQuery.toLowerCase().includes(kw.toLowerCase())
+                      ? 'bg-emerald-500 text-stone-950 font-bold'
+                      : 'bg-white/10 hover:bg-white/20 text-stone-200'
+                  }`}
+                >
+                  #{kw}
+                </button>
+              ))}
+            </div>
+
+            {/* Fast Quick Filter Buttons */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-4 text-xs">
+              <span className="text-stone-400 font-medium mr-1">Filter:</span>
+
+              <button
+                onClick={onSwitchToExamBank}
+                className="px-2.5 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-medium transition-colors flex items-center gap-1"
+              >
+                <FileCheck className="w-3 h-3 text-amber-400" />
+                <span>Exam Bank (PYQs)</span>
+              </button>
+              <button
+                onClick={() => onSelectCategory('slides')}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  selectedCategory === 'slides'
+                    ? 'bg-emerald-600 text-white font-semibold'
+                    : 'bg-white/10 hover:bg-white/20 text-stone-200'
+                }`}
+              >
+                Lecture Slides
+              </button>
+              <button
+                onClick={() => onSelectCategory('notes')}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  selectedCategory === 'notes'
+                    ? 'bg-emerald-600 text-white font-semibold'
+                    : 'bg-white/10 hover:bg-white/20 text-stone-200'
+                }`}
+              >
+                Class Notes
+              </button>
+              <button
+                onClick={() => onSelectCategory('practical')}
+                className={`px-2.5 py-1 rounded-md transition-colors ${
+                  selectedCategory === 'practical'
+                    ? 'bg-emerald-600 text-white font-semibold'
+                    : 'bg-white/10 hover:bg-white/20 text-stone-200'
+                }`}
+              >
+                Lab & Field Manuals
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Quantitative Proof Stats (adjacent to claim) */}
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-3 md:w-56 shrink-0 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-6 text-left">
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-xl md:text-2xl font-bold font-mono text-emerald-300 tabular-nums">
+                {totalResources}
+              </div>
+              <div className="text-xs text-stone-300 font-medium">Archived Resources</div>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-xl md:text-2xl font-bold font-mono text-amber-300 tabular-nums">
+                {totalPyqs}
+              </div>
+              <div className="text-xs text-stone-300 font-medium">Exam Question Papers</div>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/10 hidden md:block">
+              <div className="text-xl md:text-2xl font-bold font-mono text-stone-200 tabular-nums">
+                {totalCourses}
+              </div>
+              <div className="text-xs text-stone-300 font-medium">B.Sc. & M.Sc. Courses</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
