@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { SUST_FES_COURSES, SUST_FES_FACULTY, DetailedCourse } from '../data/coursesData';
+import { Link } from 'react-router-dom';
+import { SUST_FES_COURSES, DetailedCourse } from '../data/coursesData';
 import { AcademicYear } from '../types';
 import { CourseDetailModal } from './CourseDetailModal';
 import { SyllabusProgressTracker } from './SyllabusProgressTracker';
+import { usePageMeta } from '../hooks/usePageMeta';
 import { 
   Compass, 
   BookOpen, 
@@ -11,7 +13,6 @@ import {
   Download, 
   FileText, 
   Award, 
-  Users, 
   CheckCircle2,
   ExternalLink,
   GraduationCap
@@ -26,9 +27,13 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
   onSelectCourse,
   onNavigateToProgress,
 }) => {
-  const [activeTab, setActiveTab] = useState<'courses' | 'progress' | 'grading' | 'faculty'>('courses');
+  const [activeTab, setActiveTab] = useState<'courses' | 'progress' | 'grading'>('courses');
   const [activeYear, setActiveYear] = useState<AcademicYear>(1);
   const [inspectCourse, setInspectCourse] = useState<DetailedCourse | null>(null);
+  usePageMeta({
+    title: 'Syllabus & Degree Structure',
+    description: 'Curriculum structure, OBE course outlines, learning outcomes, and credit requirements for B.Sc. and M.Sc. degrees.',
+  });
 
   const semesterPairs: { [key: string]: { sem1: DetailedCourse[]; sem2: DetailedCourse[]; label1: string; label2: string; cred1: number; cred2: number } } = {
     '1': {
@@ -144,17 +149,6 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
         >
           <Award className="w-4 h-4" />
           <span>Grading & Evaluation Policy</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('faculty')}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-2 ${
-            activeTab === 'faculty'
-              ? 'bg-emerald-800 dark:bg-emerald-700 text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>Faculty Directory ({SUST_FES_FACULTY.length})</span>
         </button>
       </div>
 
@@ -400,55 +394,7 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
         </div>
       )}
 
-      {/* TAB 3: FACULTY DIRECTORY (From Page 4 of OBE Curriculum) */}
-      {activeTab === 'faculty' && (
-        <div className="space-y-4">
-          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs">
-            <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 mb-1">
-              Department of Forestry and Environmental Science Faculty
-            </h3>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
-              Official faculty roster and contacts as listed in the SUST FES OBE Curriculum (Academic Building 'E', SUST).
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SUST_FES_FACULTY.map((fac) => (
-              <div
-                key={fac.id}
-                className={`p-4 rounded-xl border bg-white dark:bg-stone-900 transition-all ${
-                  fac.isHead
-                    ? 'border-emerald-600 dark:border-emerald-500 ring-2 ring-emerald-500/20'
-                    : 'border-stone-200 dark:border-stone-800'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-400 flex items-center justify-center font-bold text-xs">
-                    {fac.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-                  </div>
-                  {fac.isHead && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-800 text-white uppercase">
-                      Head of Dept.
-                    </span>
-                  )}
-                </div>
-
-                <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug">
-                  {fac.name}
-                </h4>
-                <div className="text-xs text-stone-500 dark:text-stone-400 mb-3">
-                  {fac.designation}
-                </div>
-
-                <div className="text-[11px] text-stone-600 dark:text-stone-400 space-y-1 font-mono pt-2 border-t border-stone-100 dark:border-stone-800">
-                  {fac.pabx && <div>PABX: {fac.pabx}</div>}
-                  {fac.cellPhone && <div>Cell: {fac.cellPhone}</div>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Course Detail Modal */}
       <CourseDetailModal

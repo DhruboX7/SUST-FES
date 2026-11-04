@@ -1,0 +1,3 @@
+# robots.txt for SUST FES Academic Resource Library
+User-agent: *
+Allow: /

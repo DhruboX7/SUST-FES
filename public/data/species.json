@@ -1,0 +1,992 @@
+[
+  {
+    "id": "spec-1",
+    "scientificName": "Albizia saman",
+    "commonName": "Rain tree",
+    "banglaName": "রেইনট্রি",
+    "family": "Fabaceae",
+    "uses": [
+      "Shade Tree",
+      "Timber",
+      "Fuelwood",
+      "Avenue Plantation",
+      "Fodder"
+    ],
+    "habitat": "Alluvial floodplains, roadsides, open parks and village homesteads",
+    "conservationStatus": "Least Concern (Introduced)",
+    "distribution": "Widely cultivated across all districts of Bangladesh",
+    "silviculturalNotes": "Large spreading canopy with umbrella-shaped crown. Leaves fold up during overcast rainy weather and at nightfall. Fast-growing and nitrogen-fixing.",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-2",
+    "scientificName": "Artocarpus heterophyllus",
+    "commonName": "Kathal (Jackfruit)",
+    "banglaName": "কাঁঠাল",
+    "family": "Moraceae",
+    "uses": [
+      "National Fruit of Bangladesh",
+      "High-Grade Furniture Timber",
+      "Musical Instruments",
+      "Livestock Fodder"
+    ],
+    "habitat": "Well-drained upland terraces, red alluvial hillocks, and village homesteads",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Nationwide; extensive commercial agroforests in Sylhet, Gazipur, and Modhupur",
+    "silviculturalNotes": "Evergreen tree producing massive cauliflorous fruit on main trunk. Timber is golden-yellow aging to dark mahogany, highly resistant to termites and fungal decay.",
+    "imageUrl": "https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-3",
+    "scientificName": "Elaeocarpus robustus",
+    "commonName": "Jolpai (Indian Olive)",
+    "banglaName": "জলপাই",
+    "family": "Elaeocarpaceae",
+    "uses": [
+      "Edible Sour Fruit & Pickles",
+      "Light Construction Wood",
+      "Fuelwood",
+      "Medicinal"
+    ],
+    "habitat": "Moist semi-evergreen and evergreen mixed forests and homestead orchards",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, Chittagong, and central homesteads across Bangladesh",
+    "silviculturalNotes": "Moderate-sized evergreen tree. Flowers in white fragrant racemes during April-May; drupes ripen during autumn and early winter.",
+    "imageUrl": "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-4",
+    "scientificName": "Albizia richardiana",
+    "commonName": "Rajkoroi",
+    "banglaName": "রাজকড়ই",
+    "family": "Fabaceae",
+    "uses": [
+      "Avenue Shade",
+      "Light Timber",
+      "Packing Boxes",
+      "Windbreak"
+    ],
+    "habitat": "Avenues, botanical gardens, and campus borders with moist fertile soils",
+    "conservationStatus": "Least Concern (Cultivated)",
+    "distribution": "Planted widely along highways, institutional campuses, and tea gardens in Sylhet",
+    "silviculturalNotes": "Very tall graceful tree reaching 35-40m with a smooth whitish-grey straight bole and airy delicate bipinnate foliage.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-5",
+    "scientificName": "Ficus benghalensis",
+    "commonName": "Bot (Banyan Tree)",
+    "banglaName": "বট",
+    "family": "Moraceae",
+    "uses": [
+      "Ecological Keystone Species",
+      "Avian Food Resource",
+      "Dense Shade",
+      "Medicinal Aerial Roots"
+    ],
+    "habitat": "Lowland plains, roadsides, rural haats, and heritage sites",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Found in every union and village across Bangladesh",
+    "silviculturalNotes": "Strangler fig developing massive pillar-like prop roots supporting a giant horizontal crown. Provides critical food for birds, bats, and arboreal mammals.",
+    "imageUrl": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-6",
+    "scientificName": "Neolamarckia cadamba",
+    "commonName": "Kodom (Kadam)",
+    "banglaName": "কদম",
+    "family": "Rubiaceae",
+    "uses": [
+      "Match Manufacture",
+      "Paper Pulp",
+      "Fragrant Monsoon Blooms",
+      "Light Boxes"
+    ],
+    "habitat": "Moist alluvial lowlands, riverbanks, and wetland margins",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Abundant throughout Bangladesh; iconic on SUST campus hillocks and lakes",
+    "silviculturalNotes": "Rapidly growing pioneer tree. Produces distinctive spherical orange blossom globes during the monsoon. Syn: Anthocephalus indicus / Anthocephalus chinensis.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-7",
+    "scientificName": "Terminalia arjuna",
+    "commonName": "Arjun",
+    "banglaName": "অর্জুন",
+    "family": "Combretaceae",
+    "uses": [
+      "Cardiovascular Herbal Medicine",
+      "Riverbank Erosion Control",
+      "Heavy Timber",
+      "Tannin"
+    ],
+    "habitat": "Riparian river corridors, streams, and damp alluvial ravines",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Riparian tracts in Sylhet, Rajshahi, and central floodplains",
+    "silviculturalNotes": "Large buttressed trunk with smooth pinkish-grey exfoliating bark. Fruits are 5-winged fibrous samaras dispersed by water currents.",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-8",
+    "scientificName": "Lagerstroemia speciosa",
+    "commonName": "Jarul (Pride of India)",
+    "banglaName": "জারুল",
+    "family": "Lythraceae",
+    "uses": [
+      "Water-Resistant Boat Building",
+      "Construction Timber",
+      "Spectacular Mauve Flowers",
+      "Medicinal"
+    ],
+    "habitat": "Floodplains, swamps, haor margins, and wet low-lying tracts",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet wetlands, Chittagong, Dhaka avenues, SUST campus",
+    "silviculturalNotes": "Medium deciduous tree celebrated for vibrant lilac-purple blooms in May-June. Highly resistant to water immersion.",
+    "imageUrl": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-9",
+    "scientificName": "Polyalthia longifolia",
+    "commonName": "Debdaru (Mast Tree)",
+    "banglaName": "দেবদারু",
+    "family": "Annonaceae",
+    "uses": [
+      "Avenue Landscaping",
+      "Acoustic Noise Barrier",
+      "Light Barrels & Drums",
+      "Festival Foliage"
+    ],
+    "habitat": "Urban avenues, institutional gardens, and campus borders",
+    "conservationStatus": "Least Concern (Cultivated)",
+    "distribution": "Universally planted along educational campuses and streets throughout Bangladesh",
+    "silviculturalNotes": "Columnar evergreen tree with drooping wavy-margined leaves. Excellent windbreak and dust attenuator in university campuses.",
+    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-10",
+    "scientificName": "Azadirachta indica",
+    "commonName": "Neem",
+    "banglaName": "নিম",
+    "family": "Meliaceae",
+    "uses": [
+      "Biopesticide (Azadirachtin)",
+      "Antimicrobial Medicine",
+      "Termite-Proof Timber",
+      "Homestead Agroforestry"
+    ],
+    "habitat": "Dry to sub-humid plains and village homesteads",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Nationwide; exceptionally abundant in the northern Barind tract",
+    "silviculturalNotes": "Hardy drought-tolerant evergreen tree. Enriches degraded soils, repels agricultural pests, and coppices freely.",
+    "imageUrl": "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-11",
+    "scientificName": "Albizia richardiana",
+    "commonName": "Raj Koroi",
+    "banglaName": "রাজকড়ই",
+    "family": "Fabaceae",
+    "uses": [
+      "High-Canopy Shade",
+      "Packing Cases",
+      "Fuelwood",
+      "Tea Garden Windbreak"
+    ],
+    "habitat": "Avenues, roadsides, and tea estate boundaries",
+    "conservationStatus": "Least Concern (Cultivated)",
+    "distribution": "Sylhet tea estates and institutional avenues",
+    "silviculturalNotes": "Fast-growing high-canopy tree with bipinnate leaves. Highly valued for tea garden shade management and microclimate buffering.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-12",
+    "scientificName": "Pongamia pinnata",
+    "commonName": "Koroch",
+    "banglaName": "করচ",
+    "family": "Fabaceae",
+    "uses": [
+      "Freshwater Swamp Keystone",
+      "Haor Wave & Erosion Barrier",
+      "Biofuel Seed Oil",
+      "Medicinal"
+    ],
+    "habitat": "Seasonally submerged freshwater haor swamps and riverbanks",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet-Sunamganj Haor Basin (Tanguar Haor, Hakaluki Haor)",
+    "silviculturalNotes": "Critical ecological species capable of withstanding complete root inundation for 5-6 months during monsoon floods.",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-13",
+    "scientificName": "Magnolia champaca",
+    "commonName": "Champa (Champak)",
+    "banglaName": "স্বর্ণচাঁপা",
+    "family": "Magnoliaceae",
+    "uses": [
+      "Fragrant Essential Oil / Attar",
+      "Fine Joinery Timber",
+      "Ornamental Avenue Tree"
+    ],
+    "habitat": "Moist evergreen and semi-evergreen hill valleys",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Hill forests of Sylhet, Chittagong, and homestead botanical gardens",
+    "silviculturalNotes": "Graceful evergreen tree noted for intensely fragrant golden-yellow blossoms. Requires rich, porous, humic soils.",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-14",
+    "scientificName": "Tamarindus indica",
+    "commonName": "Tetul (Tamarind)",
+    "banglaName": "তেঁতুল",
+    "family": "Fabaceae",
+    "uses": [
+      "Culinary Fruit Pulp",
+      "Extremely Hard Timber",
+      "High-Grade Charcoal",
+      "Soil Conservation"
+    ],
+    "habitat": "Dry to moist tropical plains, homesteads, and roadsides",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Cultivated in villages and along highways nationwide",
+    "silviculturalNotes": "Long-lived evergreen tree with dense drooping foliage. Highly resistant to strong cyclonic winds due to deep taproot.",
+    "imageUrl": "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-15",
+    "scientificName": "Hopea odorata",
+    "commonName": "Telsur",
+    "banglaName": "তেলসুর",
+    "family": "Dipterocarpaceae",
+    "uses": [
+      "Heavy Structural Construction",
+      "Boat Building",
+      "Bridge Decking",
+      "Dammar Resin"
+    ],
+    "habitat": "Lowland rainforests and riparian fringes of evergreen hill forests",
+    "conservationStatus": "Vulnerable (IUCN)",
+    "distribution": "Sylhet (Lawachara, Rema-Kalenga) and Chittagong Hill Tracts",
+    "silviculturalNotes": "Magnificent emergent tree with smooth cylindrical bole. Timber is exceptionally dense, durable, and naturally termite resistant.",
+    "imageUrl": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-16",
+    "scientificName": "Terminalia catappa",
+    "commonName": "Kath badam (Bengal Almond)",
+    "banglaName": "কাঠবাদাম",
+    "family": "Combretaceae",
+    "uses": [
+      "Edible Nut Kernels",
+      "Foliage Tannin",
+      "Coastal Windbreak",
+      "Shade Tree"
+    ],
+    "habitat": "Coastal sand dunes, riverbanks, campuses, and parks",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Coastal belts, Cox's Bazar, and planted across all university campuses",
+    "silviculturalNotes": "Characteristic horizontal whorled branching like a pagoda. Leaves turn vivid scarlet-red before shedding in winter.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-17",
+    "scientificName": "Acacia auriculiformis",
+    "commonName": "Akashmoni",
+    "banglaName": "আকাশমণি",
+    "family": "Fabaceae",
+    "uses": [
+      "Social Forestry Plantations",
+      "Fuelwood",
+      "Paper Pulp",
+      "Furniture Timber",
+      "Wasteland Reclamation"
+    ],
+    "habitat": "Degraded red clay hills, roadside embankments, and social forestry strips",
+    "conservationStatus": "Least Concern (Introduced)",
+    "distribution": "Extensively planted nationwide across all forest divisions",
+    "silviculturalNotes": "Fast-growing exotic phyllodinous legume. Tolerates drought and low-nutrient acidic soils. Excellent coppicing ability.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-18",
+    "scientificName": "Swietenia mahagoni",
+    "commonName": "Mahogany (Small-leaf)",
+    "banglaName": "মেহগনি",
+    "family": "Meliaceae",
+    "uses": [
+      "High-Class Cabinetwork",
+      "Luxury Furniture",
+      "Veneer & Carving",
+      "Plywood"
+    ],
+    "habitat": "Plantations, roadside avenues, homestead agroforests",
+    "conservationStatus": "Endangered (Wild / IUCN)",
+    "distribution": "Extensively cultivated across Bangladesh since colonial introduction",
+    "silviculturalNotes": "Premium reddish-brown hardwood. Susceptible to Hypsipyla robusta shoot borer in early sapling stages.",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-19",
+    "scientificName": "Dillenia indica",
+    "commonName": "Chalta (Elephant Apple)",
+    "banglaName": "চালতা",
+    "family": "Dilleniaceae",
+    "uses": [
+      "Edible Fleshy Sepals (Curries & Jellies)",
+      "Riparian Bank Stabilization",
+      "Shade",
+      "Wildlife Food"
+    ],
+    "habitat": "Moist evergreen hill forests, stream banks, and haor swamp edges",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet hill streams, Lawachara, Sundarbans fringe, and village ponds",
+    "silviculturalNotes": "Spreading evergreen tree with corrugated leathery leaves and large white flowers. Hard woody fruits eaten by wild elephants.",
+    "imageUrl": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-20",
+    "scientificName": "Dipterocarpus turbinatus",
+    "commonName": "Teli garjan",
+    "banglaName": "তেলি গর্জন",
+    "family": "Dipterocarpaceae",
+    "uses": [
+      "Heavy Structural Timber",
+      "Railway Sleepers",
+      "Wood Oleoresin (Choya oil)",
+      "Plywood Core"
+    ],
+    "habitat": "Tropical wet evergreen and semi-evergreen hill forests",
+    "conservationStatus": "Vulnerable (IUCN)",
+    "distribution": "Sylhet (Lawachara, Rema-Kalenga), Chittagong, Cox's Bazar, CHT",
+    "silviculturalNotes": "Giant emergent tree reaching 45-50m height. Produces iconic two-winged samaras dispersed by rotational spinning in May-June.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-21",
+    "scientificName": "Artocarpus chaplasha",
+    "commonName": "Chapalish",
+    "banglaName": "চাপালিশ",
+    "family": "Moraceae",
+    "uses": [
+      "Dugout Canoes & Boats",
+      "General House Building",
+      "Edible Seeds",
+      "Plywood"
+    ],
+    "habitat": "Moist evergreen and semi-evergreen hill rainforests",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet hill tracts, Lawachara National Park, CHT",
+    "silviculturalNotes": "Large evergreen tree with rough brown-grey bark. Seeds are recalcitrant and germinate rapidly in moist forest litter.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-22",
+    "scientificName": "Aquilaria malaccensis",
+    "commonName": "Agor (Agarwood)",
+    "banglaName": "আগর গাছ",
+    "family": "Thymelaeaceae",
+    "uses": [
+      "Precious Oudh Oil & Resin",
+      "High-End Perfumes",
+      "Incense",
+      "Traditional Medicine"
+    ],
+    "habitat": "Subtropical acidic red hill slopes with high humidity",
+    "conservationStatus": "Critically Endangered (Wild in BD)",
+    "distribution": "Sylhet Division (Barlekha, Kulaura, Sreemangal)",
+    "silviculturalNotes": "Famous aromatic tree where dark heartwood resin forms in response to fungal infection. Artificial nailing technique widely researched at SUST FES.",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-23",
+    "scientificName": "Bauhinia variegata",
+    "commonName": "Kanchon (Orchid Tree)",
+    "banglaName": "কাঞ্চন",
+    "family": "Fabaceae",
+    "uses": [
+      "Ornamental Flowering Tree",
+      "Edible Floral Buds",
+      "Medicinal Bark",
+      "Fodder"
+    ],
+    "habitat": "Deciduous and semi-evergreen hill slopes, gardens, campuses",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, CHT, and cultivated nationwide",
+    "silviculturalNotes": "Small to medium deciduous tree covered in fragrant pink-purple orchid-like blossoms in late winter. Twin-lobed bilobed leaves.",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-24",
+    "scientificName": "Lannea grandis",
+    "commonName": "Jeol badi (Jiol)",
+    "banglaName": "জিয়ল বাদি",
+    "family": "Anacardiaceae",
+    "uses": [
+      "Live Fencing",
+      "Soft Packing Timber",
+      "Gum Extraction",
+      "Fodder"
+    ],
+    "habitat": "Deciduous forests, homestead boundaries, dry sandy tracts",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Common in rural homesteads and dry forest fringes across Bangladesh",
+    "silviculturalNotes": "Medium deciduous tree with smooth grey bark. Highly noted for vegetative propagation; cuttings root easily to establish living boundary fences.",
+    "imageUrl": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-25",
+    "scientificName": "Alstonia scholaris",
+    "commonName": "Chatim (Devil's Tree)",
+    "banglaName": "ছাতিম",
+    "family": "Apocynaceae",
+    "uses": [
+      "Blackboards & Slates",
+      "Packing Boxes",
+      "Pencil Wood",
+      "Febrifuge Medicinal Bark"
+    ],
+    "habitat": "Moist deciduous and evergreen forest borders and campus grounds",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Found across all divisions of Bangladesh",
+    "silviculturalNotes": "Whorled tier branching with bitter white milky sap. Highly fragrant greenish-white flowers perfume autumn evenings in October.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-26",
+    "scientificName": "Tectona grandis",
+    "commonName": "Shegun (Teak)",
+    "banglaName": "সেগুন",
+    "family": "Lamiaceae",
+    "uses": [
+      "Luxury Furniture",
+      "Shipbuilding & Marine Decks",
+      "Veneer",
+      "Carving"
+    ],
+    "habitat": "Well-drained alluvial and sandy-loam hill slopes",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Extensive forest plantations in Sylhet, Chittagong, and CHT",
+    "silviculturalNotes": "Introduced to Bangladesh in 1871. Deciduous timber monarch; thick spongy endocarp seeds require weathering before nursery germination.",
+    "imageUrl": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-27",
+    "scientificName": "Shorea robusta",
+    "commonName": "Sal",
+    "banglaName": "শাল",
+    "family": "Dipterocarpaceae",
+    "uses": [
+      "Heavy Structural Poles",
+      "Construction Timber",
+      "Sal Resin (Dhuna)",
+      "Leaves for Plates"
+    ],
+    "habitat": "Tropical moist deciduous terraced tracts with red clay (Modhupur/Bhawal Garh)",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Central Dhaka-Mymensingh-Tangail belt and northern Dinajpur",
+    "silviculturalNotes": "Gregarious light-demander with extraordinary coppicing power. Thick fire-resistant bark protects stands during dry season surface fires.",
+    "imageUrl": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-28",
+    "scientificName": "Bombax ceiba",
+    "commonName": "Shimul (Red Silk Cotton)",
+    "banglaName": "শিমুল",
+    "family": "Malvaceae",
+    "uses": [
+      "Kapok Silky Fiber for Pillows",
+      "Match Sticks",
+      "Paper Pulp",
+      "Medicinal Roots"
+    ],
+    "habitat": "Deciduous forest tracts, riverbanks, and open village countryside",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Abundant throughout all rural regions of Bangladesh",
+    "silviculturalNotes": "Massive buttressed trunk with conical prickles when young. Fiery red blossoms cover leafless branches in February-March.",
+    "imageUrl": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-29",
+    "scientificName": "Phyllanthus emblica",
+    "commonName": "Amloki (Indian Gooseberry)",
+    "banglaName": "আমলকী",
+    "family": "Phyllanthaceae",
+    "uses": [
+      "High Vitamin C Medicine (Triphala)",
+      "Hair Oil & Tonics",
+      "Tannin & Dye",
+      "Light Wood"
+    ],
+    "habitat": "Mixed dry deciduous hill forests and homestead orchards",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, Chittagong Hill Tracts, and village homesteads nationwide",
+    "silviculturalNotes": "Small to medium deciduous tree with light feathery foliage. Fruits are round ribbed drupes celebrated in Ayurvedic medicine.",
+    "imageUrl": "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-30",
+    "scientificName": "Albizia procera",
+    "commonName": "Shada Koroi (White Siris)",
+    "banglaName": "সাদা কড়ই",
+    "family": "Fabaceae",
+    "uses": [
+      "Quality Furniture",
+      "House Construction",
+      "Agricultural Tools",
+      "Agroforestry"
+    ],
+    "habitat": "River valleys, swamp fringes, moist deciduous forests, and roadsides",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Common nationwide in both forests and rural landscapes",
+    "silviculturalNotes": "Tall pioneer tree with conspicuous smooth greenish-white bark peeling in thin papery flakes. Excellent nitrogen-fixer.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-31",
+    "scientificName": "Albizia lebbeck",
+    "commonName": "Kala Koroi (Black Siris)",
+    "banglaName": "কালা কড়ই",
+    "family": "Fabaceae",
+    "uses": [
+      "Heavy Timber",
+      "Cabinetmaking",
+      "Shade Tree",
+      "Soil Nitrogen Enrichment"
+    ],
+    "habitat": "Dry to moist plains, village homesteads, and highway avenues",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Found throughout Bangladesh; hardy in drought-prone areas",
+    "silviculturalNotes": "Dark grey rough fissured bark with sweet-scented pompom flowers. Dry pods rattle conspicuously in winter breezes.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-32",
+    "scientificName": "Butea monosperma",
+    "commonName": "Polash (Flame of the Forest)",
+    "banglaName": "পলাশ",
+    "family": "Fabaceae",
+    "uses": [
+      "Spectacular Orange Blooms",
+      "Natural Fabric Dye",
+      "Host for Lac Insects",
+      "Fiber"
+    ],
+    "habitat": "Deciduous plains, degraded soils, open grasslands and forest margins",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Central and northern Bangladesh, campus grounds",
+    "silviculturalNotes": "Medium deciduous tree with trifoliate leaves. Canopy erupts into dazzling vermilion-orange flowers in spring (February-March).",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-33",
+    "scientificName": "Mesua ferrea",
+    "commonName": "Nagweshwar (Ceylon Ironwood)",
+    "banglaName": "নাগেশ্বর",
+    "family": "Calophyllaceae",
+    "uses": [
+      "Heavy Ironwood Structural Timber",
+      "Sacred Fragrant Blossoms",
+      "Seed Oil",
+      "Railway Sleepers"
+    ],
+    "habitat": "Tropical wet evergreen rainforests of Sylhet and CHT",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet hill reserves (Lawachara, Rema-Kalenga) and Chittagong",
+    "silviculturalNotes": "Slow-growing evergreen tree with exceptionally dense, heavy timber. Flush of young leaves is brilliant crimson-pink.",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-34",
+    "scientificName": "Cassia fistula",
+    "commonName": "Sonalu (Golden Shower)",
+    "banglaName": "সোনালু",
+    "family": "Fabaceae",
+    "uses": [
+      "Ornamental Golden Blooms",
+      "Medicinal Fruit Pulp (Laxative)",
+      "Hard Fence Posts",
+      "Tannin"
+    ],
+    "habitat": "Deciduous forests, open woodlands, and campus avenues",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Cultivated nationwide; famous on SUST academic avenue in summer",
+    "silviculturalNotes": "Medium deciduous tree hanging with pendulous racemes of bright yellow flowers in April-May, followed by long cylindrical brown pods.",
+    "imageUrl": "https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-35",
+    "scientificName": "Podocarpus neriifolius",
+    "commonName": "Banspata",
+    "banglaName": "বাঁশপাতা",
+    "family": "Podocarpaceae",
+    "uses": [
+      "Rare Native Conifer",
+      "Fine Joinery Timber",
+      "Tea Box Lining",
+      "Woodcarving"
+    ],
+    "habitat": "Subtropical evergreen hill peaks and high-ridge crests",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "High hills of Chittagong Hill Tracts and northeastern Sylhet ridges",
+    "silviculturalNotes": "One of the very few indigenous gymnosperms of Bangladesh. Leaves resemble bamboo foliage (hence Banspata). Highly prized timber.",
+    "imageUrl": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-36",
+    "scientificName": "Dalbergia sissoo",
+    "commonName": "Sisso (Shisham)",
+    "banglaName": "শিশু",
+    "family": "Fabaceae",
+    "uses": [
+      "Prime Cabinetmaking Timber",
+      "Railway Sleepers",
+      "Agricultural Implements",
+      "Agroforestry"
+    ],
+    "habitat": "Alluvial river beds, highway strips, and farm boundaries",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Widespread across northern and central Bangladesh",
+    "silviculturalNotes": "Deciduous timber tree with golden-brown heartwood. Susceptible to vascular wilt fungus (Fusarium solani) in waterlogged soils.",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-37",
+    "scientificName": "Terminalia chebula",
+    "commonName": "Horitoki (Chebulic Myrobalan)",
+    "banglaName": "হরীতকী",
+    "family": "Combretaceae",
+    "uses": [
+      "Triphala Herbal Medicine",
+      "High-Grade Leather Tanning",
+      "Dyeing",
+      "Construction Timber"
+    ],
+    "habitat": "Mixed deciduous and dry hill forests",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, Chittagong, and homestead herbal plantations",
+    "silviculturalNotes": "Medium deciduous tree producing ribbed drupes rich in hydrolyzable tannins. Regarded as 'King of Medicines' in indigenous pharmacopeia.",
+    "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-38",
+    "scientificName": "Terminalia bellirica",
+    "commonName": "Bohera (Belleric Myrobalan)",
+    "banglaName": "বহেড়া",
+    "family": "Combretaceae",
+    "uses": [
+      "Triphala Ayurvedic Medicine",
+      "Tannin for Ink",
+      "Packing Wood",
+      "Wildlife Food"
+    ],
+    "habitat": "Moist deciduous and semi-evergreen hill tracts",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, Modhupur tract, and Chittagong forests",
+    "silviculturalNotes": "Massive deciduous tree with tall buttressed trunk and round velvety fruits. Honeybees favor its fragrant nectar.",
+    "imageUrl": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-39",
+    "scientificName": "Couroupita guianensis",
+    "commonName": "Naglingam (Cannonball Tree)",
+    "banglaName": "নাগলিঙ্গম",
+    "family": "Lecythidaceae",
+    "uses": [
+      "Botanical Garden Heritage",
+      "Fragrant Flowers",
+      "Medicinal Antiseptic",
+      "Ornamental"
+    ],
+    "habitat": "Botanical arboreta, university campuses, and shrine groves",
+    "conservationStatus": "Least Concern (Cultivated)",
+    "distribution": "Planted in SUST botanical grounds, Mirpur National Botanical Garden, Baldha Garden",
+    "silviculturalNotes": "Extraordinary tree bearing woody cannonball-sized fruits directly on tangled flowering racemes growing out of the trunk (cauliflory).",
+    "imageUrl": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-40",
+    "scientificName": "Syzygium grande",
+    "commonName": "Dhakijam",
+    "banglaName": "ঢাকিজাম",
+    "family": "Myrtaceae",
+    "uses": [
+      "Heavy Construction Timber",
+      "Edible Berries",
+      "Plywood",
+      "Canopy Ecosystem Shield"
+    ],
+    "habitat": "Evergreen and semi-evergreen rainforests and hill valleys",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet hill tracts, Lawachara, Rema-Kalenga, and CHT",
+    "silviculturalNotes": "Large evergreen canopy tree with smooth grey bark and thick leathery leaves. Fruits provide abundant sustenance for forest birds.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-41",
+    "scientificName": "Xylocarpus granatum",
+    "commonName": "Dhundal (Cannonball Mangrove)",
+    "banglaName": "ধুন্দুল",
+    "family": "Meliaceae",
+    "uses": [
+      "Fine Mangrove Timber",
+      "Furniture & Pencils",
+      "Tannin",
+      "Coastal Stabilization"
+    ],
+    "habitat": "Intertidal mangrove mudflats and river banks in the Sundarbans",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans Mangrove Forest (Khulna, Bagerhat, Satkhira)",
+    "silviculturalNotes": "Mangrove tree with thin buttresses resembling serpentine ribbons. Produces large spherical woody fruits that break into tetrahedral seeds.",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-42",
+    "scientificName": "Sonneratia apetala",
+    "commonName": "Keora",
+    "banglaName": "কেওড়া",
+    "family": "Lythraceae",
+    "uses": [
+      "Coastal Char Afforestation Pioneer",
+      "Edible Sour Berry (Keora Achar)",
+      "Packing Wood",
+      "Honey"
+    ],
+    "habitat": "Intertidal newly accreted coastal mudflats and estuarine chars",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Coastal green belt afforestation across Noakhali, Bhola, Patuakhali, and Sundarbans",
+    "silviculturalNotes": "Pioneer mangrove species with tall pointed pneumatophores (respiratory roots) that rapidly trap silt to stabilize coastal land.",
+    "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-43",
+    "scientificName": "Xylocarpus moluccensis",
+    "commonName": "Pasur",
+    "banglaName": "পশুর",
+    "family": "Meliaceae",
+    "uses": [
+      "High-Grade Mangrove Furniture",
+      "Boat Building",
+      "Woodcarving",
+      "Tannin"
+    ],
+    "habitat": "Slightly elevated mangrove ridges and riverbanks in the Sundarbans",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans Mangrove Biosphere Reserve",
+    "silviculturalNotes": "Produces beautiful dark reddish-brown heartwood. Possesses blunt pneumatophores and dark fissured bark.",
+    "imageUrl": "https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-44",
+    "scientificName": "Avicennia officinalis",
+    "commonName": "Baen (Indian Mangrove)",
+    "banglaName": "বাইন",
+    "family": "Acanthaceae",
+    "uses": [
+      "Erosion Control",
+      "Fuelwood",
+      "Pencil Slats",
+      "Fodder"
+    ],
+    "habitat": "Pioneering intertidal banks and high-salinity zones",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans and all coastal mangrove delta networks",
+    "silviculturalNotes": "Characterized by dense carpets of pencil-like pencil pneumatophores projecting vertically from lateral roots to breathe during tidal immersion.",
+    "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-45",
+    "scientificName": "Excoecaria agallocha",
+    "commonName": "Gewa (Blinding Tree)",
+    "banglaName": "গেওয়া",
+    "family": "Euphorbiaceae",
+    "uses": [
+      "Newsprint Paper Pulp",
+      "Match Splints",
+      "Boxes & Toys",
+      "Honey Source"
+    ],
+    "habitat": "Moderately saline mangrove areas in the Sundarbans",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans Mangrove Reserve",
+    "silviculturalNotes": "Dominant species in central Sundarbans. Contains blistering white latex capable of causing temporary blindness if contact occurs with eyes.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-46",
+    "scientificName": "Ceriops decandra",
+    "commonName": "Goran",
+    "banglaName": "গরান",
+    "family": "Rhizophoraceae",
+    "uses": [
+      "High-Calorie Fuelwood & Charcoal",
+      "Tannin for Preserving Fishing Nets",
+      "Fence Posts"
+    ],
+    "habitat": "Dense interior tidal thickets and saline mangrove banks",
+    "conservationStatus": "Near Threatened (IUCN)",
+    "distribution": "Southern saline tracts of the Sundarbans",
+    "silviculturalNotes": "Shrub or small mangrove tree forming impenetrable thickets. Remarkable for viviparous germination where seedlings germinate while still attached to parent tree.",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-47",
+    "scientificName": "Nypa fruticans",
+    "commonName": "Golpata (Mangrove Palm)",
+    "banglaName": "গোলপাতা",
+    "family": "Arecaceae",
+    "uses": [
+      "Thatched Roofing for Coastal Homes",
+      "Sweet Toddy / Molasses",
+      "Salt-Tolerant Biofuel",
+      "Basketry"
+    ],
+    "habitat": "Soft muddy banks and brackish water river margins",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans river networks and estuarine coastal channels",
+    "silviculturalNotes": "Trunkless mangrove palm with creeping horizontal rhizomes. Huge pinnate fronds up to 9m long are the primary sustainable non-timber forest product of Sundarbans.",
+    "imageUrl": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-48",
+    "scientificName": "Bruguiera gymnorrhiza",
+    "commonName": "Kankra (Black Mangrove)",
+    "banglaName": "কাঁকড়া",
+    "family": "Rhizophoraceae",
+    "uses": [
+      "Heavy Structural Mangrove Poles",
+      "Tannin",
+      "Charcoal",
+      "Coastal Storm Protection"
+    ],
+    "habitat": "Interior high-saline estuarine zones of the Sundarbans",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sundarbans Mangrove Reserve",
+    "silviculturalNotes": "Large mangrove tree with knee-roots (pneumatophores bending like bent knees) and prominent scarlet-red calyx lobes. Viviparous seedlings.",
+    "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-49",
+    "scientificName": "Aegiceras corniculatum",
+    "commonName": "Kholshi (Black Mangrove)",
+    "banglaName": "খলসী",
+    "family": "Primulaceae",
+    "uses": [
+      "Premier Honey Nectar Source (Sundarbans Honey)",
+      "Fuelwood",
+      "Fish Poison",
+      "Coastal Protection"
+    ],
+    "habitat": "Canal banks and river edges with frequent tidal washing",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Throughout Sundarbans mangrove waterways",
+    "silviculturalNotes": "Small tree with fragrant white blooms that yield the most sought-after white honey collected by the traditional Mouvals of the Sundarbans.",
+    "imageUrl": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-50",
+    "scientificName": "Heritiera fomes",
+    "commonName": "Sundri",
+    "banglaName": "সুন্দরী",
+    "family": "Malvaceae",
+    "uses": [
+      "Boat Building & Keels",
+      "Durable Bridge Poles",
+      "Piling Timber",
+      "Hardboard"
+    ],
+    "habitat": "Freshwater and low-salinity zones of the Sundarbans",
+    "conservationStatus": "Endangered (IUCN)",
+    "distribution": "Northeastern and eastern sectors of the Sundarbans Mangrove Biosphere",
+    "silviculturalNotes": "The namesake keystone tree of the Sundarbans. Dense peg-like pneumatophores. Affected by 'top dying' physiological disorder caused by rising salinity.",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-51",
+    "scientificName": "Swintonia floribunda",
+    "commonName": "Civit",
+    "banglaName": "সিভিত",
+    "family": "Anacardiaceae",
+    "uses": [
+      "Match Splints",
+      "Paper Pulp",
+      "Packing Cases",
+      "High-Canopy Emergent Timber"
+    ],
+    "habitat": "Tropical wet evergreen hill forests and deep moist ravines",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Chittagong Hill Tracts, Cox's Bazar, and Sylhet hill valleys",
+    "silviculturalNotes": "Towering emergent tree with immense plank buttresses reaching over 40-50m height. Disperses through 5-winged samara-like fruit.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-52",
+    "scientificName": "Toona ciliata",
+    "commonName": "Toon (Red Cedar)",
+    "banglaName": "তুন",
+    "family": "Meliaceae",
+    "uses": [
+      "Fine Red Furniture",
+      "Cigar Boxes",
+      "Musical Instruments (Violins & Guitars)",
+      "Carving"
+    ],
+    "habitat": "Subtropical moist hill valleys and streamsides",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet hill ranges, CHT, and tea estate ravines",
+    "silviculturalNotes": "Deciduous tree with reddish fragrant wood resembling true mahogany. Wind-dispersed winged seeds ripen in May-June.",
+    "imageUrl": "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-53",
+    "scientificName": "Gmelina arborea",
+    "commonName": "Gamar",
+    "banglaName": "গামারী",
+    "family": "Lamiaceae",
+    "uses": [
+      "Lightweight Musical Instruments (Sitar & Harmonium)",
+      "High-Grade Plywood",
+      "Paper Pulp",
+      "Carpentry"
+    ],
+    "habitat": "Moist deciduous and semi-evergreen hill slopes",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Sylhet, Chittagong, and major forest plantations across Bangladesh",
+    "silviculturalNotes": "Fast-growing light-demanding pioneer tree. Highly vigorous coppicer; vulnerable to Calopepla leayana defoliator beetle in monotypic stands.",
+    "imageUrl": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-54",
+    "scientificName": "Anisoptera scaphula",
+    "commonName": "Boilam (Longest tree of Bangladesh forest)",
+    "banglaName": "বৈলাম",
+    "family": "Dipterocarpaceae",
+    "uses": [
+      "Longest / Tallest Tree of Bangladesh Forest",
+      "Heavy Construction Timber",
+      "Plywood Veneer",
+      "Bridge Timber"
+    ],
+    "habitat": "Primary virgin evergreen rainforests in deep hill valleys",
+    "conservationStatus": "Critically Endangered (IUCN / Bangladesh)",
+    "distribution": "Chittagong Hill Tracts (Kassalong, Rainkheong) and Cox's Bazar",
+    "silviculturalNotes": "Celebrated as the tallest emergent tree species recorded in Bangladesh natural forests, towering up to 60 meters with a massive cylindrical clear bole.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "spec-55",
+    "scientificName": "Alstonia scholaris",
+    "commonName": "Chatim",
+    "banglaName": "ছাতিম",
+    "family": "Apocynaceae",
+    "uses": [
+      "Slate & Blackboard Timber",
+      "Packing Boxes",
+      "Pencil Wood",
+      "Medicinal Antipyretic"
+    ],
+    "habitat": "Moist forest borders, roadsides, and university campus grounds",
+    "conservationStatus": "Least Concern (IUCN)",
+    "distribution": "Found in all forest divisions and campus arboreta across Bangladesh",
+    "silviculturalNotes": "Iconic tier-branched tree known for its intensely sweet autumn night fragrance and whorled glabrous leaves. Milky latex in all tissues.",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+  }
+]

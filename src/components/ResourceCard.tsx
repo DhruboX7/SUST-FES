@@ -1,19 +1,18 @@
 import React from 'react';
 import { ResourceItem } from '../types';
+import { REPORT_FORM_URL } from '../config';
 import { 
   FileText, 
   Presentation, 
   FileCheck, 
   Download, 
   Eye, 
-  ExternalLink, 
   Bookmark, 
-  Folder, 
   FileSpreadsheet,
-  Share2,
-  Sparkles,
   ArrowUpRight,
-  Copy
+  Copy,
+  Flag,
+  Sparkles
 } from 'lucide-react';
 
 interface ResourceCardProps {
@@ -23,7 +22,6 @@ interface ResourceCardProps {
   onPreview: (resource: ResourceItem) => void;
   onCopyLink: (resource: ResourceItem) => void;
   searchQuery?: string;
-  onKeywordClick?: (keyword: string) => void;
 }
 
 // Highlight matching search keywords inside text
@@ -54,40 +52,31 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onPreview,
   onCopyLink,
   searchQuery = '',
-  onKeywordClick,
 }) => {
   // Determine file icon
   const getCategoryIcon = () => {
     switch (resource.category) {
       case 'slides':
-        return <Presentation className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />;
+        return <Presentation className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />;
+      case 'notes':
+        return <FileText className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />;
       case 'pyq':
-        return <FileCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />;
-      case 'practical':
-        return <FileSpreadsheet className="w-4 h-4 text-teal-600 dark:text-teal-400" />;
+        return <FileCheck className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />;
       case 'book':
-        return <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
+        return <FileSpreadsheet className="w-3.5 h-3.5 text-purple-700 dark:text-purple-400" />;
       default:
-        return <FileText className="w-4 h-4 text-stone-600 dark:text-stone-400" />;
+        return <FileText className="w-3.5 h-3.5 text-stone-500" />;
     }
   };
 
   const getCategoryLabel = () => {
     switch (resource.category) {
-      case 'slides':
-        return 'Lecture Slides';
-      case 'pyq':
-        return resource.examTerm ? `${resource.examTerm.toUpperCase()} Exam Question` : 'Exam Question (PYQ)';
-      case 'notes':
-        return 'Class Notes';
-      case 'practical':
-        return 'Lab / Field Manual';
-      case 'book':
-        return 'Reference Book';
-      case 'syllabus':
-        return 'Syllabus / Guide';
-      default:
-        return 'Resource';
+      case 'slides': return 'Lecture Slides';
+      case 'notes': return 'Lecture Notes';
+      case 'pyq': return resource.examTerm === 'midterm' ? 'Midterm PYQ' : 'Semester Final PYQ';
+      case 'book': return 'Textbook';
+      case 'practical': return 'Lab Manual';
+      default: return 'Study Material';
     }
   };
 
@@ -99,13 +88,19 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     return `${yrStr} · ${semStr}`;
   };
 
-  const hasKeywordMatchInSnippet = Boolean(
-    searchQuery.trim() &&
-    resource.scannedSnippet &&
-    resource.scannedSnippet.toLowerCase().includes(searchQuery.toLowerCase().trim())
-  );
+  // Check if added within last 14 days
+  const isRecent = (() => {
+    if (!resource.createdAt) return false;
+    try {
+      const createdTime = new Date(resource.createdAt).getTime();
+      const diffDays = (Date.now() - createdTime) / (1000 * 60 * 60 * 24);
+      return diffDays <= 14;
+    } catch {
+      return false;
+    }
+  })();
 
-  const displayPath = resource.path || `Google Drive / Year ${resource.year} / Sem ${resource.semester} / ${resource.courseCode} / ${resource.title}`;
+  const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id)}&entry_resource_title=${encodeURIComponent(resource.title)}`;
 
   return (
     <div className="group relative bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all flex flex-col justify-between">
@@ -124,13 +119,18 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </span>
             <span aria-hidden="true">·</span>
             <span>{formatSemester()}</span>
+            {isRecent && (
+              <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 uppercase tracking-wider">
+                New
+              </span>
+            )}
           </div>
 
           {/* Bookmark Button */}
           <button
             onClick={() => onToggleBookmark(resource.id)}
-            aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark resource'}
-            className={`p-1 rounded-md transition-colors ${
+            aria-label={isBookmarked ? `Remove bookmark for ${resource.title}` : `Bookmark ${resource.title}`}
+            className={`p-1 rounded-md transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500 ${
               isBookmarked
                 ? 'text-amber-500 hover:text-amber-600'
                 : 'text-stone-300 dark:text-stone-600 hover:text-stone-500 dark:hover:text-stone-400'
@@ -154,56 +154,15 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           {renderHighlightedText(resource.courseTitle, searchQuery)}
         </div>
 
-        {/* 1. DOCUMENT DIRECTORY PATH BREADCRUMB */}
-        <div className="mb-3 p-2 rounded-lg bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-[11px] text-stone-600 dark:text-stone-400 font-mono flex items-start gap-1.5">
-          <Folder className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
-          <div className="truncate flex-1" title={displayPath}>
-            <span className="text-stone-400 font-sans mr-1">Path:</span>
-            <span className="font-medium text-stone-700 dark:text-stone-300">
-              {renderHighlightedText(displayPath, searchQuery)}
-            </span>
-          </div>
-        </div>
-
-        {/* 2. SCANNED DOCUMENT CONTENT EXCERPT (when keyword matched or available) */}
-        {(hasKeywordMatchInSnippet || (searchQuery.trim() && resource.scannedSnippet)) && (
-          <div className="mb-3 p-2.5 rounded-lg bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-[11px] text-stone-700 dark:text-stone-300">
-            <div className="flex items-center gap-1 font-semibold text-emerald-800 dark:text-emerald-400 mb-1 text-[10px] uppercase tracking-wider">
-              <Sparkles className="w-3 h-3 text-emerald-600" />
-              <span>Scanned Content Excerpt · Keyword Match</span>
-            </div>
-            <p className="line-clamp-2 leading-relaxed">
-              {renderHighlightedText(resource.scannedSnippet || resource.description || '', searchQuery)}
-            </p>
-          </div>
-        )}
-
-        {/* Regular description when not showing scanned snippet */}
-        {!hasKeywordMatchInSnippet && !searchQuery.trim() && resource.description && (
-          <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed mb-3 line-clamp-2">
-            {resource.description}
+        {/* Description */}
+        {resource.description && (
+          <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed mb-3 line-clamp-3">
+            {renderHighlightedText(resource.description, searchQuery)}
           </p>
-        )}
-
-        {/* 3. KEYWORDS & TOPIC TAGS */}
-        {resource.keywords && resource.keywords.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {resource.keywords.slice(0, 4).map((kw, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => onKeywordClick?.(kw)}
-                className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-emerald-100 hover:text-emerald-800 dark:hover:bg-emerald-950 dark:hover:text-emerald-300 transition-colors"
-                title={`Filter by keyword: ${kw}`}
-              >
-                #{kw}
-              </button>
-            ))}
-          </div>
         )}
       </div>
 
-      {/* Card Footer: Metadata info + Action & Redirect Controls */}
+      {/* Card Footer: Metadata info + Action Controls */}
       <div className="pt-3 border-t border-stone-100 dark:border-stone-800/80 space-y-3">
         <div className="flex items-center justify-between text-xs text-stone-400 dark:text-stone-500">
           <div className="flex items-center gap-1.5 truncate">
@@ -220,17 +179,18 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           )}
         </div>
 
-        {/* 4. REDIRECT & ACCESS CONTROLS */}
+        {/* Access Controls */}
         <div className="space-y-2">
           {/* Top Row: Primary Redirect to Drive & In-App Reader */}
           <div className="grid grid-cols-2 gap-2">
             
-            {/* REDIRECT OPTION (Direct to Google Drive / Cloud File) */}
+            {/* Direct Google Drive Redirect */}
             <a
               href={resource.driveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-900 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white transition-all flex items-center justify-center gap-1.5 shadow-xs"
+              aria-label={`Open ${resource.title} in Google Drive`}
+              className="py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-900 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white transition-all flex items-center justify-center gap-1.5 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
               title="Redirect and open document in Google Drive / Cloud"
             >
               <span>Redirect to Drive</span>
@@ -240,7 +200,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             {/* In-App Preview Button */}
             <button
               onClick={() => onPreview(resource)}
-              className="py-2 px-3 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+              aria-label={`Read ${resource.title} in app`}
+              className="py-2 px-3 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1.5 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
               title="Read document embedded in app"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -248,12 +209,13 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             </button>
           </div>
 
-          {/* Secondary Actions: Download & Copy Drive Link */}
+          {/* Secondary Actions: Download, Copy Drive Link & Report */}
           <div className="flex items-center justify-between text-[11px] pt-1 text-stone-500 dark:text-stone-400 border-t border-stone-100 dark:border-stone-800">
             <button
               onClick={() => onCopyLink(resource)}
+              aria-label={`Copy shareable link for ${resource.title}`}
               className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors flex items-center gap-1 py-1"
-              title="Copy Google Drive shareable link"
+              title="Copy shareable link"
             >
               <Copy className="w-3 h-3" />
               <span>Copy Link</span>
@@ -264,11 +226,24 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               download
+              aria-label={`Direct download ${resource.title}`}
               className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors flex items-center gap-1 py-1"
               title="Download file directly"
             >
               <Download className="w-3 h-3" />
-              <span>Direct Download</span>
+              <span>Download</span>
+            </a>
+
+            <a
+              href={reportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Report broken link for ${resource.title}`}
+              className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex items-center gap-1 py-1"
+              title="Report broken or inaccessible link"
+            >
+              <Flag className="w-3 h-3" />
+              <span>Report</span>
             </a>
           </div>
         </div>

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Search, X, BookOpen, FileCheck, Layers, TreePine, Sparkles } from 'lucide-react';
+import { Search, X, BookOpen, FileCheck, Layers, TreePine, Sparkles, PlusCircle } from 'lucide-react';
 import { ResourceCategory } from '../types';
+import { CONTRIBUTE_FORM_URL } from '../config';
+import heroImg from '../assets/images/hero_forestry_sust.webp';
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -28,9 +30,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* Background Image Asset with measured contrast scrim */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/src/assets/images/hero_forestry_sust_1793437781125.jpg"
-          alt="SUST Forestry and Environmental Science Canopy"
-          referrerPolicy="no-referrer"
+          src={heroImg}
+          alt="Lush campus forest canopy at the Department of Forestry and Environmental Science, SUST"
+          width={1600}
+          height={893}
+          loading="eager"
+          decoding="async"
           className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000"
         />
         {/* Measured scrim to ensure 4.5:1 WCAG AA text contrast */}
@@ -174,6 +179,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
               <div className="text-xs text-stone-300 font-medium">B.Sc. & M.Sc. Courses</div>
             </div>
+
+            <a
+              href={CONTRIBUTE_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="col-span-2 md:col-span-1 p-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-500/50 flex items-center justify-center gap-1.5 text-xs font-bold shadow-xs transition-colors"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Contribute Resource</span>
+            </a>
           </div>
         </div>
       </div>

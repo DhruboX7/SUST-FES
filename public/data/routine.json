@@ -1,0 +1,41 @@
+[
+  {
+    "year": 1,
+    "semester": 1,
+    "schedule": [
+      { "day": "Sunday", "time": "09:00 - 10:30", "courseCode": "FES 08211121", "courseTitle": "Introduction to Forestry", "room": "Room 301, Academic Building E", "teacher": "Prof. Dr. A. Z. M. Manzoor Rashid" },
+      { "day": "Sunday", "time": "11:00 - 12:30", "courseCode": "CHE 05311125", "courseTitle": "Basic Chemistry for Forestry", "room": "Chemistry Lecture Hall 2", "teacher": "Dept. of Chemistry" },
+      { "day": "Monday", "time": "09:00 - 11:00", "courseCode": "FES 08211122", "courseTitle": "Forest Botany & Dendrology Lab", "room": "Herbarium & Botany Lab", "teacher": "Prof. Dr. Narayan Saha" },
+      { "day": "Tuesday", "time": "10:00 - 11:30", "courseCode": "ENG 02321123", "courseTitle": "English Language Skills", "room": "Room 302", "teacher": "Dept. of English" },
+      { "day": "Wednesday", "time": "11:30 - 01:00", "courseCode": "FES 08211121", "courseTitle": "Introduction to Forestry", "room": "Room 301", "teacher": "Prof. Dr. A. Z. M. Manzoor Rashid" }
+    ]
+  },
+  {
+    "year": 2,
+    "semester": 1,
+    "schedule": [
+      { "day": "Sunday", "time": "10:00 - 11:30", "courseCode": "FES 08212121", "courseTitle": "Principles of Silviculture", "room": "Room 304", "teacher": "Prof. Dr. Romel Ahmed" },
+      { "day": "Monday", "time": "09:00 - 10:30", "courseCode": "FES 08212123", "courseTitle": "Forest Mensuration", "room": "Room 304", "teacher": "Prof. Dr. Mohammad Redowan" },
+      { "day": "Tuesday", "time": "11:00 - 01:00", "courseCode": "FES 08212124", "courseTitle": "Forest Mensuration Field Practical", "room": "SUST Campus Forest Arboretum", "teacher": "Prof. Dr. Mohammad Redowan" },
+      { "day": "Wednesday", "time": "09:00 - 10:30", "courseCode": "FES 08212125", "courseTitle": "Forest Ecology", "room": "Room 304", "teacher": "Prof. Dr. Farhana Haque" }
+    ]
+  },
+  {
+    "year": 3,
+    "semester": 1,
+    "schedule": [
+      { "day": "Sunday", "time": "11:30 - 01:00", "courseCode": "FES 08213121", "courseTitle": "Forest Management & Planning", "room": "Seminar Room 1", "teacher": "Prof. Dr. Swapan Kumar Sarker" },
+      { "day": "Monday", "time": "10:00 - 11:30", "courseCode": "FES 08213123", "courseTitle": "Wood Science & Technology", "room": "Wood Anatomy Lab", "teacher": "Prof. Dr. Md. Qumruzzaman Chowdhury" },
+      { "day": "Wednesday", "time": "10:00 - 12:00", "courseCode": "FES 08213124", "courseTitle": "Wood Anatomy Practical", "room": "Wood Science Lab", "teacher": "Prof. Dr. Md. Qumruzzaman Chowdhury" }
+    ]
+  },
+  {
+    "year": 4,
+    "semester": 1,
+    "schedule": [
+      { "day": "Sunday", "time": "09:00 - 10:30", "courseCode": "FES 08214121", "courseTitle": "Wildlife Ecology & Management", "room": "GIS Lab 2", "teacher": "Prof. Dr. Mohammad Belal Uddin" },
+      { "day": "Tuesday", "time": "11:30 - 01:00", "courseCode": "FES 08214123", "courseTitle": "Forest Economics & Valuation", "room": "Room 305", "teacher": "Prof. Dr. A. Z. M. Manzoor Rashid" },
+      { "day": "Thursday", "time": "09:00 - 12:00", "courseCode": "FES 08214125", "courseTitle": "GIS & Remote Sensing Lab", "room": "RS & GIS Computer Laboratory", "teacher": "Prof. Dr. Mohammad Redowan" }
+    ]
+  }
+]

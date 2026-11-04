@@ -13,13 +13,15 @@ export type FileType = 'pdf' | 'doc' | 'ppt' | 'sheet' | 'folder' | 'link';
 
 export interface Course {
   id: string;
-  code: string;         // e.g. "FES 111"
+  code: string;         // e.g. "FES 08211121"
+  shortCode?: string;   // e.g. "FES 111"
   title: string;        // e.g. "Forest Botany"
   year: AcademicYear;
   semester: 1 | 2 | 'both';
   credits: number;
   description: string;
   category: 'core' | 'support' | 'elective' | 'lab';
+  contents?: string[];
 }
 
 export interface ResourceItem {
@@ -42,9 +44,6 @@ export interface ResourceItem {
   examTerm?: 'midterm' | 'final' | 'quiz' | 'all';
   isFeatured?: boolean;
   createdAt: string;
-  path?: string;            // Directory path breadcrumb e.g. "Google Drive / 2nd Year / Sem 1 / FES 211 Silviculture / Slides"
-  keywords?: string[];      // Scanned keywords e.g. ["Silviculture", "Regeneration", "Thinning"]
-  scannedSnippet?: string;  // Scanned text excerpt containing keywords
 }
 
 export interface DriveParseResult {
@@ -63,4 +62,105 @@ export interface SyllabusProgress {
   completedCourseIds: string[];
   completedTopicKeys: { [courseId: string]: number[] };
   lastUpdated: string;
+}
+
+export interface TreeSpecies {
+  id: string;
+  scientificName: string;
+  commonName: string;
+  banglaName: string;
+  family: string;
+  uses: string[];
+  habitat: string;
+  conservationStatus: string;
+  distribution: string;
+  silviculturalNotes: string;
+  imageUrl?: string;
+  verifiedAt?: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  title: string;
+  caption: string;
+  location: string;
+  year: string;
+  category: 'field-tour' | 'lab' | 'research' | 'campus';
+  imageUrl: string;
+}
+
+export interface ThesisItem {
+  id: string;
+  title: string;
+  author: string;
+  supervisor: string;
+  degree: 'B.Sc. (Honours)' | 'M.Sc.' | string;
+  year: string;
+  researchArea: string;
+  abstract: string;
+  driveUrl?: string;
+}
+
+export interface NoticeItem {
+  id: string;
+  title: string;
+  date: string;
+  body: string;
+  imageUrl?: string;
+  attachmentUrl?: string;
+  link?: string;
+  pinned?: boolean;
+}
+
+export interface QuickLinkItem {
+  id: string;
+  title: string;
+  url: string;
+  category: 'drive' | 'syllabus' | 'portal' | 'form' | 'general';
+  description?: string;
+}
+
+export interface StudentPhotoItem {
+  id: string;
+  studentName: string;
+  studentBatch?: string;
+  studentRegNo?: string;
+  title: string;
+  caption: string;
+  location: string;
+  date: string;
+  imageUrl: string;
+  treeSpeciesId?: string;
+  speciesScientificName?: string;
+  status: 'pending' | 'approved' | 'featured';
+  submittedAt: string;
+}
+
+export interface MasterLibraryBackup {
+  exportedAt: string;
+  institution: string;
+  department: string;
+  version: string;
+  resources: ResourceItem[];
+  species: TreeSpecies[];
+  gallery: GalleryItem[];
+  theses: ThesisItem[];
+  notices: NoticeItem[];
+  quickLinks: QuickLinkItem[];
+  studentPhotos?: StudentPhotoItem[];
+}
+
+export interface BotanyAiResult {
+  scientificName: string;
+  commonName: string;
+  banglaName: string;
+  family: string;
+  uses: string[];
+  habitat: string;
+  conservationStatus: string;
+  distribution: string;
+  silviculturalNotes: string;
+  confidence: number;
+  taxonomyNotes?: string;
+  isNomenclatureValid: boolean;
 }

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "notice-1",
+    "title": "Semester Final Examination Schedule - Autumn 2024",
+    "date": "2024-11-15",
+    "body": "The Semester Final Examinations for all undergraduate academic years (1st to 4th year) of the Department of Forestry and Environmental Science will commence as per the published university academic calendar. Students are advised to clear departmental dues and collect admit cards.",
+    "imageUrl": "/assets/hero_forestry_sust.webp",
+    "attachmentUrl": "/assets/aistudio/Final_BSc_Curriculum-2025-2026_9f635d9c.pdf",
+    "link": "https://www.sust.edu",
+    "pinned": true
+  },
+  {
+    "id": "notice-2",
+    "title": "Submission of Field Tour & Silvicultural Excursion Reports",
+    "date": "2024-11-02",
+    "body": "Students of 3rd Year 1st Semester are required to submit their Sylhet Hill Forests Silvicultural Tour comprehensive field reports to the course teacher by next Sunday.",
+    "imageUrl": "/assets/hero_forestry_sust.webp",
+    "attachmentUrl": "https://www.sust.edu/d/fes",
+    "pinned": true
+  },
+  {
+    "id": "notice-3",
+    "title": "Call for Undergraduate Research & B.Sc. Project Proposals (4th Year)",
+    "date": "2024-10-25",
+    "body": "Final year students must submit their research synopsis along with supervisor preference consent form to the departmental office before November 30.",
+    "link": "https://www.sust.edu/d/fes"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "gal-1",
+    "title": "Annual Silvicultural Field Tour - Lawachara National Park",
+    "caption": "Undergraduate 3rd year students conducting canopy density sampling and natural regeneration count under Dipterocarpus turbinatus mature stands.",
+    "location": "Lawachara National Park, Kamalganj, Moulvibazar",
+    "year": "2024",
+    "category": "field-tour",
+    "imageUrl": "/assets/hero_forestry_sust.webp"
+  },
+  {
+    "id": "gal-2",
+    "title": "Remote Sensing & GIS Spatial Analysis Practical Session",
+    "caption": "Students analyzing Sentinel-2 satellite multi-spectral imagery to map forest cover dynamics and NDVI vegetation indices of northeastern haor fringes.",
+    "location": "RS & GIS Computer Laboratory, Academic Building E",
+    "year": "2024",
+    "category": "lab",
+    "imageUrl": "/assets/hero_forestry_sust.webp"
+  },
+  {
+    "id": "gal-3",
+    "title": "Mangrove Ecology Expedition - Sundarbans Biosphere",
+    "caption": "Research excursion studying pneumatophore root adaptations, salinity gradients, and carbon stock estimation in Heritiera fomes (Sundari) zones.",
+    "location": "Sundarbans East Wildlife Sanctuary, Kotka",
+    "year": "2023",
+    "category": "field-tour",
+    "imageUrl": "/assets/hero_forestry_sust.webp"
+  },
+  {
+    "id": "gal-4",
+    "title": "SUST Campus Forest Arboretum Phenology Monitoring",
+    "caption": "Routine tree height and DBH mensuration across the university's indigenous botanical reserve with Haga altimeter and Spiegel relaskop.",
+    "location": "Departmental Arboretum, SUST Campus",
+    "year": "2024",
+    "category": "campus",
+    "imageUrl": "/assets/hero_forestry_sust.webp"
+  },
+  {
+    "id": "gal-5",
+    "title": "Soil Chemistry & Eco-Physiology Nutrient Extraction",
+    "caption": "Analyzing soil organic carbon and cation exchange capacity (CEC) across hill tea estates and adjoining natural forest plots.",
+    "location": "Analytical Chemistry & Soil Science Lab",
+    "year": "2023",
+    "category": "research",
+    "imageUrl": "/assets/hero_forestry_sust.webp"
+  }
+]

@@ -79,8 +79,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [editAuthor, setEditAuthor] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editExamTerm, setEditExamTerm] = useState<'midterm' | 'final' | 'quiz' | 'all'>('final');
-  const [editKeywords, setEditKeywords] = useState('');
-  const [editPath, setEditPath] = useState('');
   const [editFormError, setEditFormError] = useState('');
   const [editSuccessMsg, setEditSuccessMsg] = useState('');
 
@@ -96,8 +94,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [authorOrTeacher, setAuthorOrTeacher] = useState('');
   const [description, setDescription] = useState('');
   const [examTerm, setExamTerm] = useState<'midterm' | 'final' | 'quiz' | 'all'>('final');
-  const [addKeywords, setAddKeywords] = useState('');
-  const [addPath, setAddPath] = useState('');
   const [addSuccessMsg, setAddSuccessMsg] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -174,8 +170,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setEditAuthor(resource.authorOrTeacher || '');
     setEditDescription(resource.description || '');
     setEditExamTerm(resource.examTerm || 'final');
-    setEditKeywords((resource.keywords || []).join(', '));
-    setEditPath(resource.path || '');
     setEditFormError('');
     setEditSuccessMsg('');
   };
@@ -200,11 +194,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     const resolvedCourseTitle = courseObj ? courseObj.title : (editCustomCourseTitle.trim() || 'Specialized Topic');
     const parsed = parseGoogleDriveUrl(editDriveUrl.trim());
 
-    const updatedKeywords = editKeywords
-      .split(',')
-      .map((k) => k.trim())
-      .filter(Boolean);
-
     const updatedResource: ResourceItem = {
       ...editingResource,
       title: editTitle.trim(),
@@ -222,9 +211,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       authorOrTeacher: editAuthor.trim() || 'FES SUST Dept',
       description: editDescription.trim() || undefined,
       examTerm: editCategory === 'pyq' ? editExamTerm : undefined,
-      path: editPath.trim() || editingResource.path || `Google Drive / Year ${editYear} / Sem ${editSemester} / ${editCourseCode} / ${editTitle.trim()}`,
-      keywords: updatedKeywords.length > 0 ? updatedKeywords : [editCourseCode, resolvedCourseTitle, editCategory],
-      scannedSnippet: editDescription.trim() || `${editCourseCode} ${resolvedCourseTitle} - ${editTitle.trim()}`,
     };
 
     onUpdateResource(updatedResource);
@@ -268,11 +254,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     const courseObj = SUST_FES_COURSES.find((c) => c.code === selectedCourseCode);
     const resolvedCourseTitle = courseObj ? courseObj.title : (customCourseTitle || 'Specialized Topic');
 
-    const kwList = addKeywords
-      .split(',')
-      .map((k) => k.trim())
-      .filter(Boolean);
-
     const newResource: ResourceItem = {
       id: `res-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
       title: title.trim(),
@@ -290,9 +271,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       authorOrTeacher: authorOrTeacher.trim() || 'FES SUST Dept',
       description: description.trim(),
       examTerm: category === 'pyq' ? examTerm : undefined,
-      path: addPath.trim() || `Google Drive / Year ${year} / Sem ${semester} / ${selectedCourseCode} ${resolvedCourseTitle} / ${title.trim()}`,
-      keywords: kwList.length > 0 ? kwList : [selectedCourseCode, resolvedCourseTitle, category, sessionYear.trim(), authorOrTeacher.trim()].filter(Boolean),
-      scannedSnippet: description.trim() || `${selectedCourseCode} ${resolvedCourseTitle} - ${title.trim()}`,
       createdAt: new Date().toISOString(),
     };
 
@@ -303,8 +281,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setDriveUrl('');
     setTitle('');
     setDescription('');
-    setAddKeywords('');
-    setAddPath('');
     setTimeout(() => setAddSuccessMsg(''), 4000);
   };
 
@@ -317,9 +293,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           r.title.toLowerCase().includes(q) ||
           r.courseCode.toLowerCase().includes(q) ||
           r.courseTitle.toLowerCase().includes(q) ||
-          (r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q)) ||
-          (r.path && r.path.toLowerCase().includes(q)) ||
-          (r.keywords && r.keywords.some((k) => k.toLowerCase().includes(q)));
+          (r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q)) ||(r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q));
         if (!matches) return false;
       }
       if (filterYear !== 'all' && r.year !== filterYear) return false;
@@ -550,7 +524,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               </span>
                             </div>
                             <p className="text-[11px] text-stone-500 dark:text-stone-400">
-                              Modify title, curriculum category, Drive link, directory path, and search keywords
+                              Modify title, curriculum category, Drive link, and topics
                             </p>
                           </div>
                         </div>
@@ -779,33 +753,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             />
                           </div>
 
-                          <div>
-                            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                              Folder Path Breadcrumb
-                            </label>
-                            <input
-                              type="text"
-                              value={editPath}
-                              onChange={(e) => setEditPath(e.target.value)}
-                              placeholder="e.g. Google Drive / 2nd Year / Sem 1 / FES 211 / Slides"
-                              className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-mono"
-                            />
-                          </div>
+                          
                         </div>
 
                         {/* 7. Keywords */}
-                        <div>
-                          <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                            Scanned Keywords (comma-separated for catalog search)
-                          </label>
-                          <input
-                            type="text"
-                            value={editKeywords}
-                            onChange={(e) => setEditKeywords(e.target.value)}
-                            placeholder="e.g. Silviculture, Nursery, Regeneration, Seedling, FES 211"
-                            className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
-                          />
-                        </div>
+                        
 
                         {/* 8. Description */}
                         <div>
@@ -1012,29 +964,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                       {item.title}
                                     </h4>
 
-                                    {item.path && (
-                                      <p className="text-[10px] text-stone-400 font-mono truncate mt-0.5">
-                                        📁 {item.path}
-                                      </p>
-                                    )}
+                                    
 
-                                    {item.keywords && item.keywords.length > 0 && (
-                                      <div className="flex items-center gap-1 flex-wrap mt-1">
-                                        {item.keywords.slice(0, 3).map((kw, i) => (
-                                          <span
-                                            key={i}
-                                            className="text-[10px] px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800 text-stone-500"
-                                          >
-                                            #{kw}
-                                          </span>
-                                        ))}
-                                        {item.keywords.length > 3 && (
-                                          <span className="text-[10px] text-stone-400">
-                                            +{item.keywords.length - 3}
-                                          </span>
-                                        )}
-                                      </div>
-                                    )}
+                                    
                                   </div>
                                 </div>
 
@@ -1327,32 +1259,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       />
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                        Folder Path (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={addPath}
-                        onChange={(e) => setAddPath(e.target.value)}
-                        placeholder="e.g. Google Drive / Year 2 / Sem 1 / FES 211"
-                        className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-mono"
-                      />
-                    </div>
+                    
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                      Search Keywords (comma-separated)
-                    </label>
-                    <input
-                      type="text"
-                      value={addKeywords}
-                      onChange={(e) => setAddKeywords(e.target.value)}
-                      placeholder="e.g. Nursery, Regeneration, Seedling, Silviculture"
-                      className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
-                    />
-                  </div>
+                  
 
                   <div>
                     <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">

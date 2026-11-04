@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { SUST_FES_COURSES, DetailedCourse } from '../data/coursesData';
 import { AcademicYear } from '../types';
+import { usePageMeta } from '../hooks/usePageMeta';
 import { 
   getStoredSyllabusProgress, 
   toggleCourseCompletion, 
@@ -53,6 +55,11 @@ export const SyllabusProgressTracker: React.FC<SyllabusProgressTrackerProps> = (
     setToastMsg(msg);
     setTimeout(() => setToastMsg(null), 3000);
   };
+
+  usePageMeta({
+    title: 'Syllabus Progress Tracker & Degree Audit',
+    description: 'Track completed courses, monitor chapter-by-chapter OBE syllabus coverage, and audit your B.Sc. credit completion.',
+  });
 
   // Calculate high-level stats
   const stats = useMemo(() => {
@@ -478,13 +485,16 @@ export const SyllabusProgressTracker: React.FC<SyllabusProgressTrackerProps> = (
                         </span>
                       </div>
 
-                      <h3 className={`text-sm font-bold transition-colors ${
-                        isCompleted
-                          ? 'text-emerald-950 dark:text-emerald-200 line-through opacity-85'
-                          : 'text-stone-900 dark:text-stone-100'
-                      }`}>
+                      <Link
+                        to={`/courses/${encodeURIComponent(course.code.replace(/\s+/g, '-'))}`}
+                        className={`text-sm font-bold transition-colors hover:text-emerald-700 dark:hover:text-emerald-400 ${
+                          isCompleted
+                            ? 'text-emerald-950 dark:text-emerald-200 line-through opacity-85'
+                            : 'text-stone-900 dark:text-stone-100'
+                        }`}
+                      >
                         {course.title}
-                      </h3>
+                      </Link>
 
                       {/* Topic Micro Progress Indicator */}
                       {totalTopics > 0 && (
@@ -507,16 +517,13 @@ export const SyllabusProgressTracker: React.FC<SyllabusProgressTrackerProps> = (
 
                   {/* Right: Actions */}
                   <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                    {onJumpToCourseCatalog && (
-                      <button
-                        type="button"
-                        onClick={() => onJumpToCourseCatalog(course.code, course.year)}
-                        className="px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 hover:border-emerald-600 text-[11px] font-semibold text-stone-600 dark:text-stone-300 hover:text-emerald-700 transition-colors flex items-center gap-1"
-                      >
-                        <span>Find Materials</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </button>
-                    )}
+                    <Link
+                      to={`/courses/${encodeURIComponent(course.code.replace(/\s+/g, '-'))}`}
+                      className="px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 hover:border-emerald-600 text-[11px] font-semibold text-stone-600 dark:text-stone-300 hover:text-emerald-700 transition-colors flex items-center gap-1"
+                    >
+                      <span>Course Page</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
 
                     {totalTopics > 0 && (
                       <button

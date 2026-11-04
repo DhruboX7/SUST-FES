@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ResourceItem, AcademicYear } from '../types';
-import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, Folder, ArrowUpRight } from 'lucide-react';
+import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, ArrowUpRight } from 'lucide-react';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 interface ExamBankViewProps {
   pyqResources: ResourceItem[];
@@ -13,6 +14,11 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
   onPreview,
   onCopyLink,
 }) => {
+  usePageMeta({
+    title: 'Previous Year Questions (PYQ) Bank',
+    description: 'Archive of past semester final and midterm question papers for undergraduate and master degrees in Forestry and Environmental Science, SUST.',
+  });
+
   const [search, setSearch] = useState('');
   const [selectedYear, setSelectedYear] = useState<AcademicYear | 'all'>('all');
   const [selectedTerm, setSelectedTerm] = useState<'all' | 'final' | 'midterm'>('all');
@@ -25,9 +31,8 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
       item.title.toLowerCase().includes(s) ||
       item.courseCode.toLowerCase().includes(s) ||
       item.courseTitle.toLowerCase().includes(s) ||
-      (item.path && item.path.toLowerCase().includes(s)) ||
-      (item.keywords && item.keywords.some((k) => k.toLowerCase().includes(s))) ||
-      (item.scannedSnippet && item.scannedSnippet.toLowerCase().includes(s)) ||
+      (item.description && item.description.toLowerCase().includes(s)) ||
+      (item.authorOrTeacher && item.authorOrTeacher.toLowerCase().includes(s)) ||
       (item.sessionYear && item.sessionYear.includes(s));
 
     const matchesYear = selectedYear === 'all' || item.year === selectedYear;
@@ -153,12 +158,6 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                   {item.title}
                 </h3>
                 <div className="text-xs text-stone-500 dark:text-stone-400 mb-2">{item.courseTitle}</div>
-
-                {/* Directory Path Breadcrumb */}
-                <div className="mb-3 p-1.5 rounded bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-[11px] text-stone-500 dark:text-stone-400 font-mono flex items-center gap-1.5 truncate">
-                  <Folder className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  <span className="truncate">{item.path || `Google Drive / ${item.courseCode} / ${item.title}`}</span>
-                </div>
 
                 {item.description && (
                   <p className="text-xs text-stone-600 dark:text-stone-400 line-clamp-2 leading-relaxed mb-4">
