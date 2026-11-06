@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { TreeSpecies, BotanyAiResult } from '../../types';
+import { TreeSpecies, TreePhoto, BotanyAiResult } from '../../types';
 import { verifyAndEnrichSpeciesWithAI, validateBinomialNomenclature } from '../../utils/botanyAi';
+import { AdminSpeciesPhotosModal } from './AdminSpeciesPhotosModal';
 import { 
   Trees, 
   Search, 
@@ -17,7 +18,13 @@ import {
   CheckSquare,
   Square,
   ShieldCheck,
-  Tag
+  Tag,
+  Globe,
+  RefreshCw,
+  Camera,
+  Layers,
+  Image as ImageIcon,
+  Star
 } from 'lucide-react';
 
 interface AdminSpeciesPanelProps {
@@ -31,7 +38,90 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [filterFamily, setFilterFamily] = useState<string>('all');
+  const [photoFilter, setPhotoFilter] = useState<'all' | 'multi' | 'single' | 'missing'>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isSyncingFlora, setIsSyncingFlora] = useState(false);
+  const [floraSyncNotice, setFloraSyncNotice] = useState('');
+
+  // Photo Management Modal State
+  const [managingPhotosSpecies, setManagingPhotosSpecies] = useState<TreeSpecies | null>(null);
+
+  const handleSyncFloraOfBangladesh = async () => {
+    setIsSyncingFlora(true);
+    setFloraSyncNotice('');
+    try {
+      const res = await fetch('/data/flora_bangladesh_photos.json');
+      if (res.ok) {
+        const floraMap: Record<
+          string,
+          { imageUrl: string; sourceUrl: string; sourceName: string; allPhotos?: string[] }
+        > = await res.json();
+        let speciesCount = 0;
+        let totalPlatesImported = 0;
+
+        const updated = species.map((sp) => {
+          const matchKey = Object.keys(floraMap).find(
+            (k) =>
+              k.toLowerCase() === sp.scientificName.trim().toLowerCase() ||
+              k.toLowerCase().includes(sp.scientificName.trim().toLowerCase()) ||
+              sp.scientificName.trim().toLowerCase().includes(k.toLowerCase())
+          );
+
+          if (matchKey && floraMap[matchKey]) {
+            speciesCount++;
+            const entry = floraMap[matchKey];
+            const allUrls: string[] = entry.allPhotos || (entry.imageUrl ? [entry.imageUrl] : []);
+
+            const existingUrls = new Set([
+              entry.imageUrl,
+              sp.imageUrl,
+              ...(sp.morePhotos?.map((p) => p.url) || [])
+            ]);
+
+            const currentPlates: TreePhoto[] = [...(sp.morePhotos || [])];
+
+            allUrls.forEach((url, i) => {
+              if (url !== entry.imageUrl && !currentPlates.some((p) => p.url === url)) {
+                let tag: TreePhoto['tag'] = 'leaf';
+                if (i === 1) tag = 'leaf';
+                else if (i === 2) tag = 'bark';
+                else if (i === 3) tag = 'flower';
+                else if (i === 4) tag = 'fruit';
+                else tag = 'general';
+
+                currentPlates.push({
+                  url,
+                  caption: `${sp.commonName} - Botanical Plate #${currentPlates.length + 1}`,
+                  tag,
+                  credit: entry.sourceName || 'Flora of Bangladesh',
+                });
+                totalPlatesImported++;
+              }
+            });
+
+            return {
+              ...sp,
+              imageUrl: sp.imageUrl || entry.imageUrl,
+              photoCredit: sp.photoCredit || entry.sourceName,
+              floraUrl: sp.floraUrl || entry.sourceUrl,
+              morePhotos: currentPlates,
+            };
+          }
+          return sp;
+        });
+
+        onUpdateSpecies(updated);
+        setFloraSyncNotice(
+          `Synced ${speciesCount} tree species and enriched ${totalPlatesImported} authentic botanical plates from floraofbangladesh.com!`
+        );
+        setTimeout(() => setFloraSyncNotice(''), 6000);
+      }
+    } catch (err) {
+      console.error('Failed to sync with flora database:', err);
+    } finally {
+      setIsSyncingFlora(false);
+    }
+  };
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +150,19 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
     return Array.from(set).sort();
   }, [species]);
 
+  const multiPhotoCount = useMemo(
+    () => species.filter((s) => (s.morePhotos?.length || 0) >= 1 && !!s.imageUrl).length,
+    [species]
+  );
+  const singlePhotoCount = useMemo(
+    () => species.filter((s) => !!s.imageUrl && (!s.morePhotos || s.morePhotos.length === 0)).length,
+    [species]
+  );
+  const missingPhotoCount = useMemo(
+    () => species.filter((s) => !s.imageUrl).length,
+    [species]
+  );
+
   const filteredSpecies = useMemo(() => {
     return species.filter((item) => {
       const matchSearch =
@@ -68,9 +171,19 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         item.banglaName.includes(search) ||
         item.family.toLowerCase().includes(search.toLowerCase());
       const matchFamily = filterFamily === 'all' || item.family === filterFamily;
-      return matchSearch && matchFamily;
+      if (!matchSearch || !matchFamily) return false;
+
+      if (photoFilter === 'multi') {
+        if (!item.imageUrl || !item.morePhotos || item.morePhotos.length === 0) return false;
+      } else if (photoFilter === 'single') {
+        if (!item.imageUrl || (item.morePhotos && item.morePhotos.length > 0)) return false;
+      } else if (photoFilter === 'missing') {
+        if (!!item.imageUrl) return false;
+      }
+
+      return true;
     });
-  }, [species, search, filterFamily]);
+  }, [species, search, filterFamily, photoFilter]);
 
   const handleOpenAdd = () => {
     setEditingItem(null);
@@ -204,11 +317,10 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   };
 
   const handleBatchDelete = () => {
-    if (window.confirm(`Delete ${selectedIds.length} tree species from database?`)) {
-      const updated = species.filter((s) => !selectedIds.includes(s.id));
-      onUpdateSpecies(updated);
-      setSelectedIds([]);
-    }
+    const updated = species.filter((s) => !selectedIds.includes(s.id));
+    onUpdateSpecies(updated);
+    setSelectedIds([]);
+    setDeleteConfirmId(null);
   };
 
   return (
@@ -228,16 +340,47 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {selectedIds.length > 0 && (
-            <button
-              onClick={handleBatchDelete}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Delete Selected ({selectedIds.length})</span>
-            </button>
+            deleteConfirmId === 'batch' ? (
+              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+                <button
+                  type="button"
+                  onClick={handleBatchDelete}
+                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                >
+                  Confirm Delete ({selectedIds.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirmId(null)}
+                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  title="Cancel"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmId('batch')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Selected ({selectedIds.length})</span>
+              </button>
+            )
           )}
+
+          <button
+            onClick={handleSyncFloraOfBangladesh}
+            disabled={isSyncingFlora}
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-emerald-600/50 bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            title="Update tree photos directly from floraofbangladesh.com"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncingFlora ? 'animate-spin' : ''}`} />
+            <span>{isSyncingFlora ? 'Syncing...' : 'Sync with Flora of Bangladesh'}</span>
+          </button>
 
           <button
             onClick={handleOpenAdd}
@@ -249,8 +392,15 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         </div>
       </div>
 
+      {floraSyncNotice && (
+        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs flex items-center gap-2 animate-fade-in font-medium">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>{floraSyncNotice}</span>
+        </div>
+      )}
+
       {/* Filter Toolbar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="relative sm:col-span-2">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
           <input
@@ -272,6 +422,19 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             {families.map((fam) => (
               <option key={fam} value={fam}>{fam}</option>
             ))}
+          </select>
+        </div>
+
+        <div>
+          <select
+            value={photoFilter}
+            onChange={(e) => setPhotoFilter(e.target.value as any)}
+            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-medium"
+          >
+            <option value="all">All Photos ({species.length})</option>
+            <option value="multi">Multi-Photo Plates ({multiPhotoCount})</option>
+            <option value="single">Single Photo ({singlePhotoCount})</option>
+            <option value="missing">Missing Photo ({missingPhotoCount})</option>
           </select>
         </div>
       </div>
@@ -302,6 +465,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                 </th>
                 <th className="py-3 px-4">Taxonomy & Vernacular</th>
                 <th className="py-3 px-4">Family</th>
+                <th className="py-3 px-4">Botanical Photos</th>
                 <th className="py-3 px-4">IUCN Status</th>
                 <th className="py-3 px-4">Primary Uses</th>
                 <th className="py-3 px-4 text-right">Actions</th>
@@ -310,102 +474,148 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
               {filteredSpecies.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-stone-400">
+                  <td colSpan={7} className="py-8 text-center text-stone-400">
                     No tree species match your search criteria.
                   </td>
                 </tr>
               ) : (
-                filteredSpecies.map((item) => (
-                  <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40">
-                    <td className="py-3 px-4">
-                      <button
-                        onClick={() =>
-                          setSelectedIds((prev) =>
-                            prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
-                          )
-                        }
-                        className="text-stone-400 hover:text-emerald-600"
-                      >
-                        {selectedIds.includes(item.id) ? (
-                          <CheckSquare className="w-4 h-4 text-emerald-600" />
-                        ) : (
-                          <Square className="w-4 h-4" />
-                        )}
-                      </button>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={item.imageUrl || '/assets/hero_forestry_sust.webp'}
-                          alt={item.scientificName}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                          }}
-                          className="w-10 h-10 object-cover rounded-lg border border-stone-200 dark:border-stone-800 shrink-0"
-                        />
-                        <div>
-                          <div className="font-bold italic text-stone-900 dark:text-stone-100">
-                            {item.scientificName}
-                          </div>
-                          <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
-                            <span>{item.commonName}</span>
-                            {item.banglaName && (
-                              <>
-                                <span aria-hidden="true">·</span>
-                                <span className="font-medium text-emerald-800 dark:text-emerald-400">{item.banglaName}</span>
-                              </>
-                            )}
+                filteredSpecies.map((item) => {
+                  const plateCount = item.morePhotos?.length || 0;
+                  const totalPhotos = (item.imageUrl ? 1 : 0) + plateCount;
+
+                  return (
+                    <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40">
+                      <td className="py-3 px-4">
+                        <button
+                          onClick={() =>
+                            setSelectedIds((prev) =>
+                              prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
+                            )
+                          }
+                          className="text-stone-400 hover:text-emerald-600"
+                        >
+                          {selectedIds.includes(item.id) ? (
+                            <CheckSquare className="w-4 h-4 text-emerald-600" />
+                          ) : (
+                            <Square className="w-4 h-4" />
+                          )}
+                        </button>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setManagingPhotosSpecies(item)}
+                            className="relative group shrink-0"
+                            title="Click to manage botanical photos for this species"
+                          >
+                            <img
+                              src={item.imageUrl || '/assets/hero_forestry_sust.webp'}
+                              alt={item.scientificName}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
+                              }}
+                              className="w-10 h-10 object-cover rounded-lg border border-stone-200 dark:border-stone-800 group-hover:border-emerald-500 transition-colors"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center text-white">
+                              <Camera className="w-3 h-3" />
+                            </div>
+                          </button>
+                          <div>
+                            <div className="font-bold italic text-stone-900 dark:text-stone-100">
+                              {item.scientificName}
+                            </div>
+                            <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
+                              <span>{item.commonName}</span>
+                              {item.banglaName && (
+                                <>
+                                  <span aria-hidden="true">·</span>
+                                  <span className="font-medium text-emerald-800 dark:text-emerald-400">{item.banglaName}</span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 font-mono text-emerald-700 dark:text-emerald-400">
-                      {item.family}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="text-[11px] text-stone-700 dark:text-stone-300">
-                        {item.conservationStatus}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="text-[11px] text-stone-600 dark:text-stone-400 max-w-xs truncate">
-                        {item.uses.slice(0, 3).join(', ')}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => handleOpenEdit(item)}
-                          className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
-                          title="Edit Species"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        {deleteConfirmId === item.id ? (
-                          <div className="flex items-center gap-1">
-                            <button
-                              onClick={() => handleDelete(item.id)}
-                              className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded-md"
-                            >
-                              Confirm
-                            </button>
-                            <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ) : (
+                      </td>
+                      <td className="py-3 px-4 font-mono text-emerald-700 dark:text-emerald-400">
+                        {item.family}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
                           <button
-                            onClick={() => setDeleteConfirmId(item.id)}
-                            className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
-                            title="Delete Species"
+                            type="button"
+                            onClick={() => setManagingPhotosSpecies(item)}
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-colors shadow-2xs ${
+                              plateCount > 0
+                                ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900'
+                                : item.imageUrl
+                                ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900'
+                                : 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 hover:bg-rose-100'
+                            }`}
+                            title="Manage primary habit and botanical multi-photo plates"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Camera className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <span>{totalPhotos} Photos</span>
                           </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          {plateCount > 0 && (
+                            <span className="text-[10px] font-mono text-stone-400 hidden lg:inline">
+                              +{plateCount} plates
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="text-[11px] text-stone-700 dark:text-stone-300">
+                          {item.conservationStatus}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="text-[11px] text-stone-600 dark:text-stone-400 max-w-xs truncate">
+                          {item.uses.slice(0, 3).join(', ')}
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => setManagingPhotosSpecies(item)}
+                            className="p-1.5 text-stone-400 hover:text-emerald-600 rounded transition-colors"
+                            title="Manage Botanical Photos & Plates"
+                          >
+                            <Camera className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleOpenEdit(item)}
+                            className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                            title="Edit Species"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                          {deleteConfirmId === item.id ? (
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => handleDelete(item.id)}
+                                className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded-md"
+                              >
+                                Confirm
+                              </button>
+                              <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setDeleteConfirmId(item.id)}
+                              className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
+                              title="Delete Species"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -602,9 +812,57 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                  Herbarium / Specimen Photo URL (Optional)
-                </label>
+                <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
+                  <label className="font-semibold text-stone-700 dark:text-stone-300">
+                    Herbarium / Specimen Photo URL (Optional)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    {editingItem && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsModalOpen(false);
+                          setManagingPhotosSpecies(editingItem);
+                        }}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900/60 px-2 py-0.5 rounded border border-blue-300 dark:border-blue-800 transition-colors"
+                      >
+                        <Camera className="w-3 h-3" />
+                        <span>Manage Plates ({(editingItem.morePhotos?.length || 0) + (editingItem.imageUrl ? 1 : 0)})</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!scientificName.trim()) {
+                          setFormError('Please enter a scientific name first.');
+                          return;
+                        }
+                        try {
+                          const res = await fetch('/data/flora_bangladesh_photos.json');
+                          if (res.ok) {
+                            const floraMap = await res.json();
+                            const key = Object.keys(floraMap).find(k => 
+                              k.toLowerCase() === scientificName.trim().toLowerCase() ||
+                              k.toLowerCase().includes(scientificName.trim().toLowerCase()) ||
+                              scientificName.trim().toLowerCase().includes(k.toLowerCase())
+                            );
+                            if (key && floraMap[key]) {
+                              setImageUrl(floraMap[key].imageUrl);
+                            } else {
+                              setFormError(`No photo found on Flora of Bangladesh for ${scientificName}`);
+                            }
+                          }
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-800 transition-colors"
+                    >
+                      <Globe className="w-3 h-3" />
+                      <span>Fetch from Flora of Bangladesh</span>
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="text"
                   value={imageUrl}
@@ -648,6 +906,18 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
           </div>
         </div>
       )}
+
+      {/* Dedicated Botanical Photo Management Modal */}
+      <AdminSpeciesPhotosModal
+        species={managingPhotosSpecies}
+        isOpen={!!managingPhotosSpecies}
+        onClose={() => setManagingPhotosSpecies(null)}
+        onSave={(updatedSpecies) => {
+          const updatedList = species.map((s) => (s.id === updatedSpecies.id ? updatedSpecies : s));
+          onUpdateSpecies(updatedList);
+          setManagingPhotosSpecies(null);
+        }}
+      />
     </div>
   );
 };

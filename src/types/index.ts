@@ -64,6 +64,14 @@ export interface SyllabusProgress {
   lastUpdated: string;
 }
 
+export interface TreePhoto {
+  url: string;
+  caption?: string;
+  tag?: 'habit' | 'leaf' | 'bark' | 'flower' | 'fruit' | 'seed' | 'general';
+  credit?: string;
+  sourceUrl?: string;
+}
+
 export interface TreeSpecies {
   id: string;
   scientificName: string;
@@ -76,6 +84,11 @@ export interface TreeSpecies {
   distribution: string;
   silviculturalNotes: string;
   imageUrl?: string;
+  photoCredit?: string;
+  floraUrl?: string;
+  sourceUrl?: string;
+  forestEcosystem?: string;
+  morePhotos?: TreePhoto[];
   verifiedAt?: string;
 }
 
@@ -85,8 +98,9 @@ export interface GalleryItem {
   caption: string;
   location: string;
   year: string;
-  category: 'field-tour' | 'lab' | 'research' | 'campus';
+  category: 'field-tour' | 'lab' | 'research' | 'campus' | string;
   imageUrl: string;
+  photographer?: string;
 }
 
 export interface ThesisItem {

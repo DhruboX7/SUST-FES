@@ -40,6 +40,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
   // Modal State for Add / Edit
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<StudentPhotoItem | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   // Form Fields
   const [studentName, setStudentName] = useState('');
@@ -116,9 +117,17 @@ export const AdminStudentPhotosPanel: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string, itemTitle: string) => {
-    if (window.confirm(`Are you sure you want to remove the student photo "${itemTitle}"?`)) {
-      deleteStudentPhoto(id);
+  const handleDelete = (id: string) => {
+    deleteStudentPhoto(id);
+    setPhotos((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
+      saveStoredStudentPhotos(updated);
+      return updated;
+    });
+    setDeleteConfirmId(null);
+    if (editingItem?.id === id) {
+      setIsModalOpen(false);
+      setEditingItem(null);
     }
   };
 
@@ -449,13 +458,43 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
 
-                      <button
-                        onClick={() => handleDelete(photo.id, photo.title)}
-                        className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
-                        title="Delete photo permanently"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {deleteConfirmId === photo.id ? (
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(photo.id);
+                            }}
+                            className="px-2 py-1 text-[10px] font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-2xs"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteConfirmId(null);
+                            }}
+                            className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                            title="Cancel"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteConfirmId(photo.id);
+                          }}
+                          className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
+                          title="Delete photo permanently"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -658,20 +697,58 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
-                >
-                  {editingItem ? 'Save Changes' : 'Create Photo Record'}
-                </button>
+              <div className="flex items-center justify-between gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+                <div>
+                  {editingItem && (
+                    deleteConfirmId === editingItem.id ? (
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(editingItem.id)}
+                          className="px-3 py-1.5 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors shadow-xs"
+                        >
+                          Confirm Delete
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteConfirmId(null)}
+                          className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                          title="Cancel"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setDeleteConfirmId(editingItem.id)}
+                        className="px-3 py-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg flex items-center gap-1.5 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete Photo</span>
+                      </button>
+                    )
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setDeleteConfirmId(null);
+                    }}
+                    className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  >
+                    {editingItem ? 'Save Changes' : 'Create Photo Record'}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

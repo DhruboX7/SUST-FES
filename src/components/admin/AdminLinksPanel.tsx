@@ -40,6 +40,7 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
   const [linkUrl, setLinkUrl] = useState('');
   const [linkCategory, setLinkCategory] = useState<QuickLinkItem['category']>('portal');
   const [linkDescription, setLinkDescription] = useState('');
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   // Resource Link Quick Edit
   const [editingResource, setEditingResource] = useState<ResourceItem | null>(null);
@@ -100,10 +101,9 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
   };
 
   const handleDeleteQuickLink = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this link?')) {
-      const updated = quickLinks.filter((l) => l.id !== id);
-      onUpdateQuickLinks(updated);
-    }
+    const updated = quickLinks.filter((l) => l.id !== id);
+    onUpdateQuickLinks(updated);
+    setDeleteConfirmId(null);
   };
 
   // Resource Link Edit
@@ -209,13 +209,32 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
-                    <button
-                      onClick={() => handleDeleteQuickLink(link.id)}
-                      className="p-1 text-stone-400 hover:text-rose-600 rounded"
-                      title="Delete Link"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {deleteConfirmId === link.id ? (
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteQuickLink(link.id)}
+                          className="px-2 py-0.5 text-[10px] font-bold bg-rose-600 text-white rounded hover:bg-rose-700"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteConfirmId(null)}
+                          className="p-1 text-stone-400 hover:text-stone-600"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setDeleteConfirmId(link.id)}
+                        className="p-1 text-stone-400 hover:text-rose-600 rounded"
+                        title="Delete Link"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
 

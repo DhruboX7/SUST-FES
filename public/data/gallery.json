@@ -1,5 +1,55 @@
 [
   {
+    "id": "eco-ratargul-1",
+    "title": "Ratargul Freshwater Swamp Forest",
+    "caption": "Submerged Koroch (Pongamia pinnata) and Barun (Crataeva nurvala) canopy during monsoon inundation in the Gowain river basin.",
+    "category": "field-tour",
+    "location": "Ratargul Swamp Forest, Gowainghat, Sylhet",
+    "year": "2024",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Beautiful_ratargul_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "photographer": "Wikimedia Commons (Sylhet Forestry Division, CC BY-SA)"
+  },
+  {
+    "id": "eco-madhupur-2",
+    "title": "Madhupur Sal Forest Trails & Understory",
+    "caption": "Silvicultural ground flora and coppice regeneration beneath mature Shorea robusta stands.",
+    "category": "research",
+    "location": "Doklaho Range, Madhupur Tract",
+    "year": "2024",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Madhupur_forest.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "photographer": "Wikimedia Commons (Taufiqur Rahman, CC BY-SA)"
+  },
+  {
+    "id": "eco-madhupur-1",
+    "title": "Madhupur National Park Moist Deciduous Sal Forest",
+    "caption": "Vast upper canopy coverage of Shorea robusta (Sal) showing straight clear boles and seasonal leaf shedding in the central terrace tract.",
+    "category": "field-tour",
+    "location": "Madhupur National Park, Tangail",
+    "year": "2024",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/A_vast_canopy_coverage_on_the_Madhupr_National_Forest.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "photographer": "Wikimedia Commons (Sal Forest Expedition, CC BY-SA)"
+  },
+  {
+    "id": "eco-sundarbans-2",
+    "title": "Nipa Palm (Golpata) Tidal Fringe",
+    "caption": "Thick natural stand of Golpata (Nypa fruticans) flourishing along brackish canal banks with stilt roots and mangrove adaptations.",
+    "category": "field-tour",
+    "location": "Kotka Sanctuary, Sundarbans East Zone",
+    "year": "2024",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/32/Bangladeshi_Nipa_Palm_in_the_Sundarbans.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "photographer": "Wikimedia Commons (Kmonsoor, CC BY-SA 3.0)"
+  },
+  {
+    "id": "eco-sundarbans-1",
+    "title": "Sundarbans Mangrove Biosphere Reserve",
+    "caption": "Tidal waterway flanked by dense Sundari (Heritiera fomes) and Gewa canopy in the world’s largest mangrove forest.",
+    "category": "field-tour",
+    "location": "Sundarbans Mangrove Forest, Bagerhat / Khulna",
+    "year": "2024",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fe/A_View_of_the_Largest_Mangrove_Forest_in_the_World.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "photographer": "Wikimedia Commons (Faisal Akram Ether, CC BY-SA)"
+  },
+  {
     "id": "gal-1",
     "title": "Annual Silvicultural Field Tour - Lawachara National Park",
     "caption": "Undergraduate 3rd year students conducting canopy density sampling and natural regeneration count under Dipterocarpus turbinatus mature stands.",

@@ -1,6 +1,6 @@
 {
-  "summary": "Comprehensive implementation plan for adding tree species botanical photos, a dedicated student field photography submission pipeline, and an administrative moderation panel inside the Manage console.",
-  "updatedAt": "2026-11-04T16:28:59.932986282Z",
+  "summary": "Comprehensive plan to extract and curate authentic, high-resolution botanical photography from the Bangladesh Forest Department (BFIS), Bangladesh National Herbarium (BNH), Flora of Bangladesh, and Wikimedia Commons. The plan enriches all 55 catalog tree species and key ecosystem anchors (Sundari, Sal, Golpata, Jackfruit, Mango, Sundarbans, and Madhupur) with verified habit covers, morphological plates (leaves, bark, flowers, fruits), and trusted source badges.",
+  "updatedAt": "2026-11-06T12:57:04.828337288Z",
   "requestFeedback": true,
   "userFacing": true
 }

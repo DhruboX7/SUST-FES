@@ -22,6 +22,7 @@ import {
 import { TreeSpecies, StudentPhotoItem } from '../types';
 import { getStoredSpecies, getStoredStudentPhotos } from '../utils/storage';
 import { SubmitStudentPhotoModal } from './SubmitStudentPhotoModal';
+import { TreeSpeciesDetailModal } from './TreeSpeciesDetailModal';
 
 export const SpeciesDatabaseView: React.FC = () => {
   usePageMeta({
@@ -33,8 +34,12 @@ export const SpeciesDatabaseView: React.FC = () => {
   const [studentPhotos, setStudentPhotos] = useState<StudentPhotoItem[]>([]);
   const [search, setSearch] = useState('');
   const [selectedFamily, setSelectedFamily] = useState<string>('all');
+  const [selectedEcosystem, setSelectedEcosystem] = useState<string>('all');
   const [selectedUse, setSelectedUse] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
+
+  // Selected Tree Species Detail Modal (with multi-photo gallery)
+  const [selectedTreeDetail, setSelectedTreeDetail] = useState<TreeSpecies | null>(null);
 
   // Student Photo Submission Modal
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -46,6 +51,7 @@ export const SpeciesDatabaseView: React.FC = () => {
     title: string;
     scientificName?: string;
     credit?: string;
+    floraUrl?: string;
   } | null>(null);
 
   const loadData = async () => {
@@ -86,6 +92,14 @@ export const SpeciesDatabaseView: React.FC = () => {
     return Array.from(set).sort();
   }, [species]);
 
+  const ecosystems = useMemo(() => {
+    const set = new Set<string>();
+    species.forEach((s) => {
+      if (s.forestEcosystem) set.add(s.forestEcosystem);
+    });
+    return Array.from(set).sort();
+  }, [species]);
+
   const filteredSpecies = useMemo(() => {
     return species.filter((s) => {
       if (search.trim()) {
@@ -96,14 +110,16 @@ export const SpeciesDatabaseView: React.FC = () => {
           s.banglaName.toLowerCase().includes(q) ||
           s.family.toLowerCase().includes(q) ||
           s.distribution.toLowerCase().includes(q) ||
-          s.silviculturalNotes.toLowerCase().includes(q);
+          s.silviculturalNotes.toLowerCase().includes(q) ||
+          (s.forestEcosystem && s.forestEcosystem.toLowerCase().includes(q));
         if (!matches) return false;
       }
       if (selectedFamily !== 'all' && s.family !== selectedFamily) return false;
+      if (selectedEcosystem !== 'all' && s.forestEcosystem !== selectedEcosystem) return false;
       if (selectedUse !== 'all' && !s.uses.includes(selectedUse)) return false;
       return true;
     });
-  }, [species, search, selectedFamily, selectedUse]);
+  }, [species, search, selectedFamily, selectedEcosystem, selectedUse]);
 
   // Group approved student photos by species ID or scientific name
   const studentPhotosBySpecies = useMemo(() => {
@@ -171,26 +187,39 @@ export const SpeciesDatabaseView: React.FC = () => {
           />
         </div>
 
-        {/* Family Filter */}
-        <div className="flex items-center gap-2">
+        {/* Family and Ecosystem Filters */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={selectedEcosystem}
+            onChange={(e) => setSelectedEcosystem(e.target.value)}
+            aria-label="Filter by forest ecosystem"
+            className="px-3 py-2 rounded-xl text-xs font-semibold bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200"
+          >
+            <option value="all">All Forest Ecosystems ({ecosystems.length})</option>
+            {ecosystems.map((eco) => (
+              <option key={eco} value={eco}>{eco}</option>
+            ))}
+          </select>
+
           <select
             value={selectedFamily}
             onChange={(e) => setSelectedFamily(e.target.value)}
             aria-label="Filter by botanical family"
             className="px-3 py-2 rounded-xl text-xs font-semibold bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200"
           >
-            <option value="all">All Botanical Families ({families.length})</option>
+            <option value="all">All Families ({families.length})</option>
             {families.map((f) => (
               <option key={f} value={f}>{f}</option>
             ))}
           </select>
 
           {/* Reset button if filtered */}
-          {(search || selectedFamily !== 'all' || selectedUse !== 'all') && (
+          {(search || selectedFamily !== 'all' || selectedEcosystem !== 'all' || selectedUse !== 'all') && (
             <button
               onClick={() => {
                 setSearch('');
                 setSelectedFamily('all');
+                setSelectedEcosystem('all');
                 setSelectedUse('all');
               }}
               className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 bg-stone-100 dark:bg-stone-800 transition-colors shrink-0"
@@ -219,6 +248,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                                studentPhotosBySpecies.get(sp.scientificName.toLowerCase()) || [];
 
             const photoUrl = sp.imageUrl || '/assets/hero_forestry_sust.webp';
+            const totalPhotos = 1 + (sp.morePhotos?.length || 0) + studentObs.length;
 
             return (
               <div
@@ -226,15 +256,10 @@ export const SpeciesDatabaseView: React.FC = () => {
                 className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs hover:border-emerald-500/50 transition-all flex flex-col justify-between"
               >
                 <div>
-                  {/* Photo Habit Banner */}
+                  {/* Photo Habit Banner - Clicking opens Multi-Photo Detail Modal */}
                   <div 
                     className="relative h-52 sm:h-56 bg-stone-950 overflow-hidden cursor-pointer group"
-                    onClick={() => setActiveLightbox({
-                      url: photoUrl,
-                      title: `${sp.commonName} (${sp.banglaName})`,
-                      scientificName: sp.scientificName,
-                      credit: 'Botanical Herbarium Reference Photo'
-                    })}
+                    onClick={() => setSelectedTreeDetail(sp)}
                   >
                     <img
                       src={photoUrl}
@@ -247,10 +272,10 @@ export const SpeciesDatabaseView: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/20" />
 
-                    {/* Lightbox Trigger Overlay */}
+                    {/* Detail Trigger Overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold backdrop-blur-2xs">
-                      <ZoomIn className="w-4 h-4" />
-                      <span>Enlarge Botanical Photo</span>
+                      <Camera className="w-4 h-4 text-emerald-400" />
+                      <span>View All Photos ({totalPhotos}) & Details</span>
                     </div>
 
                     {/* Family & Conservation Badge on Photo */}
@@ -270,21 +295,74 @@ export const SpeciesDatabaseView: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Title in Photo Overlay */}
-                    <div className="absolute bottom-3 left-3 right-3 text-white">
-                      <h2 className="text-lg sm:text-xl font-black italic leading-tight drop-shadow-sm">
-                        {sp.scientificName}
-                      </h2>
-                      <div className="text-xs text-stone-200 font-medium flex items-center gap-1.5 drop-shadow-sm">
-                        <span>{sp.commonName}</span>
-                        <span>·</span>
-                        <span className="font-semibold text-emerald-300 font-sans">{sp.banglaName}</span>
+                    {/* Title & Photo Count Overlay */}
+                    <div 
+                      className="absolute bottom-3 left-3 right-3 text-white flex items-end justify-between gap-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedTreeDetail(sp);
+                      }}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <h2 className="text-lg sm:text-xl font-black italic leading-tight drop-shadow-sm hover:text-emerald-300 transition-colors truncate">
+                          {sp.scientificName}
+                        </h2>
+                        <div className="text-xs text-stone-200 font-medium flex items-center gap-1.5 drop-shadow-sm truncate">
+                          <span>{sp.commonName}</span>
+                          <span>·</span>
+                          <span className="font-semibold text-emerald-300 font-sans">{sp.banglaName}</span>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0">
+                        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/80 text-white border border-white/20 backdrop-blur-xs flex items-center gap-1">
+                          <Camera className="w-3 h-3 text-emerald-400" />
+                          <span>{totalPhotos} Photos</span>
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Body Content */}
                   <div className="p-5 space-y-3.5">
+                    {/* Ecosystem & Photo Provenance Strip */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs border-b border-stone-100 dark:border-stone-800 pb-2.5">
+                      {sp.forestEcosystem ? (
+                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
+                          <TreePine className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>{sp.forestEcosystem}</span>
+                        </div>
+                      ) : (
+                        <div />
+                      )}
+
+                      {sp.photoCredit && (
+                        <div className="flex items-center gap-2 text-[10px] text-stone-500 dark:text-stone-400">
+                          <span className="truncate max-w-[200px]">{sp.photoCredit}</span>
+                          {(sp.sourceUrl || sp.floraUrl) && (
+                            <a
+                              href={sp.sourceUrl || sp.floraUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-0.5 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <span>
+                                {(sp.sourceUrl || '').includes('wikimedia')
+                                  ? 'Wikimedia'
+                                  : (sp.sourceUrl || '').includes('bforest.gov.bd')
+                                  ? 'BFIS'
+                                  : (sp.sourceUrl || '').includes('bnh.gov.bd')
+                                  ? 'BNH'
+                                  : 'Source'}
+                              </span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
                     {/* Natural Distribution & Habitat */}
                     <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800/80 text-xs space-y-1.5">
                       <div className="flex items-start gap-2 text-stone-700 dark:text-stone-300">
@@ -308,9 +386,79 @@ export const SpeciesDatabaseView: React.FC = () => {
                       {sp.silviculturalNotes}
                     </p>
 
+                    {/* Botanical Photo Plates Strip (Habit, Leaf, Bark, Flower, Fruit) */}
+                    {sp.morePhotos && sp.morePhotos.length > 0 && (
+                      <div className="pt-2">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-stone-700 dark:text-stone-300 mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <Layers className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Botanical Plates ({sp.morePhotos.length + 1})</span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedTreeDetail(sp)}
+                            className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-0.5"
+                          >
+                            <Plus className="w-2.5 h-2.5" />
+                            <span>Add photo</span>
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                          {/* Primary thumbnail */}
+                          <button
+                            type="button"
+                            onClick={() => setSelectedTreeDetail(sp)}
+                            className="relative w-14 h-12 rounded-lg overflow-hidden shrink-0 border border-emerald-500/60 bg-stone-900 group"
+                            title="Primary Specimen Habit"
+                          >
+                            <img
+                              src={photoUrl}
+                              alt={sp.scientificName}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                            <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] text-emerald-300 text-center font-mono">
+                              Habit
+                            </span>
+                          </button>
+                          {/* Additional botanical plates */}
+                          {sp.morePhotos.slice(0, 4).map((p, pIdx) => (
+                            <button
+                              key={pIdx}
+                              type="button"
+                              onClick={() => setSelectedTreeDetail(sp)}
+                              className="relative w-14 h-12 rounded-lg overflow-hidden shrink-0 border border-stone-200 dark:border-stone-800 bg-stone-900 hover:border-emerald-500 transition-colors group"
+                              title={p.caption || `Plate ${pIdx + 1}`}
+                            >
+                              <img
+                                src={p.url}
+                                alt={p.caption || `Plate ${pIdx + 1}`}
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
+                                }}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              />
+                              <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] text-stone-300 text-center font-mono capitalize">
+                                {p.tag || `#${pIdx + 1}`}
+                              </span>
+                            </button>
+                          ))}
+                          {sp.morePhotos.length > 4 && (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedTreeDetail(sp)}
+                              className="w-14 h-12 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-[10px] font-bold flex flex-col items-center justify-center shrink-0 border border-stone-200 dark:border-stone-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 transition-colors"
+                            >
+                              <span>+{sp.morePhotos.length - 4}</span>
+                              <span className="text-[8px] text-stone-400">more</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Student Observations Section if available */}
                     {studentObs.length > 0 && (
-                      <div className="pt-3 border-t border-stone-100 dark:border-stone-800">
+                      <div className="pt-2 border-t border-stone-100 dark:border-stone-800">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[11px] font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
                             <Camera className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
@@ -322,12 +470,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                           {studentObs.map((obs) => (
                             <div
                               key={obs.id}
-                              onClick={() => setActiveLightbox({
-                                url: obs.imageUrl,
-                                title: obs.title,
-                                scientificName: sp.scientificName,
-                                credit: `Captured by ${obs.studentName} ${obs.studentBatch ? `(${obs.studentBatch})` : ''} · ${obs.location}`
-                              })}
+                              onClick={() => setSelectedTreeDetail(sp)}
                               className="relative group shrink-0 w-24 h-16 rounded-lg overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-950 cursor-pointer shadow-xs hover:border-emerald-500"
                               title={`${obs.title} by ${obs.studentName}`}
                             >
@@ -350,7 +493,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Footer with Uses & Contribute Button */}
+                {/* Footer with Uses & Actions */}
                 <div className="p-5 pt-0 space-y-3">
                   <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex flex-wrap gap-1.5">
                     {sp.uses.map((u, i) => (
@@ -363,18 +506,36 @@ export const SpeciesDatabaseView: React.FC = () => {
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-stone-100 dark:border-stone-800">
-                    <span className="text-[11px] text-stone-400 font-mono">
-                      SUST FES Herbarium
-                    </span>
+                  <div className="flex items-center justify-between pt-2 border-t border-stone-100 dark:border-stone-800 gap-2 flex-wrap">
                     <button
                       type="button"
-                      onClick={() => handleOpenContribute(sp.id)}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+                      onClick={() => setSelectedTreeDetail(sp)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Submit Photo for {sp.commonName}</span>
+                      <Camera className="w-3.5 h-3.5" />
+                      <span>View All Photos ({totalPhotos}) & Details</span>
                     </button>
+
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTreeDetail(sp)}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 transition-colors"
+                        title="Add more photos to this tree species"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Photo</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenContribute(sp.id)}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+                      >
+                        <User className="w-3.5 h-3.5" />
+                        <span>Student Lens</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -410,6 +571,17 @@ export const SpeciesDatabaseView: React.FC = () => {
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
+                {activeLightbox.floraUrl && (
+                  <a
+                    href={activeLightbox.floraUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-900/90 hover:bg-emerald-800 text-emerald-200 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-emerald-700/60"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Flora of Bangladesh</span>
+                  </a>
+                )}
                 <a
                   href={activeLightbox.url}
                   target="_blank"
@@ -438,6 +610,23 @@ export const SpeciesDatabaseView: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Tree Species Multi-Photo & Detail Modal with 'Add More Photos' Option */}
+      <TreeSpeciesDetailModal
+        species={selectedTreeDetail}
+        studentPhotos={studentPhotos}
+        isOpen={!!selectedTreeDetail}
+        onClose={() => setSelectedTreeDetail(null)}
+        onOpenStudentSubmit={(speciesId) => {
+          setSelectedTreeDetail(null);
+          setContributeSpeciesId(speciesId);
+          setIsSubmitModalOpen(true);
+        }}
+        onSpeciesUpdated={(updated) => {
+          setSpecies((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+          setSelectedTreeDetail(updated);
+        }}
+      />
 
       {/* Student Submission Modal */}
       <SubmitStudentPhotoModal

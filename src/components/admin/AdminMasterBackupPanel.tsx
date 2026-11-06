@@ -52,6 +52,7 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
   // Reset Modal
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [resetInput, setResetInput] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
 
   const handlePinChange = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +99,6 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
 
   const handleResetFactory = async () => {
     if (resetInput.trim() !== 'RESET SUST FES') {
-      alert('Please type "RESET SUST FES" exactly to confirm factory reset.');
       return;
     }
 
@@ -106,7 +106,8 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
     setIsResetConfirmOpen(false);
     setResetInput('');
     onRefreshAll();
-    alert('All portal databases have been reset to official SUST FES default data.');
+    setResetMessage('All portal databases have been successfully reset to official SUST FES default data.');
+    setTimeout(() => setResetMessage(''), 6000);
   };
 
   return (
@@ -152,6 +153,13 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
           </div>
         </div>
       </div>
+
+      {resetMessage && (
+        <div className="p-4 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 font-semibold flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+          <span>{resetMessage}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. MASTER BACKUP & RESTORE */}

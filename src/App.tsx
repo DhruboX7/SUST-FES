@@ -101,6 +101,18 @@ function AppContent() {
     setIsLoading(true);
     setLoadError(null);
     try {
+      // If local storage is already initialized, use it as the source of truth so deletions persist
+      const localRaw = localStorage.getItem('sust_fes_resources_obe_v2');
+      if (localRaw !== null) {
+        const parsed = JSON.parse(localRaw);
+        if (Array.isArray(parsed)) {
+          setResources(parsed);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // First time initialization from static archive
       const res = await fetch('/data/resources.json');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const rawData = await res.json();
@@ -117,15 +129,8 @@ function AppContent() {
         };
       }) : [];
 
-      // Combine with local additions
-      const localStored = getStoredResources();
-      const combined = [...parsedItems];
-      for (const item of localStored) {
-        if (!combined.some((c) => c.id === item.id)) {
-          combined.push(item);
-        }
-      }
-      setResources(combined);
+      setResources(parsedItems);
+      saveStoredResources(parsedItems);
     } catch (err) {
       console.error('Failed to load static resources, falling back to local storage:', err);
       const fallback = getStoredResources();

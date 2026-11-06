@@ -144,6 +144,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
   // Derived counts
   const pyqCount = resources.filter((r) => r.category === 'pyq').length;
+  const totalTreePhotos = species.reduce(
+    (acc, s) => acc + (s.imageUrl ? 1 : 0) + (s.morePhotos?.length || 0),
+    0
+  );
 
   // 1. PIN UNLOCK SCREEN
   if (!isAuthenticated) {
@@ -271,7 +275,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </span>
         </button>
 
-        {/* 3. Tree Species */}
+        {/* 3. Tree Species & Photo Management */}
         <button
           onClick={() => setActiveTab('species')}
           className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
@@ -281,9 +285,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
           }`}
         >
           <Trees className="w-3.5 h-3.5" />
-          <span>Tree Species (AI Botany)</span>
+          <span>Tree Species & Photos</span>
           <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
-            {species.length}
+            {species.length} ({totalTreePhotos} photos)
           </span>
         </button>
 

@@ -190,10 +190,9 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
   };
 
   const handleBatchDelete = () => {
-    if (window.confirm(`Are you sure you want to delete ${selectedIds.length} exam question papers?`)) {
-      selectedIds.forEach((id) => onDeleteResource(id));
-      setSelectedIds([]);
-    }
+    selectedIds.forEach((id) => onDeleteResource(id));
+    setSelectedIds([]);
+    setDeleteConfirmId(null);
   };
 
   return (
@@ -215,13 +214,34 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
         <div className="flex items-center gap-2">
           {selectedIds.length > 0 && (
-            <button
-              onClick={handleBatchDelete}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Delete Selected ({selectedIds.length})</span>
-            </button>
+            deleteConfirmId === 'batch' ? (
+              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+                <button
+                  type="button"
+                  onClick={handleBatchDelete}
+                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                >
+                  Confirm Delete ({selectedIds.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeleteConfirmId(null)}
+                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  title="Cancel"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmId('batch')}
+                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Selected ({selectedIds.length})</span>
+              </button>
+            )
           )}
 
           <button

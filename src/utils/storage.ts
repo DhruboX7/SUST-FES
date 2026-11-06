@@ -1,6 +1,7 @@
 import { 
   ResourceItem, 
   TreeSpecies, 
+  TreePhoto,
   GalleryItem, 
   ThesisItem, 
   NoticeItem, 
@@ -79,9 +80,9 @@ function notifyDataUpdate(collection: string) {
 export function getStoredResources(): ResourceItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_RESOURCES);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
@@ -113,17 +114,58 @@ export function resetStoredResourcesToDefaults(): ResourceItem[] {
 
 export async function getStoredSpecies(): Promise<TreeSpecies[]> {
   try {
+    const res = await fetch('/data/species.json');
+    const defaultData: TreeSpecies[] = res.ok ? await res.json() : [];
+
     const raw = localStorage.getItem(STORAGE_KEY_SPECIES);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      // Ensure we have at least 50 items and images are populated
-      if (Array.isArray(parsed) && parsed.length >= 50 && parsed.some(s => s.imageUrl && s.imageUrl.length > 5)) {
-        return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Merge default enriched species data with local custom contributions
+        const localMap = new Map<string, TreeSpecies>(parsed.map((sp: TreeSpecies) => [sp.id, sp]));
+        const mergedList: TreeSpecies[] = [];
+
+        // 1. Process all official default species
+        for (const def of defaultData) {
+          const local = localMap.get(def.id);
+          if (!local) {
+            mergedList.push(def);
+          } else {
+            // Merge photos without duplicating URLs
+            const existingUrls = new Set([
+              local.imageUrl,
+              ...(local.morePhotos || []).map((p) => p.url)
+            ]);
+            const newMorePhotos = [...(local.morePhotos || [])];
+            for (const p of def.morePhotos || []) {
+              if (!existingUrls.has(p.url)) {
+                newMorePhotos.push(p);
+                existingUrls.add(p.url);
+              }
+            }
+
+            mergedList.push({
+              ...local,
+              sourceUrl: local.sourceUrl || def.sourceUrl,
+              forestEcosystem: local.forestEcosystem || def.forestEcosystem,
+              imageUrl: def.imageUrl || local.imageUrl,
+              morePhotos: newMorePhotos
+            });
+            localMap.delete(def.id);
+          }
+        }
+
+        // 2. Add any custom species added by user
+        for (const remaining of localMap.values()) {
+          mergedList.push(remaining);
+        }
+
+        saveStoredSpecies(mergedList);
+        return mergedList;
       }
     }
-    const res = await fetch('/data/species.json');
-    if (res.ok) {
-      const defaultData: TreeSpecies[] = await res.json();
+
+    if (defaultData.length > 0) {
       saveStoredSpecies(defaultData);
       return defaultData;
     }
@@ -155,22 +197,55 @@ export function saveStoredSpecies(species: TreeSpecies[]): void {
   }
 }
 
+export function addPhotoToTreeSpecies(speciesId: string, photo: TreePhoto): TreeSpecies | null {
+  const current = getStoredSpeciesSync();
+  let updatedSpecies: TreeSpecies | null = null;
+  const next = current.map((sp) => {
+    if (sp.id === speciesId) {
+      const photos = sp.morePhotos || [];
+      updatedSpecies = {
+        ...sp,
+        morePhotos: [...photos, photo]
+      };
+      return updatedSpecies;
+    }
+    return sp;
+  });
+
+  if (updatedSpecies) {
+    saveStoredSpecies(next);
+  }
+  return updatedSpecies;
+}
+
 // ==========================================
 // 3. FIELD & PRACTICAL GALLERY
 // ==========================================
 
 export async function getStoredGallery(): Promise<GalleryItem[]> {
   try {
+    const res = await fetch('/data/gallery.json');
+    const defaultData: GalleryItem[] = res.ok ? await res.json() : [];
+
     const raw = localStorage.getItem(STORAGE_KEY_GALLERY);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+        // Merge any new default gallery items (e.g. ecosystem albums) with local custom photos
+        const localIds = new Set(parsed.map((item: GalleryItem) => item.id));
+        const merged = [...parsed];
+        for (const defItem of defaultData) {
+          if (!localIds.has(defItem.id)) {
+            merged.push(defItem);
+            localIds.add(defItem.id);
+          }
+        }
+        saveStoredGallery(merged);
+        return merged;
       }
     }
-    const res = await fetch('/data/gallery.json');
-    if (res.ok) {
-      const defaultData: GalleryItem[] = await res.json();
+
+    if (defaultData.length > 0) {
       saveStoredGallery(defaultData);
       return defaultData;
     }
@@ -209,9 +284,9 @@ export function saveStoredGallery(items: GalleryItem[]): void {
 export async function getStoredTheses(): Promise<ThesisItem[]> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_THESES);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
@@ -256,9 +331,9 @@ export function saveStoredTheses(theses: ThesisItem[]): void {
 export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_NOTICES);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
@@ -380,9 +455,9 @@ export function getStoredStudentPhotosSync(): StudentPhotoItem[] {
 export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_STUDENT_PHOTOS);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
