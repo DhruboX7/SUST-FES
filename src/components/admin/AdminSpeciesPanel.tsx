@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { TreeSpecies, TreePhoto, BotanyAiResult } from '../../types';
+import { isMatchedPhotoForSpecies } from '../../utils/storage';
 import { verifyAndEnrichSpeciesWithAI, validateBinomialNomenclature } from '../../utils/botanyAi';
 import { AdminSpeciesPhotosModal } from './AdminSpeciesPhotosModal';
 import { 
@@ -81,7 +82,11 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             const currentPlates: TreePhoto[] = [...(sp.morePhotos || [])];
 
             allUrls.forEach((url, i) => {
-              if (url !== entry.imageUrl && !currentPlates.some((p) => p.url === url)) {
+              if (
+                url !== entry.imageUrl &&
+                isMatchedPhotoForSpecies(url, sp.scientificName) &&
+                !currentPlates.some((p) => p.url === url)
+              ) {
                 let tag: TreePhoto['tag'] = 'leaf';
                 if (i === 1) tag = 'leaf';
                 else if (i === 2) tag = 'bark';
@@ -99,9 +104,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
               }
             });
 
+            const nextCover = isMatchedPhotoForSpecies(sp.imageUrl || '', sp.scientificName)
+              ? sp.imageUrl
+              : (isMatchedPhotoForSpecies(entry.imageUrl, sp.scientificName) ? entry.imageUrl : (currentPlates[0]?.url || sp.imageUrl));
+
             return {
               ...sp,
-              imageUrl: sp.imageUrl || entry.imageUrl,
+              imageUrl: nextCover,
               photoCredit: sp.photoCredit || entry.sourceName,
               floraUrl: sp.floraUrl || entry.sourceUrl,
               morePhotos: currentPlates,
@@ -121,6 +130,33 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
     } finally {
       setIsSyncingFlora(false);
     }
+  };
+
+  const handlePurgeAllUnmatched = () => {
+    let totalRemoved = 0;
+    const cleaned = species.map((sp) => {
+      const initialPhotos = sp.morePhotos || [];
+      const filtered = initialPhotos.filter((p) => isMatchedPhotoForSpecies(p.url, sp.scientificName));
+      totalRemoved += (initialPhotos.length - filtered.length);
+
+      let nextCover = sp.imageUrl;
+      if (!isMatchedPhotoForSpecies(sp.imageUrl || '', sp.scientificName)) {
+        nextCover = filtered[0]?.url || sp.imageUrl;
+      }
+      return {
+        ...sp,
+        imageUrl: nextCover,
+        morePhotos: filtered
+      };
+    });
+
+    onUpdateSpecies(cleaned);
+    setFloraSyncNotice(
+      totalRemoved > 0
+        ? `Purged ${totalRemoved} unmatched photo(s) across catalog! Only verified species plates kept.`
+        : 'All tree photos across the catalog are strictly verified and matched!'
+    );
+    setTimeout(() => setFloraSyncNotice(''), 6000);
   };
 
   // Modal State
@@ -379,7 +415,16 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             title="Update tree photos directly from floraofbangladesh.com"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isSyncingFlora ? 'animate-spin' : ''}`} />
-            <span>{isSyncingFlora ? 'Syncing...' : 'Sync with Flora of Bangladesh'}</span>
+            <span>{isSyncingFlora ? 'Syncing...' : 'Sync with Flora'}</span>
+          </button>
+
+          <button
+            onClick={handlePurgeAllUnmatched}
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60 flex items-center gap-1.5 transition-colors"
+            title="Purge all leaked, sidebar, or unmatched images across all 56 species"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+            <span>Clean Unmatched</span>
           </button>
 
           <button

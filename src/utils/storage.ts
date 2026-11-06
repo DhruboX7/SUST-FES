@@ -112,6 +112,21 @@ export function resetStoredResourcesToDefaults(): ResourceItem[] {
 // 2. TREE SPECIES MANAGEMENT
 // ==========================================
 
+export function isMatchedPhotoForSpecies(url: string, scientificName: string): boolean {
+  if (!url) return false;
+  const u = decodeURIComponent(url).toLowerCase();
+  if (u.includes('images.unsplash.com')) return false;
+  if (u.includes('tripura_sundri_temple') || u.includes('temple')) return false;
+  if (u.endsWith('.svg') || u.includes('.svg?')) return false;
+  if (u.includes('sunderbans_tiger_reserve_india_david_raju_(49)')) return false;
+  if (u.includes('tinospora_cordifolia') || u.includes('trichosanthes_tricuspidata') || u.includes('makal_mahakal')) return false;
+  if (u.includes('bombax_ceiba') && scientificName !== 'Bombax ceiba') return false;
+  if (u.includes('terminalia_catappa') && scientificName !== 'Terminalia catappa') return false;
+  if (u.includes('artocarpus_heterophyllus') && scientificName !== 'Artocarpus heterophyllus') return false;
+  if (u.includes('albizia_lebbeck') && scientificName !== 'Albizia lebbeck') return false;
+  return true;
+}
+
 export async function getStoredSpecies(): Promise<TreeSpecies[]> {
   try {
     const res = await fetch('/data/species.json');
@@ -131,33 +146,40 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
           if (!local) {
             mergedList.push(def);
           } else {
-            // Merge photos without duplicating URLs
-            const existingUrls = new Set([
-              local.imageUrl,
-              ...(local.morePhotos || []).map((p) => p.url)
-            ]);
-            const newMorePhotos = [...(local.morePhotos || [])];
-            for (const p of def.morePhotos || []) {
-              if (!existingUrls.has(p.url)) {
-                newMorePhotos.push(p);
-                existingUrls.add(p.url);
-              }
-            }
+            // Clean local photos: only keep matched photos
+            const defUrls = new Set((def.morePhotos || []).map((p) => p.url));
+            const customMatchedPhotos = (local.morePhotos || []).filter(
+              (p) => !defUrls.has(p.url) && isMatchedPhotoForSpecies(p.url, def.scientificName)
+            );
+
+            const allMatchedPhotos = [...(def.morePhotos || []), ...customMatchedPhotos];
 
             mergedList.push({
               ...local,
-              sourceUrl: local.sourceUrl || def.sourceUrl,
-              forestEcosystem: local.forestEcosystem || def.forestEcosystem,
-              imageUrl: def.imageUrl || local.imageUrl,
-              morePhotos: newMorePhotos
+              sourceUrl: def.sourceUrl || local.sourceUrl,
+              forestEcosystem: def.forestEcosystem || local.forestEcosystem,
+              imageUrl: isMatchedPhotoForSpecies(def.imageUrl || '', def.scientificName)
+                ? def.imageUrl
+                : (allMatchedPhotos[0]?.url || def.imageUrl),
+              photoCredit: def.photoCredit || local.photoCredit,
+              morePhotos: allMatchedPhotos
             });
             localMap.delete(def.id);
           }
         }
 
-        // 2. Add any custom species added by user
+        // 2. Add any custom species added by user (cleaning unmatched photos)
         for (const remaining of localMap.values()) {
-          mergedList.push(remaining);
+          const cleanedPhotos = (remaining.morePhotos || []).filter((p) =>
+            isMatchedPhotoForSpecies(p.url, remaining.scientificName)
+          );
+          mergedList.push({
+            ...remaining,
+            morePhotos: cleanedPhotos,
+            imageUrl: isMatchedPhotoForSpecies(remaining.imageUrl || '', remaining.scientificName)
+              ? remaining.imageUrl
+              : (cleanedPhotos[0]?.url || remaining.imageUrl)
+          });
         }
 
         saveStoredSpecies(mergedList);

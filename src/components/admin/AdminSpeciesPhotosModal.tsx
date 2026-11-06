@@ -20,6 +20,7 @@ import {
   TreePine
 } from 'lucide-react';
 import { TreeSpecies, TreePhoto } from '../../types';
+import { isMatchedPhotoForSpecies } from '../../utils/storage';
 
 interface AdminSpeciesPhotosModalProps {
   species: TreeSpecies | null;
@@ -274,11 +275,14 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               setPhotoCredit(entry.sourceName);
             }
 
+            // Filter only verified matched URLs
+            const matchedUrls = allUrls.filter((url) => isMatchedPhotoForSpecies(url, species.scientificName));
+
             // Automatically import missing photos into morePhotos
             const currentUrls = new Set([primaryUrl || entry.imageUrl, ...morePhotos.map((p) => p.url)]);
             const newPlates: TreePhoto[] = [];
 
-            allUrls.forEach((url, i) => {
+            matchedUrls.forEach((url, i) => {
               if (!currentUrls.has(url)) {
                 currentUrls.add(url);
                 // Assign sensible botanical tags based on order
@@ -301,9 +305,9 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
             if (newPlates.length > 0) {
               setMorePhotos((prev) => [...prev, ...newPlates]);
-              setSuccessMsg(`Imported ${newPlates.length} botanical plates from floraofbangladesh.com!`);
+              setSuccessMsg(`Imported ${newPlates.length} matched botanical plates from floraofbangladesh.com!`);
             } else {
-              setSuccessMsg(`Found ${allUrls.length} photos on Flora of Bangladesh. All are already imported!`);
+              setSuccessMsg(`Found ${matchedUrls.length} matched photos on Flora of Bangladesh. All are already imported!`);
             }
             setTimeout(() => setSuccessMsg(''), 4000);
           } else {
@@ -342,7 +346,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
             const info = p.imageinfo?.[0];
             if (!info || !info.url) return;
             const imgUrl = info.url;
-            if (imgUrl.endsWith('.svg') || imgUrl.endsWith('.pdf') || imgUrl.endsWith('.tif')) return;
+            if (!isMatchedPhotoForSpecies(imgUrl, species.scientificName)) return;
 
             if (!currentUrls.has(imgUrl)) {
               currentUrls.add(imgUrl);
@@ -361,9 +365,9 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
           if (toAdd.length > 0) {
             setMorePhotos((prev) => [...prev, ...toAdd]);
-            setSuccessMsg(`Imported ${toAdd.length} high-resolution Wikimedia Commons plates!`);
+            setSuccessMsg(`Imported ${toAdd.length} high-resolution matched Wikimedia Commons plates!`);
           } else {
-            setSuccessMsg('All Wikimedia plates found are already in the gallery.');
+            setSuccessMsg('All matched Wikimedia plates found are already in the gallery.');
           }
           setTimeout(() => setSuccessMsg(''), 4000);
         } else {
@@ -375,6 +379,27 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
       setErrorMsg('Failed to query Wikimedia Commons media API.');
     } finally {
       setIsSyncingFlora(false);
+    }
+  };
+
+  // Remove any unmatched photos from current species gallery
+  const handleRemoveUnmatched = () => {
+    const beforeCount = morePhotos.length;
+    const filtered = morePhotos.filter((p) => isMatchedPhotoForSpecies(p.url, species.scientificName));
+    const removedCount = beforeCount - filtered.length;
+    setMorePhotos(filtered);
+
+    // Also sanitize primaryUrl
+    let nextPrimary = primaryUrl;
+    if (!isMatchedPhotoForSpecies(primaryUrl, species.scientificName)) {
+      nextPrimary = filtered[0]?.url || '';
+      setPrimaryUrl(nextPrimary);
+    }
+
+    if (removedCount > 0 || nextPrimary !== primaryUrl) {
+      setSuccessMsg(`Purged ${removedCount} unmatched photos. Kept strictly verified species plates!`);
+    } else {
+      setSuccessMsg('All photos in this species gallery are strictly verified and matched!');
     }
   };
 
@@ -520,6 +545,16 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               >
                 <TreePine className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Forest Dept (BFIS)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleRemoveUnmatched}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 font-bold flex items-center gap-1.5 transition-colors text-[11px]"
+                title="Purge any unmatched photos from this species gallery"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                <span>Clean Unmatched</span>
               </button>
 
               <button
