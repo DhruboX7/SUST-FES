@@ -116,9 +116,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-base font-bold tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-emerald-800 dark:group-hover:text-emerald-400 transition-colors whitespace-nowrap">
                 FES SUST Library
               </span>
-              <span className="hidden sm:inline text-xs text-stone-500 dark:text-stone-400 ml-2 font-mono">
-                Sylhet
-              </span>
             </div>
           </Link>
 
