@@ -28,6 +28,12 @@ const translations: Record<Language, Record<string, string>> = {
     about: 'About FES',
     manage: 'Manage',
     contribute: 'Contribute',
+    navGroupAcademics: 'Academics',
+    navGroupTools: 'Student Tools',
+    navGroupForestry: 'Forestry & Research',
+    navGroupDepartment: 'Department',
+    navMenu: 'Menu',
+    closeMenu: 'Close Menu',
 
     // Hero
     deptTitle: 'Department of Forestry & Environmental Science',
@@ -70,6 +76,12 @@ const translations: Record<Language, Record<string, string>> = {
     about: 'বিভাগ পরিচিতি',
     manage: 'ব্যবস্থাপনা',
     contribute: 'যুক্ত করুন',
+    navGroupAcademics: 'একাডেমিক',
+    navGroupTools: 'শিক্ষার্থী সরঞ্জাম',
+    navGroupForestry: 'ফরেস্ট্রি ও গবেষণা',
+    navGroupDepartment: 'বিভাগীয় তথ্য',
+    navMenu: 'মেনু',
+    closeMenu: 'মেনু বন্ধ',
 
     // Hero
     deptTitle: 'ফরেস্ট্রি অ্যান্ড এনভায়রনমেন্টাল সায়েন্স বিভাগ',

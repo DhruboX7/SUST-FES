@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { 
-  BrowserRouter, 
+  HashRouter, 
   Routes, 
   Route, 
   useNavigate 
@@ -21,21 +21,6 @@ import { DocumentViewerModal } from './components/DocumentViewerModal';
 import { AdminModal } from './components/AdminModal';
 
 import { Check, Loader2 } from 'lucide-react';
-
-// Resolves clean router basename across development, custom domains, and GitHub Pages subpaths
-function getRouterBasename(): string {
-  const base = import.meta.env.BASE_URL;
-  if (base && base.startsWith('/') && base !== '/') {
-    return base.replace(/\/+$/, '');
-  }
-  if (typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')) {
-    const segments = window.location.pathname.split('/').filter(Boolean);
-    if (segments.length > 0) {
-      return `/${segments[0]}`;
-    }
-  }
-  return '';
-}
 
 // Code Splitting / Lazy Route Loading
 const CatalogView = lazy(() => import('./components/CatalogView').then((m) => ({ default: m.CatalogView })));
@@ -388,13 +373,11 @@ function AppContent() {
 }
 
 export default function App() {
-  const basename = getRouterBasename();
-
   return (
     <LanguageProvider>
-      <BrowserRouter basename={basename}>
+      <HashRouter>
         <AppContent />
-      </BrowserRouter>
+      </HashRouter>
     </LanguageProvider>
   );
 }
