@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { 
-  HashRouter, 
+  BrowserRouter, 
   Routes, 
   Route, 
   useNavigate 
@@ -22,13 +22,20 @@ import { AdminModal } from './components/AdminModal';
 
 import { Check, Loader2 } from 'lucide-react';
 
-/* 
- * ROUTING NOTE:
- * We use HashRouter below to ensure flawless routing on GitHub Pages and static hosting 
- * without requiring server-side fallback rewrite rules.
- * To switch to clean path URLs on hosts that support SPA history fallback (e.g. Vercel, Netlify, Cloudflare),
- * simply replace `HashRouter` with `BrowserRouter` from 'react-router-dom'.
- */
+// Resolves clean router basename across development, custom domains, and GitHub Pages subpaths
+function getRouterBasename(): string {
+  const base = import.meta.env.BASE_URL;
+  if (base && base.startsWith('/') && base !== '/') {
+    return base.replace(/\/+$/, '');
+  }
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')) {
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length > 0) {
+      return `/${segments[0]}`;
+    }
+  }
+  return '';
+}
 
 // Code Splitting / Lazy Route Loading
 const CatalogView = lazy(() => import('./components/CatalogView').then((m) => ({ default: m.CatalogView })));
@@ -58,6 +65,14 @@ function RouteLoadingFallback() {
 
 function AppContent() {
   const navigate = useNavigate();
+
+  // Backward compatibility: automatically migrate any old /#/path URLs to clean path URLs
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash && window.location.hash.startsWith('#/')) {
+      const cleanPath = window.location.hash.substring(1);
+      navigate(cleanPath, { replace: true });
+    }
+  }, [navigate]);
 
   // Dark Mode State
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -373,11 +388,13 @@ function AppContent() {
 }
 
 export default function App() {
+  const basename = getRouterBasename();
+
   return (
     <LanguageProvider>
-      <HashRouter>
+      <BrowserRouter basename={basename}>
         <AppContent />
-      </HashRouter>
+      </BrowserRouter>
     </LanguageProvider>
   );
 }

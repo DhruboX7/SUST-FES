@@ -5,7 +5,10 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
+  const basePath = process.env.VITE_BASE_PATH || process.env.BASE_PATH || './';
+
   return {
+    base: basePath,
     plugins: [
       react(),
       tailwindcss(),
@@ -16,15 +19,15 @@ export default defineConfig(() => {
         },
         includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
         manifest: {
-          id: '/',
+          id: './',
           name: 'SUST FES Academic Resource Library',
           short_name: 'FES Library',
           description: 'Department of Forestry and Environmental Science academic library and study resource archive at SUST, Sylhet.',
           theme_color: '#064e3b',
           background_color: '#0c0a09',
           display: 'standalone',
-          start_url: '/',
-          scope: '/',
+          start_url: './',
+          scope: './',
           icons: [
             {
               src: '/pwa-192x192.png',
@@ -87,6 +90,10 @@ export default defineConfig(() => {
       },
     },
     server: {
+      port: 3000,
+      host: '0.0.0.0',
+    },
+    preview: {
       port: 3000,
       host: '0.0.0.0',
     },
