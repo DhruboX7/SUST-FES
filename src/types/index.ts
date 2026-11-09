@@ -178,3 +178,23 @@ export interface BotanyAiResult {
   taxonomyNotes?: string;
   isNomenclatureValid: boolean;
 }
+
+export interface RoutineSlot {
+  id?: string;
+  day: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | string;
+  time: string;
+  courseCode: string;
+  courseTitle: string;
+  room: string;
+  teacher: string;
+  batch?: string;
+  notes?: string;
+}
+
+export interface YearRoutine {
+  year: number;
+  semester: number;
+  schedule: RoutineSlot[];
+}
+
+export type RoutineItem = YearRoutine;

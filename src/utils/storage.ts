@@ -7,7 +7,9 @@ import {
   NoticeItem, 
   QuickLinkItem,
   StudentPhotoItem,
-  MasterLibraryBackup 
+  MasterLibraryBackup,
+  YearRoutine,
+  RoutineSlot
 } from '../types';
 import { INITIAL_RESOURCE_ARCHIVE } from '../data/coursesData';
 
@@ -16,6 +18,7 @@ const STORAGE_KEY_SPECIES = 'sust_fes_species_v2';
 const STORAGE_KEY_GALLERY = 'sust_fes_gallery_v2';
 const STORAGE_KEY_THESES = 'sust_fes_theses_v2';
 const STORAGE_KEY_NOTICES = 'sust_fes_notices_v2';
+const STORAGE_KEY_ROUTINES = 'sust_fes_routines_v1';
 const STORAGE_KEY_QUICKLINKS = 'sust_fes_quicklinks_v1';
 const STORAGE_KEY_STUDENT_PHOTOS = 'sust_fes_student_photos_v1';
 const STORAGE_KEY_BOOKMARKS = 'sust_fes_bookmarks_v1';
@@ -73,6 +76,43 @@ function notifyDataUpdate(collection: string) {
   }
 }
 
+/**
+ * Safely fetches a static JSON dataset from /data/ with candidate URL resolution,
+ * automatic retries for transient connection drops/restarts, and error resilience.
+ */
+export async function fetchStaticJson<T>(filename: string, maxRetries = 2): Promise<T | null> {
+  const cleanName = filename.replace(/^\/+/, '').replace(/^data\//, '');
+  const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+
+  const candidateUrls: string[] = [];
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  candidateUrls.push(`${normalizedBase}data/${cleanName}`);
+  candidateUrls.push(`/data/${cleanName}`);
+  candidateUrls.push(`data/${cleanName}`);
+  const uniqueUrls = Array.from(new Set(candidateUrls));
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    for (const url of uniqueUrls) {
+      try {
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data !== undefined && data !== null) {
+            return data as T;
+          }
+        }
+      } catch {
+        // Fall through to next candidate URL
+      }
+    }
+    if (attempt < maxRetries) {
+      await new Promise((resolve) => setTimeout(resolve, 200 * (attempt + 1)));
+    }
+  }
+
+  return null;
+}
+
 // ==========================================
 // 1. RESOURCES & EXAM BANK (PYQ)
 // ==========================================
@@ -128,19 +168,31 @@ export function isMatchedPhotoForSpecies(url: string, scientificName: string): b
 }
 
 export async function getStoredSpecies(): Promise<TreeSpecies[]> {
+  // 1. Immediately read existing local storage
+  let localData: TreeSpecies[] = [];
   try {
-    const res = await fetch('/data/species.json');
-    const defaultData: TreeSpecies[] = res.ok ? await res.json() : [];
-
     const raw = localStorage.getItem(STORAGE_KEY_SPECIES);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
+        localData = parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read cached species from localStorage:', err);
+  }
+
+  try {
+    // 2. Fetch official default data with retries
+    const defaultData = await fetchStaticJson<TreeSpecies[]>('species.json');
+
+    if (defaultData && Array.isArray(defaultData) && defaultData.length > 0) {
+      if (localData.length > 0) {
         // Merge default enriched species data with local custom contributions
-        const localMap = new Map<string, TreeSpecies>(parsed.map((sp: TreeSpecies) => [sp.id, sp]));
+        const localMap = new Map<string, TreeSpecies>(localData.map((sp: TreeSpecies) => [sp.id, sp]));
         const mergedList: TreeSpecies[] = [];
 
-        // 1. Process all official default species
+        // Process all official default species
         for (const def of defaultData) {
           const local = localMap.get(def.id);
           if (!local) {
@@ -168,7 +220,7 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
           }
         }
 
-        // 2. Add any custom species added by user (cleaning unmatched photos)
+        // Add any custom species added by user (cleaning unmatched photos)
         for (const remaining of localMap.values()) {
           const cleanedPhotos = (remaining.morePhotos || []).filter((p) =>
             isMatchedPhotoForSpecies(p.url, remaining.scientificName)
@@ -185,15 +237,20 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
         saveStoredSpecies(mergedList);
         return mergedList;
       }
-    }
 
-    if (defaultData.length > 0) {
+      // First run: save fetched defaults to local storage
       saveStoredSpecies(defaultData);
       return defaultData;
     }
   } catch (err) {
-    console.error('Failed to load species from storage/fetch:', err);
+    console.warn('Failed to refresh species from static data, using local cache:', err);
   }
+
+  // 3. Fallback to cached local data if fetch was unavailable
+  if (localData.length > 0) {
+    return localData;
+  }
+
   return [];
 }
 
@@ -245,17 +302,25 @@ export function addPhotoToTreeSpecies(speciesId: string, photo: TreePhoto): Tree
 // ==========================================
 
 export async function getStoredGallery(): Promise<GalleryItem[]> {
+  let localData: GalleryItem[] = [];
   try {
-    const res = await fetch('/data/gallery.json');
-    const defaultData: GalleryItem[] = res.ok ? await res.json() : [];
-
     const raw = localStorage.getItem(STORAGE_KEY_GALLERY);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Merge any new default gallery items (e.g. ecosystem albums) with local custom photos
-        const localIds = new Set(parsed.map((item: GalleryItem) => item.id));
-        const merged = [...parsed];
+        localData = parsed;
+      }
+    }
+  } catch {
+    // Ignore parse error
+  }
+
+  try {
+    const defaultData = await fetchStaticJson<GalleryItem[]>('gallery.json');
+    if (defaultData && Array.isArray(defaultData) && defaultData.length > 0) {
+      if (localData.length > 0) {
+        const localIds = new Set(localData.map((item: GalleryItem) => item.id));
+        const merged = [...localData];
         for (const defItem of defaultData) {
           if (!localIds.has(defItem.id)) {
             merged.push(defItem);
@@ -265,16 +330,14 @@ export async function getStoredGallery(): Promise<GalleryItem[]> {
         saveStoredGallery(merged);
         return merged;
       }
-    }
-
-    if (defaultData.length > 0) {
       saveStoredGallery(defaultData);
       return defaultData;
     }
   } catch (err) {
-    console.error('Failed to load gallery from storage/fetch:', err);
+    console.warn('Failed to refresh gallery from static data:', err);
   }
-  return [];
+
+  return localData;
 }
 
 export function getStoredGallerySync(): GalleryItem[] {
@@ -308,18 +371,22 @@ export async function getStoredTheses(): Promise<ThesisItem[]> {
     const raw = localStorage.getItem(STORAGE_KEY_THESES);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
     }
-    const res = await fetch('/data/theses.json');
-    if (res.ok) {
-      const defaultData: ThesisItem[] = await res.json();
+  } catch {
+    // Continue to fetch
+  }
+
+  try {
+    const defaultData = await fetchStaticJson<ThesisItem[]>('theses.json');
+    if (defaultData && Array.isArray(defaultData)) {
       saveStoredTheses(defaultData);
       return defaultData;
     }
   } catch (err) {
-    console.error('Failed to load theses from storage/fetch:', err);
+    console.warn('Failed to load theses:', err);
   }
   return [];
 }
@@ -355,18 +422,22 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
     const raw = localStorage.getItem(STORAGE_KEY_NOTICES);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
     }
-    const res = await fetch('/data/notices.json');
-    if (res.ok) {
-      const defaultData: NoticeItem[] = await res.json();
+  } catch {
+    // Continue to fetch
+  }
+
+  try {
+    const defaultData = await fetchStaticJson<NoticeItem[]>('notices.json');
+    if (defaultData && Array.isArray(defaultData)) {
       saveStoredNotices(defaultData);
       return defaultData;
     }
   } catch (err) {
-    console.error('Failed to load notices from storage/fetch:', err);
+    console.warn('Failed to load notices:', err);
   }
   return [];
 }
@@ -479,18 +550,22 @@ export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
     const raw = localStorage.getItem(STORAGE_KEY_STUDENT_PHOTOS);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
+      if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed;
       }
     }
-    const res = await fetch('/data/student_photos.json');
-    if (res.ok) {
-      const defaultData: StudentPhotoItem[] = await res.json();
+  } catch {
+    // Continue to fetch
+  }
+
+  try {
+    const defaultData = await fetchStaticJson<StudentPhotoItem[]>('student_photos.json');
+    if (defaultData && Array.isArray(defaultData)) {
       saveStoredStudentPhotos(defaultData);
       return defaultData;
     }
   } catch (err) {
-    console.error('Failed to load student photos from storage/fetch:', err);
+    console.warn('Failed to load student photos:', err);
   }
   return [];
 }
@@ -685,12 +760,62 @@ export function importLibraryFromJson(
   }));
 }
 
+// ==========================================
+// 8. CLASS ROUTINE MANAGEMENT
+// ==========================================
+
+export async function getStoredRoutines(): Promise<YearRoutine[]> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_ROUTINES);
+    if (raw !== null) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Continue to fetch
+  }
+
+  try {
+    const defaultData = await fetchStaticJson<YearRoutine[]>('routine.json');
+    if (defaultData && Array.isArray(defaultData)) {
+      return defaultData;
+    }
+  } catch (err) {
+    console.warn('Failed to load routines from static data:', err);
+  }
+  return [];
+}
+
+export function saveStoredRoutines(routines: YearRoutine[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY_ROUTINES, JSON.stringify(routines));
+    notifyDataUpdate('routines');
+  } catch (err) {
+    console.error('Error saving routines storage:', err);
+  }
+}
+
+export async function resetStoredRoutines(): Promise<YearRoutine[]> {
+  try {
+    localStorage.removeItem(STORAGE_KEY_ROUTINES);
+    const routines = await getStoredRoutines();
+    notifyDataUpdate('routines');
+    return routines;
+  } catch (err) {
+    console.error('Error resetting routines:', err);
+    return [];
+  }
+}
+
 export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   localStorage.removeItem(STORAGE_KEY_RESOURCES);
   localStorage.removeItem(STORAGE_KEY_SPECIES);
   localStorage.removeItem(STORAGE_KEY_GALLERY);
   localStorage.removeItem(STORAGE_KEY_THESES);
   localStorage.removeItem(STORAGE_KEY_NOTICES);
+  localStorage.removeItem(STORAGE_KEY_ROUTINES);
   localStorage.removeItem(STORAGE_KEY_QUICKLINKS);
   localStorage.removeItem(STORAGE_KEY_STUDENT_PHOTOS);
 
@@ -699,6 +824,7 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   await getStoredGallery();
   await getStoredTheses();
   await getStoredNotices();
+  await getStoredRoutines();
   await getStoredStudentPhotos();
   getStoredQuickLinks();
 

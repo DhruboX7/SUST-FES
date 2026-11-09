@@ -341,7 +341,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </Link>
 
           {/* Desktop Navigation: Categorized Dropdowns */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2 text-sm" aria-label="Main Navigation">
             {navGroups.map((group) => {
               const active = isGroupActive(group);
               const isOpen = openDropdown === group.id;
@@ -354,17 +354,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setOpenDropdown((prev) => (prev === group.id ? null : group.id))}
                     aria-expanded={isOpen}
                     aria-haspopup="menu"
-                    className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 transition-colors py-2 px-3 text-sm font-medium rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 cursor-pointer ${
+                    className={`flex items-center gap-2 whitespace-nowrap shrink-0 transition-all py-2 px-3.5 text-sm font-semibold rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 cursor-pointer ${
                       active || isOpen
-                        ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 font-semibold'
-                        : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-stone-100 dark:hover:bg-stone-800/60'
+                        ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+                        : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-emerald-50/80 dark:hover:bg-stone-800/80 border border-transparent hover:border-emerald-200/50'
                     }`}
                   >
-                    <GroupIcon className={`w-4 h-4 ${active ? 'text-emerald-700 dark:text-emerald-400' : 'text-stone-500 dark:text-stone-400'}`} />
+                    <GroupIcon className={`w-4 h-4 ${active || isOpen ? 'text-emerald-200 dark:text-emerald-100' : 'text-stone-500 dark:text-stone-400'}`} />
                     <span>{getGroupLabel(group)}</span>
+                    {active && !isOpen && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 ring-2 ring-emerald-400/40 animate-pulse ml-0.5" />
+                    )}
                     <ChevronDown
                       className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        isOpen ? 'rotate-180 text-emerald-700 dark:text-emerald-400' : 'text-stone-400'
+                        isOpen ? 'rotate-180 text-white' : active ? 'text-emerald-200' : 'text-stone-400'
                       }`}
                     />
                   </button>
@@ -374,10 +377,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div
                       role="menu"
                       aria-label={getGroupLabel(group)}
-                      className="absolute left-0 mt-1.5 w-72 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150"
+                      className="absolute left-0 mt-2 w-80 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150"
                     >
-                      <div className="px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-600 dark:text-stone-300 border-b border-stone-100 dark:border-stone-800/60 mb-1">
-                        {getGroupLabel(group)}
+                      <div className="px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 border-b border-stone-100 dark:border-stone-800/80 mb-1 flex items-center justify-between">
+                        <span>{getGroupLabel(group)}</span>
+                        <span className="text-[10px] text-stone-600 dark:text-stone-400 font-normal">FES SUITE</span>
                       </div>
 
                       {group.items.map((item) => {
@@ -392,13 +396,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                               target="_blank"
                               rel="noopener noreferrer"
                               role="menuitem"
-                              className="flex items-center gap-3 px-3.5 py-2.5 text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors group"
+                              className="flex items-center gap-3 px-3.5 py-2.5 mx-1.5 rounded-xl text-sm text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors group"
                             >
                               <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center text-emerald-700 dark:text-emerald-300 shrink-0 group-hover:scale-105 transition-transform">
                                 <ItemIcon className="w-4 h-4" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="font-medium flex items-center gap-1.5">
+                                <div className="font-semibold flex items-center gap-1.5">
                                   <span>{getItemLabel(item)}</span>
                                   <ExternalLink className="w-3 h-3 text-stone-400" />
                                 </div>
@@ -415,24 +419,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                             key={item.id}
                             to={item.to || '/'}
                             role="menuitem"
-                            className={`flex items-center gap-3 px-3.5 py-2.5 text-sm transition-colors group ${
+                            className={`flex items-center gap-3 px-3.5 py-2.5 mx-1.5 rounded-xl text-sm transition-all group ${
                               isCurrent
-                                ? 'bg-emerald-50/80 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-200 font-semibold'
-                                : 'text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-emerald-800 dark:hover:text-emerald-300'
+                                ? 'bg-emerald-50 text-emerald-950 dark:bg-emerald-950/70 dark:text-emerald-200 font-bold border border-emerald-300/80 dark:border-emerald-800 shadow-xs'
+                                : 'text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800/80 hover:text-emerald-800 dark:hover:text-emerald-300'
                             }`}
                           >
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
                               isCurrent 
-                                ? 'bg-emerald-600 text-white dark:bg-emerald-500' 
-                                : 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300'
+                                ? 'bg-emerald-700 text-white dark:bg-emerald-600 shadow-xs' 
+                                : 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300'
                             }`}>
                               <ItemIcon className="w-4 h-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium flex items-center justify-between gap-2">
+                              <div className="font-semibold flex items-center justify-between gap-2">
                                 <span>{getItemLabel(item)}</span>
                                 {item.badge !== undefined && item.badge > 0 && (
-                                  <span className="px-1.5 py-0.2 text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 rounded-md">
+                                  <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-emerald-600 text-white rounded-full shadow-xs">
                                     {item.badge}
                                   </span>
                                 )}
@@ -454,18 +458,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <NavLink
               to="/bookmarks"
               className={({ isActive }) =>
-                `whitespace-nowrap shrink-0 transition-colors py-2 px-2.5 text-sm font-medium rounded-lg flex items-center gap-1.5 ${
+                `whitespace-nowrap shrink-0 transition-all py-2 px-3 text-sm font-semibold rounded-xl flex items-center gap-2 border ${
                   isActive
-                    ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 font-semibold'
-                    : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-stone-100 dark:hover:bg-stone-800/60'
+                    ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+                    : 'bg-stone-100/80 dark:bg-stone-800/80 border-stone-200/90 dark:border-stone-700/80 text-stone-700 dark:text-stone-300 hover:border-emerald-500/50 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-emerald-50/50 shadow-2xs'
                 }`
               }
               title="Quick access to saved study bookmarks"
             >
-              <Bookmark className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+              <Bookmark className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>{t('bookmarks')}</span>
               {bookmarkCount > 0 && (
-                <span className="px-1.5 py-0.2 text-xs font-mono font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 rounded-md">
+                <span className="px-2 py-0.5 text-xs font-mono font-bold bg-emerald-600 text-white rounded-full shadow-xs ring-1 ring-white/20">
                   {bookmarkCount}
                 </span>
               )}
@@ -635,9 +639,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
 
         {/* Mobile Quick Categorized Tabs (Single-Tap Segmented Bar) */}
-        <div className="lg:hidden border-t border-stone-100 dark:border-stone-800/80 py-2">
+        <div className="lg:hidden border-t border-stone-200/80 dark:border-stone-800/80 py-2.5">
           {/* Level 1: Category Segment Selector */}
-          <div className="flex items-center justify-between gap-1 bg-stone-100 dark:bg-stone-800/70 p-1 rounded-xl">
+          <div className="grid grid-cols-4 gap-1 p-1.5 bg-stone-100/90 dark:bg-stone-900/90 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-inner">
             {navGroups.map((group) => {
               const isSelected = mobileSelectedGroup === group.id;
               const hasActiveChild = isGroupActive(group);
@@ -648,24 +652,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={group.id}
                   type="button"
                   onClick={() => setMobileSelectedGroup(group.id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  className={`relative flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 text-xs rounded-xl transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-white dark:bg-stone-900 text-emerald-800 dark:text-emerald-300 shadow-xs'
+                      ? 'bg-linear-to-b from-emerald-700 to-emerald-800 dark:from-emerald-600 dark:to-emerald-700 text-white font-bold shadow-md shadow-emerald-950/25 ring-1 ring-emerald-400/40 scale-[1.02]'
                       : hasActiveChild
-                      ? 'text-emerald-700 dark:text-emerald-400 hover:text-stone-900 dark:hover:text-stone-100'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      ? 'bg-emerald-50/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-semibold hover:bg-emerald-100/70'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-800/80 font-medium'
                   }`}
                   aria-pressed={isSelected}
                 >
-                  <GroupIcon className="w-3.5 h-3.5 shrink-0" />
+                  <GroupIcon className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-white' : hasActiveChild ? 'text-emerald-700 dark:text-emerald-400' : 'text-stone-500'}`} />
                   <span className="truncate">{getGroupLabel(group)}</span>
+                  {hasActiveChild && !isSelected && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-stone-900 absolute top-1.5 right-1.5" />
+                  )}
                 </button>
               );
             })}
           </div>
 
           {/* Level 2: Sub-items for the Selected Category */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pt-2 no-scrollbar">
+          <div className="flex items-center gap-2 overflow-x-auto pt-2.5 pb-1 no-scrollbar">
             {currentMobileGroupObj.items.map((item) => {
               const ItemIcon = item.icon;
               const isCurrent = item.to ? (item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)) : false;
@@ -677,7 +684,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap shrink-0 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-700/60 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl whitespace-nowrap shrink-0 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-700/80 transition-colors shadow-2xs"
                   >
                     <ItemIcon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>{getItemLabel(item)}</span>
@@ -690,17 +697,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <NavLink
                   key={item.id}
                   to={item.to || '/'}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap shrink-0 transition-colors border ${
+                  className={`flex items-center gap-2 px-3.5 py-1.5 text-xs rounded-xl whitespace-nowrap shrink-0 transition-all border ${
                     isCurrent
-                      ? 'bg-emerald-800 text-white border-emerald-800 font-semibold'
-                      : 'bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-800'
+                      ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white border-emerald-600 font-bold shadow-md shadow-emerald-950/20 ring-2 ring-emerald-500/30 scale-[1.02]'
+                      : 'bg-white dark:bg-stone-800/90 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700/80 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-stone-700/60 font-medium shadow-2xs'
                   }`}
                 >
                   <ItemIcon className={`w-3.5 h-3.5 ${isCurrent ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`} />
                   <span>{getItemLabel(item)}</span>
                   {item.badge !== undefined && item.badge > 0 && (
-                    <span className={`px-1 py-0.1 text-[9px] font-mono font-bold rounded ${
-                      isCurrent ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'
+                    <span className={`px-1.5 py-0.2 text-[9px] font-mono font-bold rounded-full ${
+                      isCurrent ? 'bg-white text-emerald-900' : 'bg-emerald-600 text-white'
                     }`}>
                       {item.badge}
                     </span>

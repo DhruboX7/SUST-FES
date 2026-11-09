@@ -33,6 +33,7 @@ import { AdminGalleryPanel } from './admin/AdminGalleryPanel';
 import { AdminStudentPhotosPanel } from './admin/AdminStudentPhotosPanel';
 import { AdminThesesPanel } from './admin/AdminThesesPanel';
 import { AdminNoticesPanel } from './admin/AdminNoticesPanel';
+import { AdminRoutinePanel } from './admin/AdminRoutinePanel';
 import { AdminMasterBackupPanel } from './admin/AdminMasterBackupPanel';
 
 import { 
@@ -48,6 +49,8 @@ import {
   BookMarked, 
   Bell, 
   Database,
+  Calendar,
+  Sparkles,
   ArrowRight,
   LogOut,
   AlertCircle
@@ -82,7 +85,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
   // Active Management Tab
   const [activeTab, setActiveTab] = useState<
-    'pyq' | 'links' | 'species' | 'gallery' | 'studentPhotos' | 'theses' | 'notices' | 'backup'
+    'pyq' | 'links' | 'species' | 'gallery' | 'studentPhotos' | 'theses' | 'notices' | 'routine' | 'backup'
   >('pyq');
 
   // Multi-collection data stores
@@ -360,6 +363,23 @@ export const AdminView: React.FC<AdminViewProps> = ({
           </span>
         </button>
 
+        {/* 6.5. Class Routine (AI Automation) */}
+        <button
+          onClick={() => setActiveTab('routine')}
+          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+            activeTab === 'routine'
+              ? 'bg-emerald-800 text-white font-bold shadow-xs'
+              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+          }`}
+        >
+          <Calendar className="w-3.5 h-3.5" />
+          <span>Class Routine</span>
+          <span className="flex items-center gap-0.5 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+            <Sparkles className="w-2.5 h-2.5" />
+            <span>AI</span>
+          </span>
+        </button>
+
         {/* 7. Master Backup & System */}
         <button
           onClick={() => setActiveTab('backup')}
@@ -439,6 +459,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
               saveStoredNotices(newNotices);
             }}
           />
+        )}
+
+        {activeTab === 'routine' && (
+          <AdminRoutinePanel />
         )}
 
         {activeTab === 'backup' && (

@@ -64,7 +64,7 @@ export const SpeciesDatabaseView: React.FC = () => {
       setSpecies(spData);
       setStudentPhotos(stuData);
     } catch (err) {
-      console.error('Failed to load species data:', err);
+      console.warn('Species data load warning, using cached fallback:', err);
     } finally {
       setIsLoading(false);
     }
@@ -222,11 +222,38 @@ export const SpeciesDatabaseView: React.FC = () => {
                 setSelectedEcosystem('all');
                 setSelectedUse('all');
               }}
-              className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 bg-stone-100 dark:bg-stone-800 transition-colors shrink-0"
+              className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-100 bg-stone-100 dark:bg-stone-800 transition-colors shrink-0 cursor-pointer"
             >
               Reset
             </button>
           )}
+        </div>
+
+        {/* Quick Ecosystem Highlighted Tabs */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar w-full">
+          {[
+            { id: 'all', label: 'All Ecosystems' },
+            { id: 'Sundarbans Mangrove Tidal Forest', label: '🌊 Mangroves' },
+            { id: 'Madhupur & Barind Moist Deciduous Sal Forest', label: '🍂 Sal / Deciduous' },
+            { id: 'Sylhet & Chittagong Hill Tracts Semi-Evergreen Forest', label: '🌲 Hill Semi-Evergreen' },
+            { id: 'Plains, Alluvial Basin & Homestead Forestry', label: '🏡 Plains & Homestead' },
+          ].map((ecoTab) => {
+            const isSelected = selectedEcosystem === ecoTab.id;
+            return (
+              <button
+                key={ecoTab.id}
+                type="button"
+                onClick={() => setSelectedEcosystem(ecoTab.id)}
+                className={`px-3 py-1.5 text-xs rounded-xl whitespace-nowrap shrink-0 font-bold transition-all cursor-pointer border ${
+                  isSelected
+                    ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-950/20 ring-1 ring-emerald-400/40 scale-[1.02]'
+                    : 'bg-white dark:bg-stone-800/90 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700/80 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-stone-700 font-medium shadow-2xs'
+                }`}
+              >
+                {ecoTab.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 

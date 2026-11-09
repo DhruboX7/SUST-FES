@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { 
   Bell, 
@@ -16,23 +17,9 @@ import {
   FileText,
   X
 } from 'lucide-react';
-import { AcademicYear, NoticeItem } from '../types';
-import { getStoredNotices } from '../utils/storage';
-
-interface RoutineSlot {
-  day: string;
-  time: string;
-  courseCode: string;
-  courseTitle: string;
-  room: string;
-  teacher: string;
-}
-
-interface YearRoutine {
-  year: number;
-  semester: number;
-  schedule: RoutineSlot[];
-}
+import { AcademicYear, NoticeItem, YearRoutine, RoutineSlot } from '../types';
+import { getStoredNotices, getStoredRoutines } from '../utils/storage';
+import { DatedRoutineCalendar } from './routine/DatedRoutineCalendar';
 
 export const NoticesView: React.FC = () => {
   usePageMeta({
@@ -40,7 +27,27 @@ export const NoticesView: React.FC = () => {
     description: 'Official departmental notices, exam announcements, and semester class routines for Forestry and Environmental Science, SUST.',
   });
 
-  const [activeTab, setActiveTab] = useState<'notices' | 'routine'>('notices');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState<'notices' | 'routine'>(() => {
+    return tabParam === 'routine' ? 'routine' : 'notices';
+  });
+
+  useEffect(() => {
+    if (tabParam === 'routine' || tabParam === 'notices') {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tab: 'notices' | 'routine') => {
+    setActiveTab(tab);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('tab', tab);
+      return next;
+    }, { replace: true });
+  };
+  const [routineViewMode, setRoutineViewMode] = useState<'calendar' | 'matrix'>('calendar');
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [routines, setRoutines] = useState<YearRoutine[]>([]);
   const [selectedYear, setSelectedYear] = useState<AcademicYear>(1);
@@ -50,15 +57,12 @@ export const NoticesView: React.FC = () => {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [nData, rRes] = await Promise.all([
+      const [nData, rData] = await Promise.all([
         getStoredNotices().catch(() => []),
-        fetch('/data/routine.json').catch(() => null),
+        getStoredRoutines().catch(() => []),
       ]);
       setNotices(nData);
-      if (rRes && rRes.ok) {
-        const rData = await rRes.json();
-        setRoutines(rData);
-      }
+      setRoutines(rData);
     } catch (err) {
       console.error('Failed to load notices or routines:', err);
     } finally {
@@ -71,6 +75,7 @@ export const NoticesView: React.FC = () => {
 
     const handleUpdate = () => {
       getStoredNotices().then((data) => setNotices(data)).catch(() => {});
+      getStoredRoutines().then((data) => setRoutines(data)).catch(() => {});
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
@@ -124,7 +129,7 @@ export const NoticesView: React.FC = () => {
       {/* Mode Tabs */}
       <div className="flex items-center gap-2 border-b border-stone-200 dark:border-stone-800 pb-3">
         <button
-          onClick={() => setActiveTab('notices')}
+          onClick={() => handleTabChange('notices')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'notices'
               ? 'bg-emerald-800 text-white shadow-xs'
@@ -139,7 +144,7 @@ export const NoticesView: React.FC = () => {
         </button>
 
         <button
-          onClick={() => setActiveTab('routine')}
+          onClick={() => handleTabChange('routine')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'routine'
               ? 'bg-emerald-800 text-white shadow-xs'
@@ -328,93 +333,138 @@ export const NoticesView: React.FC = () => {
       {activeTab === 'routine' && (
         <div className="space-y-4">
           
-          {/* Year & Semester Filter */}
-          <div className="flex flex-wrap items-center gap-3 p-4 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">Academic Year:</span>
-              <div className="flex gap-1">
-                {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
-                  <button
-                    key={yr}
-                    onClick={() => setSelectedYear(yr)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
-                      selectedYear === yr
-                        ? 'bg-emerald-800 text-white'
-                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200'
-                    }`}
-                  >
-                    Year {yr}
-                  </button>
-                ))}
+          {/* Year, Semester & View Mode Filter Bar */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs">
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Year Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Year:</span>
+                <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                  {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
+                    <button
+                      key={yr}
+                      onClick={() => setSelectedYear(yr)}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        selectedYear === yr
+                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      Year {yr}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Semester Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Semester:</span>
+                <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                  {[1, 2].map((sem) => (
+                    <button
+                      key={sem}
+                      onClick={() => setSelectedSemester(sem as 1 | 2)}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        selectedSemester === sem
+                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      Sem {sem}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">Semester:</span>
-              <div className="flex gap-1">
-                {[1, 2].map((sem) => (
-                  <button
-                    key={sem}
-                    onClick={() => setSelectedSemester(sem as 1 | 2)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
-                      selectedSemester === sem
-                        ? 'bg-emerald-800 text-white'
-                        : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200'
-                    }`}
-                  >
-                    Semester {sem}
-                  </button>
-                ))}
-              </div>
+            {/* Calendar vs. Timetable Grid View Switcher */}
+            <div className="flex items-center gap-1.5 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl border border-stone-200 dark:border-stone-700/60 self-start md:self-auto">
+              <button
+                type="button"
+                onClick={() => setRoutineViewMode('calendar')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  routineViewMode === 'calendar'
+                    ? 'bg-white dark:bg-stone-900 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/30'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                }`}
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                <span>Dated Calendar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setRoutineViewMode('matrix')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  routineViewMode === 'matrix'
+                    ? 'bg-white dark:bg-stone-900 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/30'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Weekly Grid</span>
+              </button>
             </div>
           </div>
 
-          {/* Schedule Slots */}
-          {!currentRoutine || currentRoutine.schedule.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
-              <Calendar className="w-10 h-10 text-stone-400 mx-auto mb-2" />
-              <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200">
-                Routine not published for Year {selectedYear} Semester {selectedSemester}
-              </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                Contact the batch representative or department office for tentative slots.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {currentRoutine.schedule.map((slot, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 mb-1">
-                      <span className="font-bold text-emerald-800 dark:text-emerald-400">{slot.day}</span>
-                      <span className="font-mono flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-stone-400" />
-                        {slot.time}
-                      </span>
-                    </div>
-                    <div className="font-mono text-xs font-semibold text-stone-500 dark:text-stone-400 mb-0.5">
-                      {slot.courseCode}
-                    </div>
-                    <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
-                      {slot.courseTitle}
-                    </h4>
-                  </div>
+          {/* VIEW MODE 1: DATED CALENDAR */}
+          {routineViewMode === 'calendar' && (
+            <DatedRoutineCalendar
+              schedule={currentRoutine?.schedule || []}
+              year={Number(selectedYear)}
+              semester={selectedSemester}
+            />
+          )}
 
-                  <div className="pt-2 border-t border-stone-100 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0" />
-                      <span className="truncate">{slot.room}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-500 shrink-0" />
-                      <span className="truncate">{slot.teacher}</span>
-                    </div>
-                  </div>
+          {/* VIEW MODE 2: WEEKLY MATRIX */}
+          {routineViewMode === 'matrix' && (
+            <div>
+              {!currentRoutine || currentRoutine.schedule.length === 0 ? (
+                <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
+                  <Calendar className="w-10 h-10 text-stone-400 mx-auto mb-2" />
+                  <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200">
+                    Routine not published for Year {selectedYear} Semester {selectedSemester}
+                  </h3>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                    Contact the batch representative or department office for tentative slots.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {currentRoutine.schedule.map((slot, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 mb-1">
+                          <span className="font-bold text-emerald-800 dark:text-emerald-400">{slot.day}</span>
+                          <span className="font-mono flex items-center gap-1 font-semibold text-stone-700 dark:text-stone-300">
+                            <Clock className="w-3 h-3 text-stone-400" />
+                            {slot.time}
+                          </span>
+                        </div>
+                        <div className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-0.5">
+                          {slot.courseCode}
+                        </div>
+                        <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
+                          {slot.courseTitle}
+                        </h4>
+                      </div>
+
+                      <div className="pt-2 border-t border-stone-100 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0" />
+                          <span className="truncate">{slot.room}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-500 shrink-0" />
+                          <span className="truncate">{slot.teacher}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

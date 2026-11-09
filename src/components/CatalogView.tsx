@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { ResourceItem, AcademicYear, AcademicSemester, ResourceCategory } from '../types';
+import { ResourceItem, AcademicYear, AcademicSemester, ResourceCategory, YearRoutine } from '../types';
 import { SUST_FES_COURSES } from '../data/coursesData';
+import { getStoredRoutines } from '../utils/storage';
 import { HeroSection } from './HeroSection';
 import { SemesterFilter } from './SemesterFilter';
 import { ResourceCard } from './ResourceCard';
+import { DatedRoutineCalendar } from './routine/DatedRoutineCalendar';
 import { CONTRIBUTE_FORM_URL } from '../config';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { 
@@ -13,7 +15,8 @@ import {
   Upload, 
   ExternalLink, 
   RefreshCw, 
-  Clock 
+  Calendar,
+  ArrowRight 
 } from 'lucide-react';
 
 interface CatalogViewProps {
@@ -138,14 +141,57 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     });
   }, [resources, searchQuery, selectedYear, selectedSemester, selectedCategory, selectedCourseCode]);
 
-  // Recently Added items (latest 6 sorted by createdAt descending)
-  const recentlyAdded = useMemo(() => {
-    if (resources.length === 0) return [];
-    return [...resources]
-      .filter((r) => r.createdAt)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 6);
-  }, [resources]);
+  // Routines data and active calendar Year/Semester state
+  const [routines, setRoutines] = useState<YearRoutine[]>([]);
+  const [calendarYear, setCalendarYear] = useState<AcademicYear>(() => {
+    return typeof selectedYear === 'number' ? selectedYear : 1;
+  });
+  const [calendarSemester, setCalendarSemester] = useState<1 | 2>(() => {
+    return typeof selectedSemester === 'number' ? (selectedSemester as 1 | 2) : 1;
+  });
+
+  // Keep calendar selection in sync when catalog semester filter changes
+  useEffect(() => {
+    if (typeof selectedYear === 'number') {
+      setCalendarYear(selectedYear);
+    }
+  }, [selectedYear]);
+
+  useEffect(() => {
+    if (typeof selectedSemester === 'number') {
+      setCalendarSemester(selectedSemester as 1 | 2);
+    }
+  }, [selectedSemester]);
+
+  // Load routines data
+  useEffect(() => {
+    let isMounted = true;
+    getStoredRoutines()
+      .then((data) => {
+        if (isMounted) setRoutines(data);
+      })
+      .catch(() => {});
+
+    const handleUpdate = () => {
+      getStoredRoutines()
+        .then((data) => {
+          if (isMounted) setRoutines(data);
+        })
+        .catch(() => {});
+    };
+
+    window.addEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
+  }, []);
+
+  const currentRoutine = useMemo(() => {
+    return routines.find(
+      (r) => Number(r.year) === Number(calendarYear) && Number(r.semester) === Number(calendarSemester)
+    );
+  }, [routines, calendarYear, calendarSemester]);
 
   const hasActiveFilters = Boolean(
     searchQuery.trim() ||
@@ -170,28 +216,86 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         onSwitchToExamBank={() => navigate('/pyq')}
       />
 
-      {/* Recently Added Section (Shown when no search query is active) */}
-      {!searchQuery.trim() && recentlyAdded.length > 0 && (
-        <section aria-labelledby="recently-added-heading" className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 id="recently-added-heading" className="text-sm font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-              <span>Recently Added to Archive</span>
-            </h2>
-            <span className="text-xs text-stone-400">Latest additions</span>
+      {/* Interactive Class Routine Calendar Section (Shown when no search query is active) */}
+      {!searchQuery.trim() && (
+        <section aria-labelledby="catalog-routine-calendar-heading" className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs">
+            <div>
+              <h2
+                id="catalog-routine-calendar-heading"
+                className="text-sm font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100 flex items-center gap-2"
+              >
+                <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <span>Class Routine Calendar</span>
+              </h2>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                Live departmental schedule with day-by-day classes, venues, and timings
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Year Selector */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">Year:</span>
+                <div className="flex gap-1 p-0.5 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                  {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
+                    <button
+                      key={yr}
+                      type="button"
+                      onClick={() => setCalendarYear(yr)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        calendarYear === yr
+                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      Y{yr}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Semester Selector */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">Sem:</span>
+                <div className="flex gap-1 p-0.5 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                  {[1, 2].map((sem) => (
+                    <button
+                      key={sem}
+                      type="button"
+                      onClick={() => setCalendarSemester(sem as 1 | 2)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        calendarSemester === sem
+                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
+                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                      }`}
+                    >
+                      S{sem}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Link to Full Notices & Routine */}
+              <button
+                type="button"
+                onClick={() => navigate('/notices?tab=routine')}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer"
+                title="Open full routine view with timetable matrix"
+              >
+                <span>Full Timetable</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recentlyAdded.map((res) => (
-              <ResourceCard
-                key={`recent-${res.id}`}
-                resource={res}
-                isBookmarked={bookmarks.includes(res.id)}
-                onToggleBookmark={onToggleBookmark}
-                onPreview={onPreview}
-                onCopyLink={onCopyLink}
-              />
-            ))}
-          </div>
+
+          <DatedRoutineCalendar
+            schedule={currentRoutine?.schedule || []}
+            year={Number(calendarYear)}
+            semester={calendarSemester}
+          />
         </section>
       )}
 

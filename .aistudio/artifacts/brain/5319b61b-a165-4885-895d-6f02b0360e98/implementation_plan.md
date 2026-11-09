@@ -1,145 +1,91 @@
-# Bangladesh Forest Flora & Tree Species Photo Curation System
+# Implementation Plan: Dated Interactive Calendar & AI Class Schedule Parser Automation
 
-Enriches the SUST Forestry tree species catalog with verified, high-resolution botanical photography extracted from the Bangladesh Forest Department (BFIS), Bangladesh National Herbarium (BNH), Flora of Bangladesh, and Wikimedia Commons, providing authentic morphological plates and ecosystem context.
-
----
-
-### User Review & Critical Decisions
-
-> [!IMPORTANT]
-> The following user preferences were confirmed during interactive clarification and form the architectural baseline for this release:
-> - **Primary & Multi-Plate Integration**: Primary cover photos will be updated with the highest-resolution authentic habit/canopy captures, and additional extracted photos will be cataloged as structured morphological plates (Habit, Foliage/Leaves, Bark, Flower, Fruit/Seed).
-> - **Catalog Coverage**: Enriches all 55 native and plantation species in the SUST FES catalog while creating comprehensive botanical plates for national and regional forest keystones: Sundari (*Heritiera fomes*), Golpata (*Nypa fruticans*), Sal (*Shorea robusta*), National Tree Jackfruit (*Artocarpus heterophyllus*), Mango (*Mangifera indica*), as well as Sundarbans and Madhupur National Park ecosystems.
-> - **Official Attribution & Source Badges**: Every photo will carry transparent attribution and direct links to its respective source authority (BFIS Forest Dept, BNH Herbarium, Wikimedia Commons CC BY-SA, or Flora of Bangladesh), displayed elegantly in species cards, detail views, and lightboxes without visual clutter.
+Integrate an interactive dated calendar into the FES SUST Class Routine view and build an AI-powered schedule extraction & management panel inside the Admin Console, allowing instant parsing of pasted timetable announcements into structured class records.
 
 ---
 
-### 1. Overview & Core Concept
+## 1. User Decisions & Architectural Objectives
 
-- **What It Does**:
-  1. **Automated Multi-Source Extraction**: Ingests and normalizes authentic plant specimen photographs from four authoritative institutional repositories:
-     - **Bangladesh Forest Department (BFIS TreeInfo)**: Official forestry plantation, silvicultural habit, and wood anatomy imagery.
-     - **Bangladesh National Herbarium (BNH e-Flora)**: Certified taxonomic specimen sheets and diagnostic morphological plates.
-     - **Flora of Bangladesh**: High-resolution field photography spanning trees of Bangladesh.
-     - **Wikimedia Commons**: High-definition, open-licensed (CC BY-SA 4.0/3.0) botanical plates for Sundari, Golpata, Sal flowers, Jackfruit, and Mango, plus habitat captures of Sundarbans and Madhupur Sal tract.
-  2. **Morphological Plate Taxonomy**: Categorizes photos into standardized botanical organs: `habit` (growth form & crown), `leaf` (venation & arrangement), `bark` (trunk texture & lenticels), `flower` (inflorescence details), `fruit` (pods, drupes, seeds), and `ecosystem` (natural stand habitat).
-  3. **High-Fidelity Visual Catalog**: Updates `species.json` with pristine, verified images replacing unverified links, while ensuring zero broken images with graceful CSS fallback cards.
-  4. **Admin Curation Controls**: Allows administrators in `/manage` to preview, switch primary covers, re-order plates, and perform 1-click batch syncs with new extracted sources.
-
-- **Target Audience & Persona**:
-  - **Forestry Undergraduates & Faculty**: Reviewing diagnostic traits for dendrology courses, practical herbarium exams, and field tours.
-  - **Dendrology & Silviculture Researchers**: Verifying regional phenotypes across mangrove, moist deciduous, and evergreen forest tracts.
-  - **Department Administrators**: Maintaining the official botanical archive with verified citations.
-
-- **Key Value**:
-  Replaces unverified placeholder graphics with accredited, scientifically grounded field photography directly tied to Bangladesh's national forestry institutions and open scientific commons.
+Based on your confirmed preferences:
+- **Interactive Dated Calendar**: Embed an interactive monthly and weekly calendar in `/notices` (Routine tab) with real-world dates, semester day highlights, and class cards for the selected day.
+- **AI Schedule Parser**: Provide an intelligent extraction tool in `/manage` using `@google/genai` (`gemini-3.8-flash`) that accepts unstructured text (notice texts, messy syllabus fragments, informal messages, or tabular pastes) and extracts structured timetable slots.
+- **Editable Verification Grid**: Render parsed classes in an editable preview table allowing admins to fine-tune room numbers, teachers, and timings before committing to the routine database.
 
 ---
 
-### 2. User Experience & Visual Design
+## 2. Technical Design & Component Breakdown
 
-Following the *Frontend Design Constitution* and the *Science & Biotech Precision Guidelines*:
+### A. Data Layer & Storage Utilities (`src/utils/storage.ts`)
+- Add `STORAGE_KEY_ROUTINES = 'sust_fes_routines_v1'` to `src/utils/storage.ts`.
+- Implement `getStoredRoutines(): Promise<RoutineItem[]>`:
+  - Merges official `public/data/routine.json` baseline with user-saved localStorage modifications.
+- Implement `saveStoredRoutines(routines: RoutineItem[]): void`:
+  - Dispatches `window.dispatchEvent(new Event('sust_fes_data_updated'))` so all views immediately reflect routine updates.
+- Implement `resetStoredRoutines(): Promise<RoutineItem[]>` to restore default departmental timetable.
 
-- **Key User Flows**:
-  1. **Catalog Exploration (`/species`)**:
-     - The user browses the 55 tree species grid. Each card presents a crisp, verified habit cover photo with an unboxed scientific kicker (`Family · Binomial Name · Bangla Name`).
-     - A subtle source badge (e.g., `BFIS`, `BNH`, `Wikimedia`, or `Flora BD`) indicates the accredited authority with external link support.
-     - Multi-plate indicator shows available morphological perspectives (e.g., `4 Botanical Plates`).
-  2. **Botanical Lightbox & Morphology Viewer**:
-     - Clicking any species opens the deep-inspection modal.
-     - Features an interactive thumbnail strip alternating between Habit, Foliage, Bark, Inflorescence, and Fruits.
-     - High-resolution pan/zoom viewport displays fine venation and bark fissures without compression artifacts.
-     - Displays full provenance metadata: photographer/artist, license (`CC BY-SA`), source organization, and direct URL to the national database record.
-  3. **Habitat & Ecosystem Portals (`/gallery` & `/species`)**:
-     - Dedicated ecosystem tags highlighting Sundarbans mangrove association (Sundari, Golpata, Gorjan) and Madhupur moist deciduous tract (Sal, Haldu, Koroi).
-  4. **Management Console Integration (`/manage` -> Tree Species)**:
-     - Admin can test-fetch photos from any of the four portals directly within the Species Editor modal or launch batch sync.
+### B. AI Schedule Parser Engine (`src/utils/aiScheduleParser.ts`)
+- Use `@google/genai` with model `gemini-3.8-flash`.
+- Define strict structured JSON schema for extraction:
+  - `year`: Academic year (1, 2, 3, 4)
+  - `semester`: Academic semester (1 or 2)
+  - `schedule`: Array of slots:
+    - `day`: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday'
+    - `time`: Formatted string (e.g. "09:00 - 10:30")
+    - `courseCode`: Standardized code (e.g. "FES 08211121" or matched curriculum code)
+    - `courseTitle`: Official course title
+    - `room`: Academic building/room name
+    - `teacher`: Instructor name or department
+- Implement dual-engine reliability:
+  - Primary: Gemini 3.8 Flash structured output.
+  - Fallback: Deterministic regex and line-by-line parser for offline/unauthenticated execution or standard table copies.
 
-- **Visual Identity & Theme**:
-  - **Palette**: Monochromatic forestry canvas (crisp white `#FFFFFF` / dark obsidian `#0C0E12`), deep forest structural borders (`#1B382B` accents in dark mode, `#E2E8F0` in light mode), and calibrated botanical green (`#047857` / `#10B981`) for active states.
-  - **Typography**: Clean neo-grotesque interface type (`Plus Jakarta Sans` / `Outfit`) paired with italicized Latin binomial nomenclature (`font-serif italic` for species names) and tabular numerals (`font-mono tabular-nums`) for plate counts and dimensions.
-  - **Zero-Pill Discipline**: Metadata displayed as unboxed typographic lines with bullet separators (`Fabaceae · Albizia saman · রেইনট্রি · 6 Plates`).
-  - **Resilient Fallback**: Strict `referrerPolicy="no-referrer"` with graceful inline SVG silhouette fallbacks for network-restricted environments.
+### C. Dated Routine Calendar (`src/components/routine/DatedRoutineCalendar.tsx`)
+- Month Grid & Weekly Strip:
+  - Month navigation (Previous / Next / Today jump).
+  - Highlights days of the week where classes exist for the selected Year & Semester.
+  - Visual badges showing class count per day.
+  - Click any date to view the scheduled classes for that specific weekday with room, timing, and instructor tags.
+- Quick Jump to "Today's Classes":
+  - Highlights classes running today with real-time "Happening Now" / "Upcoming" status indicators.
+
+### D. Enhanced Routine Explorer (`src/components/NoticesView.tsx`)
+- Add view switchers inside the Routine tab:
+  - **Weekly Timetable Matrix** (traditional slot cards grouped by day).
+  - **Dated Calendar Explorer** (monthly & weekly calendar with date pickers).
+- Display active filters for Academic Year (1st–4th Year) and Semester (1 or 2).
+
+### E. Admin Routine & AI Automation Panel (`src/components/admin/AdminRoutinePanel.tsx`)
+- Add a new "Class Routine" tab to `AdminView.tsx`:
+  - View current routine slots per year/semester with delete and edit controls.
+  - **"AI Schedule Parser" Modal / Workspace**:
+    - Large text area with prompt placeholder ("Paste official notice, chat message, or schedule table...").
+    - Target Year and Semester selectors.
+    - "Extract with Gemini AI" action button with loading states.
+    - Sample test schedule snippets for quick demonstration.
+    - Editable preview table where admins can inspect, edit, delete, or add slots before saving.
+    - "Commit to Database" button that updates local storage and refreshes app state.
 
 ---
 
-### 3. Key Product Decisions & Trade-Offs
+## 3. Implementation Steps & Verification Status
 
-- **Decision 1: Direct CDN & Wikimedia Image URL Resolution**
-  - *Chosen Approach*: Resolve direct, high-speed Wikimedia upload URLs (`upload.wikimedia.org/...`) and official BFIS/BNH web assets with strict HTTPS, storing dimensions and metadata locally in `species.json`.
-  - *Why*: Eliminates CORS redirects and prevents runtime API rate-limiting during exam season or classroom use.
-  - *Alternatives Considered*: Dynamic runtime API calls on every card render (risks Wikimedia 429 throttling and network latency).
-
-- **Decision 2: Comprehensive Multi-Organ Plate Model**
-  - *Chosen Approach*: Store up to 6 curated morphological plates per species inside `morePhotos: TreePhoto[]`, tagged by botanical organ (`habit`, `leaf`, `bark`, `flower`, `fruit`).
-  - *Why*: Dendrology taxonomy requires cross-examination of bark and leaf venation, not just a distant tree silhouette.
-  - *Alternatives Considered*: Single cover photo only (fails to support academic practical learning).
-
-- **Decision 3: Offline-Resilient Static Seed + Authoritative Local Storage**
-  - *Chosen Approach*: Write enriched records directly into `public/data/species.json` and synchronize with `src/utils/storage.ts` so custom additions made by admins remain preserved without loss.
-  - *Why*: Ensures immediate loading for new visitors while honoring admin edits.
-
----
-
-### 4. Technical Architecture & Data Strategy
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        Institutional Data Sources                      │
-├────────────────────┬────────────────────┬──────────────────────────────┤
-│ BFIS TreeInfo      │ BNH e-Flora        │ Wikimedia Commons            │
-│ (bforest.gov.bd)   │ (bnh.gov.bd)       │ (CC BY-SA high-res media)    │
-│ Silviculture Dept  │ Certified Herbarium│ Sundari, Sal, Golpata, Mango │
-└─────────┬──────────┴─────────┬──────────┴──────────────┬───────────────┘
-          │                    │                         │
-          ▼                    ▼                         ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│               Data Extraction & Normalization Script                   │
-│                    (scripts/extract-tree-photos.mjs)                   │
-│  - Fetches Wikimedia MediaSearch API & ImageInfo                       │
-│  - Queries BFIS & BNH verified botanical plate catalogs                │
-│  - Organizes photos by botanical organ tag (habit/leaf/bark/flower)    │
-│  - Normalizes licenses, attributions, and direct CDN endpoints         │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                   SUST FES Digital Botanical Engine                    │
-│                                                                        │
-│   public/data/species.json               src/utils/storage.ts          │
-│   (55 Enriched Taxa)           ◄──────► (Reactive Local Storage)       │
-│                                                   │                    │
-│         ┌─────────────────────────────────────────┴─────────┐          │
-│         ▼                                                   ▼          │
-│   SpeciesDatabaseView.tsx                         AdminSpeciesPanel.tsx│
-│   - Verified Botanical Habit Covers               - 1-Click Multi-Sync │
-│   - Multi-Plate Morphological Viewer              - Plate Editor       │
-│   - Institutional Provenance Badges               - Cover Selector     │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-#### Step-by-Step Implementation Sequence
-
-1. **Extraction & Ingestion Script (`scripts/extract-tree-photos.mjs`)**:
-   - Query Wikimedia API for high-resolution images of *Heritiera fomes* (Sundari), *Nypa fruticans* (Golpata), *Shorea robusta* (Sal), *Artocarpus heterophyllus* (Jackfruit), and *Mangifera indica* (Mango).
-   - Resolve habitat captures for Sundarbans mangrove forest and Madhupur National Park Sal tract.
-   - Cross-reference with BFIS and BNH e-Flora indices for campus and native species.
-   - Output structured JSON mappings with organ tags, captions, and attribution.
-
-2. **Botanical Database Enrichment (`public/data/species.json`)**:
-   - Update primary `imageUrl` and comprehensive `morePhotos` arrays for all 55 catalog species.
-   - Assign appropriate tags (`habit`, `leaf`, `bark`, `flower`, `fruit`) and institutional credit.
-
-3. **Public Botanical Interface Updates (`src/components/SpeciesDatabaseView.tsx`)**:
-   - Render multi-plate gallery tabs in the species modal with smooth keyboard arrow navigation.
-   - Display quiet, authoritative source badges with direct external links.
-   - Add filter toggle for "Multi-Plate Verified Species" and "Forest Ecosystems".
-
-4. **Admin Management Updates (`src/components/admin/AdminSpeciesPanel.tsx` & `AdminSpeciesPhotosModal.tsx`)**:
-   - Add multi-source sync presets allowing admins to pull newly available photos from BFIS, BNH, and Wikimedia.
-   - Enable quick primary photo replacement with any extracted plate.
-
-5. **Validation & Verification**:
-   - Run `node scripts/validate-data.mjs` to ensure 100% schema compliance.
-   - Execute `compile_applet` and `lint_applet` to confirm zero build errors.
-   - Verify HTTP 200 health and visual presentation.
+1. **Storage & Types** [COMPLETED]:
+   - Unified `RoutineSlot`, `YearRoutine`, and `RoutineItem` in `src/types/index.ts`.
+   - Added routine storage keys, `getStoredRoutines()`, `saveStoredRoutines()`, and `resetStoredRoutines()` in `src/utils/storage.ts`.
+2. **AI Schedule Parser** [COMPLETED]:
+   - Created `src/utils/aiScheduleParser.ts` with structured `@google/genai` (`gemini-3.8-flash`) extraction and deterministic fallback regex heuristics.
+3. **Dated Calendar Component** [COMPLETED]:
+   - Created `src/components/routine/DatedRoutineCalendar.tsx` with interactive month grid, weekly bar, day slot highlights, today jump, and real-time class status indicators ("Happening Now", "Upcoming", "Completed").
+4. **Notices View Integration** [COMPLETED]:
+   - Integrated `DatedRoutineCalendar` in `src/components/NoticesView.tsx` with responsive dual-mode switcher ("Dated Calendar" and "Weekly Grid").
+5. **Admin Routine Panel & Automation** [COMPLETED]:
+   - Created `src/components/admin/AdminRoutinePanel.tsx` with AI parser modal, editable verification table, sample presets, and single-click commit.
+   - Integrated into `src/components/AdminView.tsx` under a new "Class Routine" tab featuring an "AI" badge.
+6. **Universal Multi-Format Parser & Auto-Generation on Paste** [COMPLETED]:
+   - Completely resolved parser failure by replacing rigid regex and unauthenticated client instantiation with the **Universal Multi-Pass Schedule Engine**.
+   - Added instant auto-generation on paste (`onPaste` event) and real-time reactive debounce so entries populate immediately as soon as text is pasted into the textarea.
+   - Handled ALL formats: tab-separated spreadsheet tables, WhatsApp/Messenger informal notices, pipe/comma-delimited tables, key-value blocks, multi-day phrases (`Sunday & Tuesday`), and single start times.
+   - Integrated full departmental curriculum auto-enrichment (`SUST_FES_COURSES`) and faculty matching (`SUST_FES_FACULTY`).
+   - Added automated Year and Semester detection (`detectYearAndSemester`).
+   - Expanded unit test suite to 11/11 passing tests (`scripts/test-routine-parser.mjs`).
+   - Production bundle compiled (`vite build`), lint clean (`tsc --noEmit`), and dev server responding with HTTP 200.

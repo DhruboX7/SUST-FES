@@ -20,7 +20,7 @@ import {
   TreePine
 } from 'lucide-react';
 import { TreeSpecies, TreePhoto } from '../../types';
-import { isMatchedPhotoForSpecies } from '../../utils/storage';
+import { isMatchedPhotoForSpecies, fetchStaticJson } from '../../utils/storage';
 
 interface AdminSpeciesPhotosModalProps {
   species: TreeSpecies | null;
@@ -244,9 +244,8 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     setIsSyncingFlora(true);
     setErrorMsg('');
     try {
-      const res = await fetch('/data/flora_bangladesh_photos.json');
-      if (res.ok) {
-        const floraMap = await res.json();
+      const floraMap = await fetchStaticJson<Record<string, any>>('flora_bangladesh_photos.json');
+      if (floraMap) {
         const key = Object.keys(floraMap).find(
           (k) =>
             k.toLowerCase() === species.scientificName.trim().toLowerCase() ||

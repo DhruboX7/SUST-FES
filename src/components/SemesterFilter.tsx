@@ -51,12 +51,12 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
       
       {/* Tier 1: Year Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-          <Layers className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-500" />
+        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
+          <Layers className="w-4 h-4 text-emerald-700 dark:text-emerald-500" />
           <span>Academic Year:</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-lg">
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200/80 dark:border-stone-700/60 rounded-xl shadow-inner">
           {years.map((y) => (
             <button
               key={String(y.id)}
@@ -64,10 +64,10 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                 onSelectYear(y.id);
                 onSelectCourseId('all');
               }}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedYear === y.id
-                  ? 'bg-emerald-800 dark:bg-emerald-700 text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white'
+                  ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white font-bold shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+                  : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700/80'
               }`}
             >
               {y.label}
@@ -81,19 +81,19 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
         
         {/* Semester Segmented Switch */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-stone-500 dark:text-stone-400 whitespace-nowrap">
+          <span className="text-xs font-bold text-stone-700 dark:text-stone-300 whitespace-nowrap">
             Semester:
           </span>
-          <div className="flex items-center gap-1 p-1 bg-stone-100 dark:bg-stone-800 rounded-lg">
+          <div className="flex items-center gap-1 p-1 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200 dark:border-stone-700/70 rounded-xl shadow-inner">
             <button
               onClick={() => {
                 onSelectSemester('all');
                 onSelectCourseId('all');
               }}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1 text-xs rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedSemester === 'all'
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white font-bold shadow-xs ring-1 ring-emerald-500/30'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
               Both Semesters
@@ -103,10 +103,10 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                 onSelectSemester(1);
                 onSelectCourseId('all');
               }}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1 text-xs rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedSemester === 1
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white font-bold shadow-xs ring-1 ring-emerald-500/30'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
               Semester I
@@ -116,10 +116,10 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                 onSelectSemester(2);
                 onSelectCourseId('all');
               }}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1 text-xs rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 selectedSemester === 2
-                  ? 'bg-white dark:bg-stone-700 text-stone-900 dark:text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                  ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white font-bold shadow-xs ring-1 ring-emerald-500/30'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
               Semester II
@@ -129,13 +129,13 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
 
         {/* Course Specific Filter Dropdown */}
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <span className="text-xs font-medium text-stone-500 dark:text-stone-400 whitespace-nowrap">
+          <span className="text-xs font-bold text-stone-700 dark:text-stone-300 whitespace-nowrap">
             Course:
           </span>
           <select
             value={selectedCourseId}
             onChange={(e) => onSelectCourseId(e.target.value)}
-            className="w-full md:w-72 px-3 py-1.5 text-xs rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border border-stone-200 dark:border-stone-700 focus:outline-none focus:ring-1 focus:ring-emerald-600 truncate"
+            className="w-full md:w-72 px-3 py-1.5 text-xs rounded-xl bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border border-stone-300 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-medium truncate shadow-2xs"
           >
             <option value="all">All Courses in this Selection</option>
             {availableCourses.map((c) => (
@@ -149,15 +149,15 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
 
       {/* Tier 3: Category Filter Buttons & Count */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-stone-100 dark:border-stone-800">
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
+              className={`px-3 py-1.5 text-xs rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer border ${
                 selectedCategory === cat.id
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 border border-transparent'
+                  ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white font-bold shadow-md shadow-emerald-950/20 border-emerald-600 ring-1 ring-emerald-400/40 scale-[1.02]'
+                  : 'bg-stone-100 dark:bg-stone-800/90 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700/80 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-stone-700 font-medium shadow-2xs'
               }`}
             >
               {cat.label}
@@ -166,7 +166,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
         </div>
 
         <div className="text-xs text-stone-500 dark:text-stone-400 font-mono whitespace-nowrap shrink-0 self-end sm:self-auto">
-          Showing <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-nums">{activeCount}</span> resource{activeCount === 1 ? '' : 's'}
+          Showing <span className="font-bold text-emerald-800 dark:text-emerald-400 tabular-nums">{activeCount}</span> resource{activeCount === 1 ? '' : 's'}
         </div>
       </div>
     </div>

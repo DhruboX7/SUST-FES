@@ -77,15 +77,15 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
           </div>
 
           {/* Year selector */}
-          <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto p-1.5 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200/80 dark:border-stone-700/60 rounded-xl shadow-inner">
             {(['all', 1, 2, 3, 4] as (AcademicYear | 'all')[]).map((yr) => (
               <button
                 key={String(yr)}
                 onClick={() => setSelectedYear(yr)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap shrink-0 transition-colors ${
+                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   selectedYear === yr
-                    ? 'bg-amber-800 text-white font-semibold'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200'
+                    ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-md shadow-amber-950/20 ring-1 ring-amber-500/40 scale-[1.02]'
+                    : 'text-stone-700 dark:text-stone-300 hover:text-amber-800 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700/80'
                 }`}
               >
                 {yr === 'all' ? 'All Years' : `${yr}${yr === 1 ? 'st' : yr === 2 ? 'nd' : yr === 3 ? 'rd' : 'th'} Year`}
@@ -94,27 +94,33 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
           </div>
 
           {/* Term selector */}
-          <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-lg shrink-0">
+          <div className="flex items-center gap-1 bg-stone-100/90 dark:bg-stone-800/90 p-1 border border-stone-200 dark:border-stone-700/60 rounded-xl shadow-inner shrink-0">
             <button
               onClick={() => setSelectedTerm('all')}
-              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors ${
-                selectedTerm === 'all' ? 'bg-white dark:bg-stone-700 shadow-xs text-stone-900 dark:text-white' : 'text-stone-500'
+              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
+                selectedTerm === 'all' 
+                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
               All Terms
             </button>
             <button
               onClick={() => setSelectedTerm('final')}
-              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors ${
-                selectedTerm === 'final' ? 'bg-white dark:bg-stone-700 shadow-xs text-stone-900 dark:text-white' : 'text-stone-500'
+              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
+                selectedTerm === 'final' 
+                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
               Finals
             </button>
             <button
               onClick={() => setSelectedTerm('midterm')}
-              className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors ${
-                selectedTerm === 'midterm' ? 'bg-white dark:bg-stone-700 shadow-xs text-stone-900 dark:text-white' : 'text-stone-500'
+              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
+                selectedTerm === 'midterm' 
+                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
               Midterms

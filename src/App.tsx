@@ -10,7 +10,8 @@ import {
   getStoredResources, 
   saveStoredResources, 
   getStoredBookmarks, 
-  toggleStoredBookmark 
+  toggleStoredBookmark,
+  fetchStaticJson 
 } from './utils/storage';
 import { parseGoogleDriveUrl, guessFileType } from './utils/driveParser';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -113,9 +114,10 @@ function AppContent() {
       }
 
       // First time initialization from static archive
-      const res = await fetch('/data/resources.json');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const rawData = await res.json();
+      const rawData = await fetchStaticJson<any[]>('resources.json');
+      if (!rawData) {
+        throw new Error('Static resources unavailable, using fallback storage');
+      }
       
       const parsedItems: ResourceItem[] = Array.isArray(rawData) ? rawData.map((item: any) => {
         const parsed = parseGoogleDriveUrl(item.driveUrl || '');
@@ -132,7 +134,7 @@ function AppContent() {
       setResources(parsedItems);
       saveStoredResources(parsedItems);
     } catch (err) {
-      console.error('Failed to load static resources, falling back to local storage:', err);
+      console.warn('Failed to load static resources, falling back to local storage:', err);
       const fallback = getStoredResources();
       setResources(fallback);
       if (fallback.length === 0) {

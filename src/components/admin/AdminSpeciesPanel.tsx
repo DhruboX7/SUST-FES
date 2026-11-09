@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { TreeSpecies, TreePhoto, BotanyAiResult } from '../../types';
-import { isMatchedPhotoForSpecies } from '../../utils/storage';
+import { isMatchedPhotoForSpecies, fetchStaticJson } from '../../utils/storage';
 import { verifyAndEnrichSpeciesWithAI, validateBinomialNomenclature } from '../../utils/botanyAi';
 import { AdminSpeciesPhotosModal } from './AdminSpeciesPhotosModal';
 import { 
@@ -51,12 +51,11 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
     setIsSyncingFlora(true);
     setFloraSyncNotice('');
     try {
-      const res = await fetch('/data/flora_bangladesh_photos.json');
-      if (res.ok) {
-        const floraMap: Record<
-          string,
-          { imageUrl: string; sourceUrl: string; sourceName: string; allPhotos?: string[] }
-        > = await res.json();
+      const floraMap = await fetchStaticJson<Record<
+        string,
+        { imageUrl: string; sourceUrl: string; sourceName: string; allPhotos?: string[] }
+      >>('flora_bangladesh_photos.json');
+      if (floraMap) {
         let speciesCount = 0;
         let totalPlatesImported = 0;
 
@@ -883,9 +882,8 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                           return;
                         }
                         try {
-                          const res = await fetch('/data/flora_bangladesh_photos.json');
-                          if (res.ok) {
-                            const floraMap = await res.json();
+                          const floraMap = await fetchStaticJson<Record<string, any>>('flora_bangladesh_photos.json');
+                          if (floraMap) {
                             const key = Object.keys(floraMap).find(k => 
                               k.toLowerCase() === scientificName.trim().toLowerCase() ||
                               k.toLowerCase().includes(scientificName.trim().toLowerCase()) ||
@@ -898,7 +896,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                             }
                           }
                         } catch (err) {
-                          console.error(err);
+                          console.warn('Could not load Flora of Bangladesh data:', err);
                         }
                       }}
                       className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-800 transition-colors"

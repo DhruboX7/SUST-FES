@@ -13,7 +13,7 @@
     "serve": "vite preview --port 3000 --host 0.0.0.0",
     "lint": "tsc --noEmit",
     "validate": "node scripts/validate-data.mjs",
-    "test": "node --test scripts/test-grading.mjs"
+    "test": "node --test scripts/test-grading.mjs scripts/test-routine-parser.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",

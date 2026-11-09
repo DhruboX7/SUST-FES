@@ -109,13 +109,13 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
       </div>
 
       {/* Primary Section Switcher */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-2 shadow-xs flex items-center gap-2 overflow-x-auto">
+      <div className="bg-stone-100/90 dark:bg-stone-900/90 rounded-2xl border border-stone-200/90 dark:border-stone-800 p-1.5 shadow-inner flex items-center gap-1.5 overflow-x-auto">
         <button
           onClick={() => setActiveTab('courses')}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'courses'
-              ? 'bg-emerald-800 dark:bg-emerald-700 text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+              : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-white/80 dark:hover:bg-stone-800'
           }`}
         >
           <Compass className="w-4 h-4" />
@@ -129,22 +129,22 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
               setActiveTab('progress');
             }
           }}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'progress'
-              ? 'bg-emerald-800 dark:bg-emerald-700 text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+              : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-white/80 dark:hover:bg-stone-800'
           }`}
           title="Open Syllabus Academic Progress Report (160 Credits)"
         >
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-300" />
           <span>Syllabus Academic Progress (Progress Report)</span>
         </button>
         <button
           onClick={() => setActiveTab('grading')}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === 'grading'
-              ? 'bg-emerald-800 dark:bg-emerald-700 text-white shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+              : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-white/80 dark:hover:bg-stone-800'
           }`}
         >
           <Award className="w-4 h-4" />
@@ -156,15 +156,15 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
       {activeTab === 'courses' && (
         <div className="space-y-6">
           {/* Year Selector Tabs */}
-          <div className="flex flex-wrap items-center gap-2 p-1 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-2 shadow-xs">
+          <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-stone-100/90 dark:bg-stone-900/90 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-inner">
             {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
               <button
                 key={String(yr)}
                 onClick={() => setActiveYear(yr)}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                   activeYear === yr
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+                    ? 'bg-linear-to-r from-emerald-800 to-emerald-700 dark:from-emerald-700 dark:to-emerald-600 text-white shadow-md shadow-emerald-950/20 ring-1 ring-emerald-500/40 scale-[1.02]'
+                    : 'text-stone-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-white/80 dark:hover:bg-stone-800'
                 }`}
               >
                 {yr === 1 ? 'First Year (42 Credits)' : yr === 2 ? 'Second Year (42 Credits)' : yr === 3 ? 'Third Year (43 Credits)' : 'Fourth Year (40 Credits)'}
