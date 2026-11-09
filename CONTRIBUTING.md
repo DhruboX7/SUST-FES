@@ -25,8 +25,8 @@ If you are comfortable with Git and JSON, you can directly contribute files or f
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/sust-fes-library.git
-cd sust-fes-library
+git clone https://github.com/DhruboX7/sust-fes.git
+cd sust-fes
 
 # Install dependencies
 npm install
@@ -99,6 +99,6 @@ All three commands must exit with code `0`.
    ```bash
    git commit -m "feat(data): add 2024 Silviculture lecture slides and midterm pyq"
    ```
-3. Push to your fork and submit a Pull Request to `master`.
+3. Push to your fork and submit a Pull Request to `main`.
 
 Thank you for helping keep academic resources accessible for all SUST FES students!

@@ -1,6 +1,6 @@
 # SUST FES Academic Resource Library
 
-[![CI Quality & Validation](https://github.com/sust-fes/academic-library/actions/workflows/ci.yml/badge.svg)](https://github.com/sust-fes/academic-library/actions/workflows/ci.yml)
+[![CI Quality & Validation](https://github.com/DhruboX7/sust-fes/actions/workflows/ci.yml/badge.svg)](https://github.com/DhruboX7/sust-fes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![React 19](https://img.shields.io/badge/React-19.0.1-blue.svg)](https://react.dev/)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-4.3.3-teal.svg)](https://tailwindcss.com/)
@@ -31,7 +31,7 @@ Digital academic repository, previous year exam bank, botanical identifier, and 
 
 ## 🛠 Tech Stack
 
-- **Framework**: [React 19](https://react.dev) + [TypeScript 5](https://www.typescriptlang.org)
+- **Framework**: [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org) (strict mode)
 - **Bundler & Tooling**: [Vite 8](https://vitejs.dev)
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com) + modern CSS theme variables
 - **Routing**: [React Router 7](https://reactrouter.com) (configured with `HashRouter` for zero-configuration hosting on GitHub Pages)
@@ -50,11 +50,11 @@ Digital academic repository, previous year exam bank, botanical identifier, and 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/sust-fes-library.git
-cd sust-fes-library
+git clone https://github.com/DhruboX7/sust-fes.git
+cd sust-fes
 
-# 2. Install dependencies cleanly
-npm install
+# 2. Install dependencies exactly as pinned in package-lock.json
+npm ci
 
 # 3. Start local development server
 npm run dev
@@ -77,7 +77,8 @@ public/
 │   ├── routine.json           # Class schedule tables by year and semester
 │   ├── species.json           # Botanical & campus tree species archive
 │   ├── gallery.json           # Study tours, nursery practice, and fieldwork photos
-│   └── theses.json            # Undergraduate and MS thesis research abstracts
+│   ├── theses.json            # Undergraduate and MS thesis research abstracts
+│   └── student_photos.json    # Student-submitted photo entries
 ├── favicon.svg                # Departmental tree SVG favicon
 ├── pwa-192x192.png            # PWA application icons
 ├── pwa-512x512.png
@@ -91,6 +92,17 @@ To ensure no malformed JSON or missing fields are committed to production, run:
 ```bash
 npm run validate
 ```
+
+### Quality Checks
+
+```bash
+npm run lint   # TypeScript typecheck (strict mode)
+npm test       # Unit tests (CGPA grading + routine parser)
+npm run build  # Production build into dist/
+npm start      # Serve the built dist/ with the bundled Node server
+```
+
+CI (`.github/workflows/ci.yml`) runs validate, tests, typecheck and build on every push and pull request using `npm ci`, so commit `package-lock.json` whenever you change dependencies.
 
 ---
 
@@ -118,7 +130,7 @@ The application connects to Google Forms for **Resource Contributions** and **Br
 ### Deploy to GitHub Pages (Automated via GitHub Actions)
 1. Fork or push this repository to GitHub.
 2. Go to **Settings** $\rightarrow$ **Pages** $\rightarrow$ **Source**: set to **GitHub Actions**.
-3. Pushes to `master` will trigger `.github/workflows/deploy.yml` which builds and publishes the site automatically.
+3. Pushes to `main` (or `master`) will trigger `.github/workflows/deploy.yml` which builds and publishes the site automatically.
 
 ### Deploy to Vercel / Netlify
 Run `npm run build`. The production output is located in `dist/`. Deploy as a standard Vite single-page application.
