@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [master, main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-and-build:
     name: Lint, Validate & Build
@@ -21,8 +28,9 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      # npm ci installs exactly what package-lock.json pins and fails if it is out of sync.
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Validate static data integrity
         run: npm run validate
@@ -31,7 +39,7 @@ jobs:
         run: npm test
 
       - name: TypeScript typecheck
-        run: npx tsc --noEmit
+        run: npm run lint
 
       - name: Build production bundle
         run: npm run build

@@ -16,7 +16,6 @@
     "test": "node --test scripts/test-grading.mjs scripts/test-routine-parser.mjs"
   },
   "dependencies": {
-    "@google/genai": "^2.32.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
     "lucide-react": "^0.546.0",
@@ -33,5 +32,8 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite-plugin-pwa": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

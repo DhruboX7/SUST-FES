@@ -31,10 +31,16 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Validate static datasets
         run: npm run validate
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: TypeScript typecheck
+        run: npm run lint
 
       - name: Setup Pages
         id: pages
