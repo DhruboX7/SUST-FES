@@ -13,7 +13,7 @@
     "serve": "vite preview --port 3000 --host 0.0.0.0",
     "lint": "tsc --noEmit",
     "validate": "node scripts/validate-data.mjs",
-    "test": "node --test scripts/test-grading.mjs scripts/test-routine-parser.mjs && npx tsx --test scripts/test-routine-strict.mjs"
+    "test": "node --test scripts/test-grading.mjs scripts/test-routine-parser.mjs && tsx --test scripts/test-routine-strict.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -30,6 +30,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite-plugin-pwa": "^2.0.0"
   },
