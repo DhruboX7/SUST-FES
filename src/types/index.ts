@@ -179,6 +179,17 @@ export interface BotanyAiResult {
   isNomenclatureValid: boolean;
 }
 
+export type RoutineEventType =
+  | 'class'
+  | 'lab'
+  | 'quiz'
+  | 'term_test'
+  | 'viva'
+  | 'presentation'
+  | 'assignment'
+  | 'final_exam'
+  | 'other';
+
 export interface RoutineSlot {
   id?: string;
   day: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | string;
@@ -189,6 +200,58 @@ export interface RoutineSlot {
   teacher: string;
   batch?: string;
   notes?: string;
+
+  // Strict Routine Parser Specification attributes
+  date?: string | null; // ISO YYYY-MM-DD
+  type?: RoutineEventType;
+  typeLabel?: string | null;
+  isLab?: boolean;
+  sequenceNumber?: number | null; // e.g. CT 3, TT 2
+  startTime?: string | null; // 24-hr HH:MM
+  endTime?: string | null; // 24-hr HH:MM
+  allDay?: boolean;
+  recurrence?: 'weekly' | 'none' | string;
+  weekdayConflict?: boolean;
+  weekdayAsWritten?: string | null;
+  weekdayComputed?: string | null;
+  timeAsWritten?: string | null;
+  confidence?: 'high' | 'medium' | 'low';
+  warnings?: string[];
+}
+
+export interface ParsedRoutineEvent {
+  id: string;
+  date: string | null;
+  weekday_as_written: string | null;
+  weekday_computed: string | null;
+  weekday_conflict: boolean;
+  recurrence: 'weekly' | 'none' | string;
+  start_time: string | null;
+  end_time: string | null;
+  time_as_written: string | null;
+  all_day: boolean;
+  subject_code: string | null;
+  subject_name: string;
+  type: RoutineEventType;
+  type_label: string | null;
+  is_lab: boolean;
+  sequence_number: number | null;
+  room: string | null;
+  teacher: string | null;
+  confidence: 'high' | 'medium' | 'low';
+  warnings: string[];
+}
+
+export interface StructuredRoutineOutput {
+  academic_context: {
+    year: number | null;
+    semester: number | null;
+    level: string | null;
+    term: string | null;
+    batch: string | null;
+  };
+  timezone: string;
+  events: ParsedRoutineEvent[];
 }
 
 export interface YearRoutine {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ResourceItem, AcademicYear } from '../types';
 import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, ArrowUpRight } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ExamBankViewProps {
   pyqResources: ResourceItem[];
@@ -14,6 +15,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
   onPreview,
   onCopyLink,
 }) => {
+  const { t } = useLanguage();
   usePageMeta({
     title: 'Previous Year Questions (PYQ) Bank',
     description: 'Archive of past semester final and midterm question papers for undergraduate and master degrees in Forestry and Environmental Science, SUST.',
@@ -49,13 +51,13 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
         <div className="max-w-2xl">
           <div className="flex items-center gap-2 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
             <FileCheck className="w-4 h-4" />
-            <span>FES SUST Examination Archive</span>
+            <span>{t('examArchiveSub')}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
-            Previous Year Questions (PYQs) & Papers
+            {t('examBankTitle')}
           </h2>
           <p className="text-stone-300 text-sm leading-relaxed">
-            Essential question papers from past semesters (Midterms & Semester Finals) to help students prepare for upcoming departmental exams.
+            {t('examBankDesc')}
           </p>
         </div>
       </div>
@@ -71,7 +73,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search past exam questions (e.g. Dendrology 2023, FES 08211121, Silviculture)..."
+              placeholder={t('searchPyqPlaceholder')}
               className="w-full pl-9 pr-4 py-2 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none"
             />
           </div>
@@ -88,7 +90,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     : 'text-stone-700 dark:text-stone-300 hover:text-amber-800 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700/80'
                 }`}
               >
-                {yr === 'all' ? 'All Years' : `${yr}${yr === 1 ? 'st' : yr === 2 ? 'nd' : yr === 3 ? 'rd' : 'th'} Year`}
+                {yr === 'all' ? t('allYears') : yr === 1 ? t('firstYear') : yr === 2 ? t('secondYear') : yr === 3 ? t('thirdYear') : t('fourthYear')}
               </button>
             ))}
           </div>
@@ -103,7 +105,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
-              All Terms
+              {t('allTerms')}
             </button>
             <button
               onClick={() => setSelectedTerm('final')}
@@ -113,7 +115,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
-              Finals
+              {t('finalExam')}
             </button>
             <button
               onClick={() => setSelectedTerm('midterm')}
@@ -123,7 +125,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
               }`}
             >
-              Midterms
+              {t('midtermExam')}
             </button>
           </div>
         </div>
@@ -133,9 +135,9 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
       {filtered.length === 0 ? (
         <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-8">
           <FileCheck className="w-10 h-10 text-stone-400 mx-auto mb-2" />
-          <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">No Exam Papers Found</h3>
+          <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">{t('noPyqFound')}</h3>
           <p className="text-xs text-stone-500 max-w-sm mx-auto mt-1">
-            Try adjusting your search terms or year filter, or add question papers via the Manage Library panel.
+            {t('noResourcesMatchDesc')}
           </p>
         </div>
       ) : (
@@ -182,7 +184,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-amber-800 hover:bg-amber-900 text-white transition-colors flex items-center justify-center gap-1 shadow-xs"
                     title="Redirect to Google Drive / Source"
                   >
-                    <span>Redirect to Drive</span>
+                    <span>{t('redirectDrive')}</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
                   </a>
 
@@ -192,7 +194,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1"
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    <span>Preview</span>
+                    <span>{t('readInApp')}</span>
                   </button>
                 </div>
 
@@ -201,7 +203,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     onClick={() => onCopyLink(item)}
                     className="hover:text-amber-700 transition-colors"
                   >
-                    Copy Link
+                    {t('copyLink')}
                   </button>
                   <a
                     href={item.downloadUrl}
@@ -211,7 +213,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     className="hover:text-amber-700 transition-colors flex items-center gap-1"
                   >
                     <Download className="w-3 h-3" />
-                    <span>Download</span>
+                    <span>{t('download')}</span>
                   </a>
                 </div>
               </div>

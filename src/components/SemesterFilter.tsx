@@ -1,6 +1,7 @@
 import React from 'react';
 import { AcademicYear, AcademicSemester, ResourceCategory, Course } from '../types';
 import { Filter, Layers, BookMarked, FileText, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SemesterFilterProps {
   selectedYear: AcademicYear | 'all';
@@ -27,23 +28,25 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
   availableCourses,
   activeCount,
 }) => {
+  const { t } = useLanguage();
+
   const years: { id: AcademicYear | 'all'; label: string }[] = [
-    { id: 'all', label: 'All Years' },
-    { id: 1, label: '1st Year' },
-    { id: 2, label: '2nd Year' },
-    { id: 3, label: '3rd Year' },
-    { id: 4, label: '4th Year' },
-    { id: 'msc', label: 'M.Sc. / Thesis' },
+    { id: 'all', label: t('allYears') },
+    { id: 1, label: t('firstYear') },
+    { id: 2, label: t('secondYear') },
+    { id: 3, label: t('thirdYear') },
+    { id: 4, label: t('fourthYear') },
+    { id: 'msc', label: t('mscYear') },
   ];
 
   const categories: { id: ResourceCategory | 'all'; label: string }[] = [
-    { id: 'all', label: 'All Types' },
-    { id: 'slides', label: 'Lecture Slides' },
-    { id: 'notes', label: 'Class Notes' },
-    { id: 'pyq', label: 'Previous Questions (PYQs)' },
-    { id: 'practical', label: 'Lab & Field Manuals' },
-    { id: 'book', label: 'Reference Books' },
-    { id: 'syllabus', label: 'Syllabus & Guides' },
+    { id: 'all', label: t('allTypes') },
+    { id: 'slides', label: t('lectureSlides') },
+    { id: 'notes', label: t('classNotes') },
+    { id: 'pyq', label: t('examBankPyqs') },
+    { id: 'practical', label: t('labFieldManuals') },
+    { id: 'book', label: t('refBooks') },
+    { id: 'syllabus', label: t('syllabusGuides') },
   ];
 
   return (
@@ -53,7 +56,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
         <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
           <Layers className="w-4 h-4 text-emerald-700 dark:text-emerald-500" />
-          <span>Academic Year:</span>
+          <span>{t('academicYearTier')}</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200/80 dark:border-stone-700/60 rounded-xl shadow-inner">
@@ -82,7 +85,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
         {/* Semester Segmented Switch */}
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-stone-700 dark:text-stone-300 whitespace-nowrap">
-            Semester:
+            {t('semLabel')}
           </span>
           <div className="flex items-center gap-1 p-1 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200 dark:border-stone-700/70 rounded-xl shadow-inner">
             <button
@@ -96,7 +99,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
-              Both Semesters
+              {t('bothSemesters')}
             </button>
             <button
               onClick={() => {
@@ -109,7 +112,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
-              Semester I
+              {t('semesterOne')}
             </button>
             <button
               onClick={() => {
@@ -122,7 +125,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
                   : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-white/60 dark:hover:bg-stone-700/60 font-medium'
               }`}
             >
-              Semester II
+              {t('semesterTwo')}
             </button>
           </div>
         </div>
@@ -130,14 +133,14 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
         {/* Course Specific Filter Dropdown */}
         <div className="flex items-center gap-2 w-full md:w-auto">
           <span className="text-xs font-bold text-stone-700 dark:text-stone-300 whitespace-nowrap">
-            Course:
+            {t('courseLabel')}
           </span>
           <select
             value={selectedCourseId}
             onChange={(e) => onSelectCourseId(e.target.value)}
             className="w-full md:w-72 px-3 py-1.5 text-xs rounded-xl bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 border border-stone-300 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-medium truncate shadow-2xs"
           >
-            <option value="all">All Courses in this Selection</option>
+            <option value="all">{t('allCoursesInSelection')}</option>
             {availableCourses.map((c) => (
               <option key={c.id} value={c.code}>
                 {c.code} · {c.title}
@@ -166,7 +169,7 @@ export const SemesterFilter: React.FC<SemesterFilterProps> = ({
         </div>
 
         <div className="text-xs text-stone-500 dark:text-stone-400 font-mono whitespace-nowrap shrink-0 self-end sm:self-auto">
-          Showing <span className="font-bold text-emerald-800 dark:text-emerald-400 tabular-nums">{activeCount}</span> resource{activeCount === 1 ? '' : 's'}
+          {t('showingResources')} <span className="font-bold text-emerald-800 dark:text-emerald-400 tabular-nums">{activeCount}</span> {activeCount === 1 ? t('resourceWord') : t('resourcesWord')}
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Search, X, BookOpen, FileCheck, Layers, TreePine, Sparkles, PlusCircle 
 import { ResourceCategory } from '../types';
 import { CONTRIBUTE_FORM_URL } from '../config';
 import heroImg from '../assets/images/hero_forestry_sust.webp';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -25,6 +26,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectCategory,
   onSwitchToExamBank,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="relative mb-8 rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-800 shadow-sm bg-stone-900 text-white">
       {/* Background Image Asset with measured contrast scrim */}
@@ -48,15 +51,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="max-w-2xl">
             <div className="flex items-center justify-center md:justify-start gap-2 text-emerald-300 text-xs font-semibold tracking-wider uppercase mb-2">
               <TreePine className="w-4 h-4 text-emerald-400" />
-              <span>Shahjalal University of Science and Technology</span>
+              <span>{t('uniTitle')}</span>
             </div>
             
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white leading-tight mb-3">
-              Department of Forestry & Environmental Science
+              {t('deptTitle')}
             </h1>
             
             <p className="text-stone-300 text-sm md:text-base leading-relaxed mb-6 font-normal">
-              Official academic archive for lecture slides, class handouts, previous year exam questions, and field practical manuals.
+              {t('heroSubtitle')}
             </p>
 
             {/* Instant Search Bar */}
@@ -68,14 +71,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Search by course code (e.g. FES 08211121, Silviculture), topic, or teacher..."
+                placeholder={t('searchPlaceholder')}
                 className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/95 dark:bg-stone-900/90 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 text-sm border border-stone-200 dark:border-stone-700 shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => onSearchChange('')}
-                  aria-label="Clear search query"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                  aria-label={t('clearSearch')}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -86,7 +89,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mt-2.5 text-[11px]">
               <span className="text-emerald-400/80 font-medium text-[10px] uppercase tracking-wider flex items-center gap-1">
                 <Sparkles className="w-3 h-3 text-emerald-400" />
-                Scan Keywords:
+                {t('scanKeywords')}
               </span>
               {[
                 'Silviculture',
@@ -104,7 +107,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   key={kw}
                   type="button"
                   onClick={() => onSearchChange(kw)}
-                  className={`px-2 py-0.5 rounded-md font-mono text-[10px] transition-all ${
+                  className={`px-2 py-0.5 rounded-md font-mono text-[10px] transition-all cursor-pointer ${
                     searchQuery.toLowerCase().includes(kw.toLowerCase())
                       ? 'bg-emerald-500 text-stone-950 font-bold'
                       : 'bg-white/10 hover:bg-white/20 text-stone-200'
@@ -117,44 +120,44 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Fast Quick Filter Buttons */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-4 text-xs">
-              <span className="text-stone-400 font-medium mr-1">Filter:</span>
+              <span className="text-stone-400 font-medium mr-1">{t('filterLabel')}</span>
 
               <button
                 onClick={onSwitchToExamBank}
-                className="px-2.5 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-medium transition-colors flex items-center gap-1"
+                className="px-2.5 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-medium transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <FileCheck className="w-3 h-3 text-amber-400" />
-                <span>Exam Bank (PYQs)</span>
+                <span>{t('examBankPyqs')}</span>
               </button>
               <button
                 onClick={() => onSelectCategory('slides')}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
+                className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                   selectedCategory === 'slides'
                     ? 'bg-emerald-600 text-white font-semibold'
                     : 'bg-white/10 hover:bg-white/20 text-stone-200'
                 }`}
               >
-                Lecture Slides
+                {t('lectureSlides')}
               </button>
               <button
                 onClick={() => onSelectCategory('notes')}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
+                className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                   selectedCategory === 'notes'
                     ? 'bg-emerald-600 text-white font-semibold'
                     : 'bg-white/10 hover:bg-white/20 text-stone-200'
                 }`}
               >
-                Class Notes
+                {t('classNotes')}
               </button>
               <button
                 onClick={() => onSelectCategory('practical')}
-                className={`px-2.5 py-1 rounded-md transition-colors ${
+                className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                   selectedCategory === 'practical'
                     ? 'bg-emerald-600 text-white font-semibold'
                     : 'bg-white/10 hover:bg-white/20 text-stone-200'
                 }`}
               >
-                Lab & Field Manuals
+                {t('labFieldManuals')}
               </button>
             </div>
           </div>
@@ -165,19 +168,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="text-xl md:text-2xl font-bold font-mono text-emerald-300 tabular-nums">
                 {totalResources}
               </div>
-              <div className="text-xs text-stone-300 font-medium">Archived Resources</div>
+              <div className="text-xs text-stone-300 font-medium">{t('archivedResources')}</div>
             </div>
             <div className="p-3 rounded-xl bg-white/5 border border-white/10">
               <div className="text-xl md:text-2xl font-bold font-mono text-amber-300 tabular-nums">
                 {totalPyqs}
               </div>
-              <div className="text-xs text-stone-300 font-medium">Exam Question Papers</div>
+              <div className="text-xs text-stone-300 font-medium">{t('examQuestionPapers')}</div>
             </div>
             <div className="p-3 rounded-xl bg-white/5 border border-white/10 hidden md:block">
               <div className="text-xl md:text-2xl font-bold font-mono text-stone-200 tabular-nums">
                 {totalCourses}
               </div>
-              <div className="text-xs text-stone-300 font-medium">B.Sc. & M.Sc. Courses</div>
+              <div className="text-xs text-stone-300 font-medium">{t('bscMscCourses')}</div>
             </div>
 
             <a
@@ -187,7 +190,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               className="col-span-2 md:col-span-1 p-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-500/50 flex items-center justify-center gap-1.5 text-xs font-bold shadow-xs transition-colors"
             >
               <PlusCircle className="w-3.5 h-3.5" />
-              <span>Contribute Resource</span>
+              <span>{t('contributeResource')}</span>
             </a>
           </div>
         </div>

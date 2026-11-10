@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { RoutineSlot } from '../../types';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -20,9 +21,16 @@ interface DatedRoutineCalendarProps {
 }
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+const WEEKDAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'] as const;
+const WEEKDAYS_SHORT_BN = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'] as const;
+
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
+];
+const MONTH_NAMES_BN = [
+  'জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
+  'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'
 ];
 
 export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
@@ -30,6 +38,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
   year,
   semester,
 }) => {
+  const { t, lang } = useLanguage();
   const today = useMemo(() => new Date(), []);
   const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
@@ -99,18 +108,41 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
   // Selected date weekday name
   const selectedDayName = WEEKDAYS[selectedDate.getDay()];
 
-  // Filter slots for the selected date's day of the week
-  const selectedDaySlots = useMemo(() => {
-    return schedule.filter((slot) => slot.day.toLowerCase() === selectedDayName.toLowerCase());
-  }, [schedule, selectedDayName]);
+  // Format date helper: YYYY-MM-DD
+  const formatDateISO = (d: Date) => {
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return `${yr}-${mo}-${da}`;
+  };
 
-  // Map each day of week to slots
-  const slotsByWeekday = useMemo(() => {
-    const map = new Map<string, RoutineSlot[]>();
-    for (const d of WEEKDAYS) {
-      map.set(d.toLowerCase(), schedule.filter((s) => s.day.toLowerCase() === d.toLowerCase()));
-    }
-    return map;
+  // Filter slots for the selected date: prioritize exact date match, else recurring weekday slots
+  const selectedDaySlots = useMemo(() => {
+    const iso = formatDateISO(selectedDate);
+    const dateSpecific = schedule.filter((s) => s.date && s.date === iso);
+    if (dateSpecific.length > 0) return dateSpecific;
+
+    // Recurring weekly slots for this weekday
+    return schedule.filter((slot) => {
+      if (slot.date) return slot.date === iso;
+      return slot.day.toLowerCase() === selectedDayName.toLowerCase();
+    });
+  }, [schedule, selectedDate, selectedDayName]);
+
+  // Helper to fetch slots for any calendar cell date
+  const getSlotsForCellDate = useMemo(() => {
+    return (d: Date) => {
+      const iso = formatDateISO(d);
+      const dayName = WEEKDAYS[d.getDay()].toLowerCase();
+
+      const exact = schedule.filter((s) => s.date === iso);
+      if (exact.length > 0) return exact;
+
+      return schedule.filter((s) => {
+        if (s.date) return s.date === iso;
+        return s.day.toLowerCase() === dayName;
+      });
+    };
   }, [schedule]);
 
   const isSameDay = (d1: Date, d2: Date) => {
@@ -133,29 +165,38 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
       const [startPart, endPart] = timeStr.split(/\s*[-–—]\s*/);
-      if (!startPart || !endPart) return null;
+      if (!startPart) return null;
 
-      const parseTimeMinutes = (str: string) => {
+      const parseTimeMinutes = (str: string, isEnd = false, startMins?: number) => {
         const cleaned = str.trim();
-        const [time, modifier] = cleaned.split(/\s+/);
-        let [hours, mins] = time.split(':').map(Number);
+        const ampmMatch = cleaned.match(/[AaPp][Mm]/i);
+        const modifier = ampmMatch ? ampmMatch[0].toLowerCase() : null;
+        const timePart = cleaned.replace(/[AaPp][Mm]/i, '').trim();
+
+        let [hours, mins] = timePart.split(':').map(Number);
         if (isNaN(hours)) return null;
         mins = isNaN(mins) ? 0 : mins;
 
-        if (modifier) {
-          if (modifier.toLowerCase() === 'pm' && hours < 12) hours += 12;
-          if (modifier.toLowerCase() === 'am' && hours === 12) hours = 0;
-        } else {
-          // If 1, 2, 3, 4, 5 without PM in daytime university schedule
+        if (modifier === 'pm' && hours < 12) hours += 12;
+        if (modifier === 'am' && hours === 12) hours = 0;
+
+        if (!modifier) {
+          // Standard university daytime inference (1-6 is PM: 13:00 to 18:00)
           if (hours >= 1 && hours <= 6) hours += 12;
+          // Rollover check if end part is less than start part (e.g. 11:30 to 01:00)
+          if (isEnd && startMins !== undefined && hours * 60 + mins < startMins && hours < 12) {
+            hours += 12;
+          }
         }
         return hours * 60 + mins;
       };
 
       const startMin = parseTimeMinutes(startPart);
-      const endMin = parseTimeMinutes(endPart);
+      if (startMin === null) return null;
 
-      if (startMin === null || endMin === null) return null;
+      const endMin = endPart ? parseTimeMinutes(endPart, true, startMin) : startMin + 90; // Default 90m if single time
+
+      if (endMin === null) return null;
 
       if (currentMinutes >= startMin && currentMinutes <= endMin) {
         return 'now';
@@ -183,10 +224,10 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                <span>{MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
+                <span>{lang === 'bn' ? MONTH_NAMES_BN[currentDate.getMonth()] : MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
               </h3>
               <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
-                Academic Year {year} · Semester {semester} Timetable
+                {lang === 'bn' ? `শিক্ষাবর্ষ ${year} · সেমিস্টার ${semester} সময়সূচী` : `Academic Year ${year} · Semester ${semester} Timetable`}
               </p>
             </div>
           </div>
@@ -197,7 +238,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
               onClick={handleJumpToToday}
               className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-800 dark:hover:text-emerald-300 border border-stone-200 dark:border-stone-700 transition-colors cursor-pointer"
             >
-              Today
+              {t('today')}
             </button>
             <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl border border-stone-200 dark:border-stone-700">
               <button
@@ -224,8 +265,9 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
         <div className="mt-4">
           {/* Weekday headers */}
           <div className="grid grid-cols-7 gap-1 text-center mb-2">
-            {WEEKDAYS.map((day) => {
+            {WEEKDAYS.map((day, dIdx) => {
               const isWeekend = day === 'Friday' || day === 'Saturday';
+              const label = lang === 'bn' ? WEEKDAYS_SHORT_BN[dIdx] : day.slice(0, 3);
               return (
                 <div
                   key={day}
@@ -233,8 +275,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                     isWeekend ? 'text-stone-400 dark:text-stone-500' : 'text-stone-600 dark:text-stone-300'
                   }`}
                 >
-                  <span className="hidden sm:inline">{day.slice(0, 3)}</span>
-                  <span className="sm:hidden">{day.slice(0, 2)}</span>
+                  <span>{label}</span>
                 </div>
               );
             })}
@@ -244,7 +285,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
           <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
             {calendarDays.map((cell, idx) => {
               const cellWeekday = WEEKDAYS[cell.date.getDay()];
-              const daySlots = slotsByWeekday.get(cellWeekday.toLowerCase()) || [];
+              const daySlots = getSlotsForCellDate(cell.date);
               const hasClasses = daySlots.length > 0;
               const cellIsToday = isToday(cell.date);
               const cellIsSelected = isSelected(cell.date);
@@ -335,21 +376,21 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-                Selected Day Schedule
+                {t('selectedDaySchedule')}
               </span>
               {isToday(selectedDate) && (
                 <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300">
-                  Today
+                  {t('today')}
                 </span>
               )}
             </div>
             <h4 className="text-lg font-bold text-stone-900 dark:text-stone-100">
-              {selectedDayName}, {MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
+              {lang === 'bn' ? WEEKDAYS_BN[selectedDate.getDay()] : selectedDayName}, {lang === 'bn' ? MONTH_NAMES_BN[selectedDate.getMonth()] : MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
             </h4>
           </div>
 
           <div className="text-xs font-mono font-medium text-stone-500 dark:text-stone-400">
-            {selectedDaySlots.length} {selectedDaySlots.length === 1 ? 'Class' : 'Classes'} Scheduled
+            {selectedDaySlots.length} {t('classesScheduled')}
           </div>
         </div>
 
@@ -358,10 +399,10 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
           <div className="text-center py-10 px-4 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-dashed border-stone-200 dark:border-stone-800">
             <CheckCircle2 className="w-9 h-9 text-emerald-600/70 mx-auto mb-2" />
             <h5 className="text-sm font-bold text-stone-800 dark:text-stone-200">
-              No Classes Scheduled for {selectedDayName}
+              {t('noClassesScheduled')} ({lang === 'bn' ? WEEKDAYS_BN[selectedDate.getDay()] : selectedDayName})
             </h5>
             <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto mt-1">
-              There are no departmental lecture slots listed for Year {year} Semester {semester} on {selectedDayName}s. Use this time for reading, assignments, or field preparation.
+              {t('noClassesScheduledDesc')}
             </p>
           </div>
         ) : (
@@ -388,28 +429,60 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
 
                       {status === 'now' && (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white animate-pulse">
-                          Happening Now
+                          {t('happeningNow')}
                         </span>
                       )}
                       {status === 'upcoming' && (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
-                          Upcoming Today
+                          {t('upcomingToday')}
                         </span>
                       )}
                       {status === 'past' && (
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-stone-200 text-stone-600 dark:bg-stone-700 dark:text-stone-300">
-                          Completed
+                          {t('completed')}
                         </span>
                       )}
                     </div>
 
-                    {/* Course Code & Title */}
-                    <div className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-0.5">
-                      {slot.courseCode}
+                    {/* Course Code, Type Badge & Title */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <span className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400">
+                        {slot.courseCode}
+                      </span>
+                      {slot.type && slot.type !== 'class' && (
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                          slot.type === 'viva' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' :
+                          slot.type === 'quiz' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
+                          slot.type === 'term_test' ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' :
+                          slot.type === 'presentation' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300' :
+                          slot.type === 'assignment' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' :
+                          slot.type === 'final_exam' ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300' :
+                          'bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-300'
+                        }`}>
+                          {slot.typeLabel || slot.type}
+                        </span>
+                      )}
+                      {slot.isLab && (
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                          Lab / Field
+                        </span>
+                      )}
                     </div>
-                    <h5 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-3">
+                    <h5 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
                       {slot.courseTitle}
                     </h5>
+
+                    {/* Warnings (if any) */}
+                    {slot.warnings && slot.warnings.length > 0 && (
+                      <div className="mb-2 space-y-0.5">
+                        {slot.warnings.map((w, wIdx) => (
+                          <div key={wIdx} className="text-[10px] text-amber-700 dark:text-amber-400 flex items-center gap-1 font-medium">
+                            <AlertCircle className="w-3 h-3 shrink-0" />
+                            <span>{w}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Room & Teacher Metadata */}

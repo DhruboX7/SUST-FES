@@ -14,6 +14,7 @@ import {
   Flag,
   Sparkles
 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ResourceCardProps {
   resource: ResourceItem;
@@ -53,6 +54,8 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   onCopyLink,
   searchQuery = '',
 }) => {
+  const { t } = useLanguage();
+
   // Determine file icon
   const getCategoryIcon = () => {
     switch (resource.category) {
@@ -121,7 +124,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             <span>{formatSemester()}</span>
             {isRecent && (
               <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 uppercase tracking-wider">
-                New
+                {t('newBadge')}
               </span>
             )}
           </div>
@@ -193,7 +196,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               className="py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-900 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white transition-all flex items-center justify-center gap-1.5 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
               title="Redirect and open document in Google Drive / Cloud"
             >
-              <span>Redirect to Drive</span>
+              <span>{t('redirectDrive')}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
 
@@ -205,7 +208,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               title="Read document embedded in app"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Read in App</span>
+              <span>{t('readInApp')}</span>
             </button>
           </div>
 
@@ -218,7 +221,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               title="Copy shareable link"
             >
               <Copy className="w-3 h-3" />
-              <span>Copy Link</span>
+              <span>{t('copyLink')}</span>
             </button>
 
             <a
@@ -231,7 +234,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               title="Download file directly"
             >
               <Download className="w-3 h-3" />
-              <span>Download</span>
+              <span>{t('download')}</span>
             </a>
 
             <a
@@ -243,7 +246,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               title="Report broken or inaccessible link"
             >
               <Flag className="w-3 h-3" />
-              <span>Report</span>
+              <span>{t('report')}</span>
             </a>
           </div>
         </div>
