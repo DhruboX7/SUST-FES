@@ -79,10 +79,10 @@ export interface TreeSpecies {
   banglaName: string;
   family: string;
   uses: string[];
-  habitat: string;
+  habitat: string;`n  habitatBn?: string;
   conservationStatus: string;
-  distribution: string;
-  silviculturalNotes: string;
+  distribution: string;`n  distributionBn?: string;
+  silviculturalNotes: string;`n  silviculturalNotesBn?: string;
   imageUrl?: string;
   photoCredit?: string;
   floraUrl?: string;
@@ -170,10 +170,10 @@ export interface BotanyAiResult {
   banglaName: string;
   family: string;
   uses: string[];
-  habitat: string;
+  habitat: string;`n  habitatBn?: string;
   conservationStatus: string;
-  distribution: string;
-  silviculturalNotes: string;
+  distribution: string;`n  distributionBn?: string;
+  silviculturalNotes: string;`n  silviculturalNotesBn?: string;
   confidence: number;
   taxonomyNotes?: string;
   isNomenclatureValid: boolean;
