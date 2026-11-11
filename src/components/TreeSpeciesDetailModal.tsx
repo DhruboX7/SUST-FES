@@ -19,6 +19,13 @@ import {
 } from 'lucide-react';
 import { TreeSpecies, TreePhoto, StudentPhotoItem } from '../types';
 import { addPhotoToTreeSpecies } from '../utils/storage';
+import { useLanguage } from '../contexts/LanguageContext';
+import { 
+  getLocalizedSpeciesField, 
+  getLocalizedEcosystem, 
+  getLocalizedConservationStatus, 
+  getLocalizedUse 
+} from '../utils/speciesTranslations';
 
 interface TreeSpeciesDetailModalProps {
   species: TreeSpecies | null;
@@ -37,6 +44,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
   onOpenStudentSubmit,
   onSpeciesUpdated,
 }) => {
+  const { t, lang } = useLanguage();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
@@ -256,7 +264,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
               <div className="flex items-center gap-2">
                 <Camera className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
                 <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100">
-                  Botanical & Specimen Photos ({allPhotos.length})
+                  {lang === 'bn' ? 'বোটানিক্যাল ও নমুনার ছবি' : 'Botanical & Specimen Photos'} ({allPhotos.length})
                 </h3>
               </div>
 
@@ -264,19 +272,19 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAddingPhoto(!isAddingPhoto)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>{isAddingPhoto ? 'Close Form' : 'Add More Photos'}</span>
+                  <span>{isAddingPhoto ? t('closeForm') : t('addMorePhotos')}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => onOpenStudentSubmit(species.id)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-emerald-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-emerald-700 transition-colors cursor-pointer"
                 >
                   <User className="w-3.5 h-3.5" />
-                  <span>Student Field Lens</span>
+                  <span>{t('studentFieldLens')}</span>
                 </button>
               </div>
             </div>
@@ -509,20 +517,20 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
               <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800">
                 <div className="flex items-center gap-1.5 font-bold text-stone-900 dark:text-stone-100 mb-1">
                   <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-                  <span>Geographic Distribution in Bangladesh</span>
+                  <span>{t('geographicDistribution')}</span>
                 </div>
                 <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                  {species.distribution}
+                  {getLocalizedSpeciesField(species, 'distribution', lang)}
                 </p>
               </div>
 
               <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800">
                 <div className="flex items-center gap-1.5 font-bold text-stone-900 dark:text-stone-100 mb-1">
                   <Layers className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Ecological Habitat</span>
+                  <span>{t('ecologicalHabitat')}</span>
                 </div>
                 <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                  {species.habitat}
+                  {getLocalizedSpeciesField(species, 'habitat', lang)}
                 </p>
               </div>
             </div>
@@ -530,17 +538,17 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
             {/* Silvicultural Notes */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">
-                Silvicultural & Dendrological Characteristics
+                {t('silviculturalNotesLabel')}
               </h4>
               <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed bg-stone-50/50 dark:bg-stone-950/40 p-3.5 rounded-xl border border-stone-200 dark:border-stone-800">
-                {species.silviculturalNotes}
+                {getLocalizedSpeciesField(species, 'silviculturalNotes', lang)}
               </p>
             </div>
 
             {/* Timber & Ecological Uses */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-1.5">
-                Economic & Ecological Utilization
+                {t('economicUsesLabel')}
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {species.uses.map((use, i) => (
@@ -548,7 +556,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                     key={i}
                     className="px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
                   >
-                    {use}
+                    {getLocalizedUse(use, lang)}
                   </span>
                 ))}
               </div>
@@ -564,7 +572,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                   className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
                 >
                   <Globe className="w-4 h-4 text-emerald-600" />
-                  <span>Read Full Botanical Profile on Flora of Bangladesh</span>
+                  <span>{t('readFullBotanicalFlora')}</span>
                   <ExternalLink className="w-3.5 h-3.5 opacity-70" />
                 </a>
               </div>

@@ -18,10 +18,12 @@ import { LanguageProvider } from './contexts/LanguageContext';
 
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { DocumentViewerModal } from './components/DocumentViewerModal';
-import { AdminModal } from './components/AdminModal';
 
 import { Check, Loader2 } from 'lucide-react';
+
+// Code Splitting / Lazy Route Loading
+const DocumentViewerModal = lazy(() => import('./components/DocumentViewerModal').then((m) => ({ default: m.DocumentViewerModal })));
+const AdminModal = lazy(() => import('./components/AdminModal').then((m) => ({ default: m.AdminModal })));
 
 // Code Splitting / Lazy Route Loading
 const CatalogView = lazy(() => import('./components/CatalogView').then((m) => ({ default: m.CatalogView })));
@@ -341,22 +343,30 @@ function AppContent() {
       <Footer />
 
       {/* Embedded Document Previewer Modal */}
-      <DocumentViewerModal
-        resource={previewResource}
-        onClose={() => setPreviewResource(null)}
-        onCopyLink={handleCopyLink}
-      />
+      {previewResource && (
+        <Suspense fallback={null}>
+          <DocumentViewerModal
+            resource={previewResource}
+            onClose={() => setPreviewResource(null)}
+            onCopyLink={handleCopyLink}
+          />
+        </Suspense>
+      )}
 
       {/* Visual Admin Modal */}
-      <AdminModal
-        isOpen={isAdminModalOpen}
-        onClose={() => setIsAdminModalOpen(false)}
-        resources={resources}
-        onAddResource={handleAddResource}
-        onUpdateResource={handleUpdateResource}
-        onDeleteResource={handleDeleteResource}
-        onRefreshResources={handleRefreshResources}
-      />
+      {isAdminModalOpen && (
+        <Suspense fallback={null}>
+          <AdminModal
+            isOpen={isAdminModalOpen}
+            onClose={() => setIsAdminModalOpen(false)}
+            resources={resources}
+            onAddResource={handleAddResource}
+            onUpdateResource={handleUpdateResource}
+            onDeleteResource={handleDeleteResource}
+            onRefreshResources={handleRefreshResources}
+          />
+        </Suspense>
+      )}
 
       {/* Toast Feedback */}
       {toastMessage && (

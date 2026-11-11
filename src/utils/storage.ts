@@ -76,12 +76,20 @@ function notifyDataUpdate(collection: string) {
   }
 }
 
+// In-memory cache for static JSON datasets to avoid redundant HTTP calls and parsing overhead
+const staticJsonCache = new Map<string, unknown>();
+
 /**
  * Safely fetches a static JSON dataset from /data/ with candidate URL resolution,
- * automatic retries for transient connection drops/restarts, and error resilience.
+ * automatic retries for transient connection drops/restarts, in-memory caching, and error resilience.
  */
 export async function fetchStaticJson<T>(filename: string, maxRetries = 2): Promise<T | null> {
   const cleanName = filename.replace(/^\/+/, '').replace(/^data\//, '');
+  
+  if (staticJsonCache.has(cleanName)) {
+    return staticJsonCache.get(cleanName) as T;
+  }
+
   const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
 
   const candidateUrls: string[] = [];
@@ -94,10 +102,11 @@ export async function fetchStaticJson<T>(filename: string, maxRetries = 2): Prom
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     for (const url of uniqueUrls) {
       try {
-        const res = await fetch(url, { cache: 'no-cache' });
+        const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
           if (data !== undefined && data !== null) {
+            staticJsonCache.set(cleanName, data);
             return data as T;
           }
         }

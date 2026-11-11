@@ -23,8 +23,17 @@ import { TreeSpecies, StudentPhotoItem } from '../types';
 import { getStoredSpecies, getStoredStudentPhotos } from '../utils/storage';
 import { SubmitStudentPhotoModal } from './SubmitStudentPhotoModal';
 import { TreeSpeciesDetailModal } from './TreeSpeciesDetailModal';
+import { useLanguage } from '../contexts/LanguageContext';
+import { 
+  getLocalizedSpeciesField, 
+  getLocalizedEcosystem, 
+  getLocalizedConservationStatus, 
+  getLocalizedUse 
+} from '../utils/speciesTranslations';
 
 export const SpeciesDatabaseView: React.FC = () => {
+  const { t, lang } = useLanguage();
+
   usePageMeta({
     title: 'Dendrology & Tree Species Database with Photography',
     description: 'Silvicultural database of indigenous and plantation tree species of Bangladesh with taxonomy, botanical photography, student observations, and wood utilization profiles.',
@@ -37,6 +46,7 @@ export const SpeciesDatabaseView: React.FC = () => {
   const [selectedEcosystem, setSelectedEcosystem] = useState<string>('all');
   const [selectedUse, setSelectedUse] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState<number>(12);
 
   // Selected Tree Species Detail Modal (with multi-photo gallery)
   const [selectedTreeDetail, setSelectedTreeDetail] = useState<TreeSpecies | null>(null);
@@ -140,6 +150,11 @@ export const SpeciesDatabaseView: React.FC = () => {
     return map;
   }, [studentPhotos]);
 
+  // Reset pagination window whenever user searches or filters
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [search, selectedFamily, selectedEcosystem, selectedUse]);
+
   const handleOpenContribute = (speciesId?: string) => {
     setContributeSpeciesId(speciesId);
     setIsSubmitModalOpen(true);
@@ -153,22 +168,22 @@ export const SpeciesDatabaseView: React.FC = () => {
         <div className="max-w-2xl">
           <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-2">
             <TreePine className="w-4 h-4 text-emerald-400" />
-            <span>FES SUST Dendrology & Botanical Herbarium</span>
+            <span>{t('herbariumSubtitle')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
-            Tree Species Database & Field Photos
+            {t('speciesDbTitle')}
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
-            Botanical taxonomy, high-resolution habit photography, student field observations, and wood utilization profiles for the 55 major forestry tree species of Bangladesh.
+            {t('speciesDbSubtitle')}
           </p>
         </div>
 
         <button
           onClick={() => handleOpenContribute()}
-          className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 shadow-md hover:shadow-lg transition-all"
+          className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 shadow-md hover:shadow-lg transition-all cursor-pointer"
         >
           <Camera className="w-4 h-4" />
-          <span>Contribute Field Photo</span>
+          <span>{lang === 'bn' ? 'ফিল্ড ছবি যুক্ত করুন' : 'Contribute Field Photo'}</span>
         </button>
       </div>
 
@@ -181,7 +196,7 @@ export const SpeciesDatabaseView: React.FC = () => {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by scientific name (Dipterocarpus), common name, Bangla (গর্জন), or notes..."
+            placeholder={t('searchSpeciesPlaceholder')}
             aria-label="Search tree species"
             className="w-full pl-10 pr-4 py-2 rounded-xl text-xs sm:text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
           />
@@ -195,9 +210,9 @@ export const SpeciesDatabaseView: React.FC = () => {
             aria-label="Filter by forest ecosystem"
             className="px-3 py-2 rounded-xl text-xs font-semibold bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200"
           >
-            <option value="all">All Forest Ecosystems ({ecosystems.length})</option>
+            <option value="all">{t('allEcosystems')} ({ecosystems.length})</option>
             {ecosystems.map((eco) => (
-              <option key={eco} value={eco}>{eco}</option>
+              <option key={eco} value={eco}>{getLocalizedEcosystem(eco, lang)}</option>
             ))}
           </select>
 
@@ -207,7 +222,7 @@ export const SpeciesDatabaseView: React.FC = () => {
             aria-label="Filter by botanical family"
             className="px-3 py-2 rounded-xl text-xs font-semibold bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200"
           >
-            <option value="all">All Families ({families.length})</option>
+            <option value="all">{t('allFamilies')} ({families.length})</option>
             {families.map((f) => (
               <option key={f} value={f}>{f}</option>
             ))}
@@ -224,7 +239,7 @@ export const SpeciesDatabaseView: React.FC = () => {
               }}
               className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-stone-100 bg-stone-100 dark:bg-stone-800 transition-colors shrink-0 cursor-pointer"
             >
-              Reset
+              {t('reset')}
             </button>
           )}
         </div>
@@ -232,11 +247,11 @@ export const SpeciesDatabaseView: React.FC = () => {
         {/* Quick Ecosystem Highlighted Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar w-full">
           {[
-            { id: 'all', label: 'All Ecosystems' },
-            { id: 'Sundarbans Mangrove Tidal Forest', label: '🌊 Mangroves' },
-            { id: 'Madhupur & Barind Moist Deciduous Sal Forest', label: '🍂 Sal / Deciduous' },
-            { id: 'Sylhet & Chittagong Hill Tracts Semi-Evergreen Forest', label: '🌲 Hill Semi-Evergreen' },
-            { id: 'Plains, Alluvial Basin & Homestead Forestry', label: '🏡 Plains & Homestead' },
+            { id: 'all', label: t('allEcosystems') },
+            { id: 'Sundarbans Mangrove Tidal Forest', label: `🌊 ${t('mangroves')}` },
+            { id: 'Madhupur & Barind Moist Deciduous Sal Forest', label: `🍂 ${t('salDeciduous')}` },
+            { id: 'Sylhet & Chittagong Hill Tracts Semi-Evergreen Forest', label: `🌲 ${t('hillSemiEvergreen')}` },
+            { id: 'Plains, Alluvial Basin & Homestead Forestry', label: `🏡 ${t('plainsHomestead')}` },
           ].map((ecoTab) => {
             const isSelected = selectedEcosystem === ecoTab.id;
             return (
@@ -269,13 +284,14 @@ export const SpeciesDatabaseView: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredSpecies.map((sp) => {
-            const studentObs = studentPhotosBySpecies.get(sp.id) || 
-                               studentPhotosBySpecies.get(sp.scientificName.toLowerCase()) || [];
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredSpecies.slice(0, visibleCount).map((sp) => {
+              const studentObs = studentPhotosBySpecies.get(sp.id) || 
+                                 studentPhotosBySpecies.get(sp.scientificName.toLowerCase()) || [];
 
-            const photoUrl = sp.imageUrl || '/assets/hero_forestry_sust.webp';
-            const totalPhotos = 1 + (sp.morePhotos?.length || 0) + studentObs.length;
+              const photoUrl = sp.imageUrl || '/assets/hero_forestry_sust.webp';
+              const totalPhotos = 1 + (sp.morePhotos?.length || 0) + studentObs.length;
 
             return (
               <div
@@ -302,13 +318,13 @@ export const SpeciesDatabaseView: React.FC = () => {
                     {/* Detail Trigger Overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold backdrop-blur-2xs">
                       <Camera className="w-4 h-4 text-emerald-400" />
-                      <span>View All Photos ({totalPhotos}) & Details</span>
+                      <span>{t('viewAllPhotos')} ({totalPhotos}) & {t('details')}</span>
                     </div>
 
                     {/* Family & Conservation Badge on Photo */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
                       <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/75 text-emerald-300 backdrop-blur-xs">
-                        Family: {sp.family}
+                        {t('familyLabel')} {sp.family}
                       </span>
 
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-xs ${
@@ -318,7 +334,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                           ? 'bg-amber-700 text-white'
                           : 'bg-emerald-800 text-white'
                       }`}>
-                        {sp.conservationStatus}
+                        {getLocalizedConservationStatus(sp.conservationStatus, lang)}
                       </span>
                     </div>
 
@@ -344,7 +360,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                       <div className="shrink-0">
                         <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/80 text-white border border-white/20 backdrop-blur-xs flex items-center gap-1">
                           <Camera className="w-3 h-3 text-emerald-400" />
-                          <span>{totalPhotos} Photos</span>
+                          <span>{totalPhotos} {t('photosWord')}</span>
                         </span>
                       </div>
                     </div>
@@ -357,7 +373,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                       {sp.forestEcosystem ? (
                         <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
                           <TreePine className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>{sp.forestEcosystem}</span>
+                          <span>{getLocalizedEcosystem(sp.forestEcosystem, lang)}</span>
                         </div>
                       ) : (
                         <div />
@@ -395,22 +411,22 @@ export const SpeciesDatabaseView: React.FC = () => {
                       <div className="flex items-start gap-2 text-stone-700 dark:text-stone-300">
                         <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-semibold text-stone-900 dark:text-stone-100">Distribution: </span>
-                          {sp.distribution}
+                          <span className="font-semibold text-stone-900 dark:text-stone-100">{t('distributionLabel')} </span>
+                          <span>{getLocalizedSpeciesField(sp, 'distribution', lang)}</span>
                         </div>
                       </div>
                       <div className="flex items-start gap-2 text-stone-600 dark:text-stone-400">
                         <Layers className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-semibold text-stone-800 dark:text-stone-200">Habitat: </span>
-                          {sp.habitat}
+                          <span className="font-semibold text-stone-800 dark:text-stone-200">{t('habitatLabel')} </span>
+                          <span>{getLocalizedSpeciesField(sp, 'habitat', lang)}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Silvicultural Notes */}
                     <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                      {sp.silviculturalNotes}
+                      {getLocalizedSpeciesField(sp, 'silviculturalNotes', lang)}
                     </p>
 
                     {/* Botanical Photo Plates Strip (Habit, Leaf, Bark, Flower, Fruit) */}
@@ -419,15 +435,15 @@ export const SpeciesDatabaseView: React.FC = () => {
                         <div className="flex items-center justify-between text-[11px] font-bold text-stone-700 dark:text-stone-300 mb-1.5">
                           <span className="flex items-center gap-1">
                             <Layers className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Botanical Plates ({sp.morePhotos.length + 1})</span>
+                            <span>{t('botanicalPlates')} ({sp.morePhotos.length + 1})</span>
                           </span>
                           <button
                             type="button"
                             onClick={() => setSelectedTreeDetail(sp)}
-                            className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-0.5"
+                            className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-0.5 cursor-pointer"
                           >
                             <Plus className="w-2.5 h-2.5" />
-                            <span>Add photo</span>
+                            <span>{t('addPhoto')}</span>
                           </button>
                         </div>
                         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
@@ -493,7 +509,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[11px] font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
                             <Camera className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-                            <span>Student Field Observations ({studentObs.length})</span>
+                            <span>{t('studentFieldObservations')} ({studentObs.length})</span>
                           </span>
                         </div>
 
@@ -534,7 +550,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                         key={i}
                         className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300"
                       >
-                        {u}
+                        {getLocalizedUse(u, lang)}
                       </span>
                     ))}
                   </div>
@@ -543,30 +559,30 @@ export const SpeciesDatabaseView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedTreeDetail(sp)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer"
                     >
                       <Camera className="w-3.5 h-3.5" />
-                      <span>View All Photos ({totalPhotos}) & Details</span>
+                      <span>{t('viewAllPhotos')} ({totalPhotos}) & {t('details')}</span>
                     </button>
 
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
                         onClick={() => setSelectedTreeDetail(sp)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 transition-colors cursor-pointer"
                         title="Add more photos to this tree species"
                       >
                         <Plus className="w-3.5 h-3.5" />
-                        <span>Add Photo</span>
+                        <span>{t('addPhoto')}</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleOpenContribute(sp.id)}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 transition-colors cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5" />
-                        <span>Student Lens</span>
+                        <span>{t('studentLens')}</span>
                       </button>
                     </div>
                   </div>
@@ -575,6 +591,31 @@ export const SpeciesDatabaseView: React.FC = () => {
             );
           })}
         </div>
+
+          {/* Progressive Load More / Results Indicator */}
+          {filteredSpecies.length > 12 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400">
+              <span>
+                Showing <strong className="text-stone-800 dark:text-stone-200">{Math.min(visibleCount, filteredSpecies.length)}</strong> of <strong className="text-stone-800 dark:text-stone-200">{filteredSpecies.length}</strong> botanical species
+              </span>
+              {visibleCount < filteredSpecies.length ? (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => Math.min(prev + 12, filteredSpecies.length))}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Load More Species (+{Math.min(12, filteredSpecies.length - visibleCount)})</span>
+                </button>
+              ) : (
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                  All {filteredSpecies.length} species displayed
+                </span>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {/* Lightbox Modal */}
