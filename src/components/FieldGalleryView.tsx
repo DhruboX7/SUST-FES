@@ -346,6 +346,8 @@ export const FieldGalleryView: React.FC = () => {
               <img
                 src={activeLightbox.url}
                 alt={activeLightbox.title}
+                loading="lazy"
+                decoding="async"
                 className="max-w-full max-h-[72vh] object-contain rounded-lg shadow-lg"
               />
             </div>

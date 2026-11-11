@@ -442,6 +442,8 @@ export const SpeciesDatabaseView: React.FC = () => {
                               src={photoUrl}
                               alt={sp.scientificName}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              loading="lazy"
+                              decoding="async"
                             />
                             <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] text-emerald-300 text-center font-mono">
                               Habit
@@ -459,6 +461,8 @@ export const SpeciesDatabaseView: React.FC = () => {
                               <img
                                 src={p.url}
                                 alt={p.caption || `Plate ${pIdx + 1}`}
+                                loading="lazy"
+                                decoding="async"
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
                                 }}
@@ -504,6 +508,8 @@ export const SpeciesDatabaseView: React.FC = () => {
                               <img
                                 src={obs.imageUrl}
                                 alt={obs.title}
+                                loading="lazy"
+                                decoding="async"
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
                                 }}
