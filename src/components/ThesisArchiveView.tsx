@@ -28,22 +28,34 @@ export const ThesisArchiveView: React.FC = () => {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadData = () => {
-    getStoredTheses()
-      .then((data) => setTheses(data))
-      .catch((err) => console.error('Failed to load theses:', err))
-      .finally(() => setIsLoading(false));
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const loadData = () => {
+      getStoredTheses()
+        .then((data) => {
+          if (isMounted) setTheses(Array.isArray(data) ? data : []);
+        })
+        .catch((err) => console.error('Failed to load theses:', err))
+        .finally(() => {
+          if (isMounted) setIsLoading(false);
+        });
+    };
+
     loadData();
 
-    const handleUpdate = () => {
-      loadData();
+    const handleUpdate = (e: Event) => {
+      const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!collection || collection === 'theses' || collection === 'all') {
+        if (isMounted) loadData();
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   const toggleExpand = (id: string) => {
@@ -53,21 +65,24 @@ export const ThesisArchiveView: React.FC = () => {
   };
 
   const filteredTheses = useMemo(() => {
+    if (!Array.isArray(theses)) return [];
     return theses.filter((t) => {
+      if (!t) return false;
       if (search.trim()) {
         const q = search.toLowerCase().trim();
         const matches =
-          t.title.toLowerCase().includes(q) ||
-          t.author.toLowerCase().includes(q) ||
-          t.supervisor.toLowerCase().includes(q) ||
-          t.researchArea.toLowerCase().includes(q) ||
-          t.year.includes(q) ||
-          t.abstract.toLowerCase().includes(q);
+          (t.title && t.title.toLowerCase().includes(q)) ||
+          (t.author && t.author.toLowerCase().includes(q)) ||
+          (t.supervisor && t.supervisor.toLowerCase().includes(q)) ||
+          (t.researchArea && t.researchArea.toLowerCase().includes(q)) ||
+          (t.year && String(t.year).includes(q)) ||
+          (t.abstract && t.abstract.toLowerCase().includes(q));
         if (!matches) return false;
       }
       if (selectedDegree !== 'all') {
-        if (selectedDegree === 'bsc' && !t.degree.includes('B.Sc.')) return false;
-        if (selectedDegree === 'msc' && !t.degree.includes('M.Sc.')) return false;
+        const deg = t.degree || '';
+        if (selectedDegree === 'bsc' && !deg.includes('B.Sc.')) return false;
+        if (selectedDegree === 'msc' && !deg.includes('M.Sc.')) return false;
       }
       return true;
     });

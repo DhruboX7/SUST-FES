@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SUST_FES_COURSES, DetailedCourse } from '../data/coursesData';
 import { AcademicYear } from '../types';
@@ -50,10 +50,21 @@ export const SyllabusProgressTracker: React.FC<SyllabusProgressTrackerProps> = (
   const [expandedCourseIds, setExpandedCourseIds] = useState<string[]>([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
 
   const showToast = (msg: string) => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3000);
+    toastTimerRef.current = setTimeout(() => {
+      setToastMsg(null);
+      toastTimerRef.current = null;
+    }, 3000);
   };
 
   usePageMeta({

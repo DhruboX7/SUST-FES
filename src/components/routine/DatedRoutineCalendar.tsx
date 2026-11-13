@@ -116,34 +116,41 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
     return `${yr}-${mo}-${da}`;
   };
 
+  // Pre-index slots by exact ISO date and recurring weekday for O(1) cell lookup
+  const { slotsByDate, slotsByDay } = useMemo(() => {
+    const byDate = new Map<string, RoutineSlot[]>();
+    const byDay = new Map<string, RoutineSlot[]>();
+    for (const slot of schedule) {
+      if (slot.date) {
+        const list = byDate.get(slot.date);
+        if (list) list.push(slot);
+        else byDate.set(slot.date, [slot]);
+      } else if (slot.day) {
+        const key = slot.day.toLowerCase();
+        const list = byDay.get(key);
+        if (list) list.push(slot);
+        else byDay.set(key, [slot]);
+      }
+    }
+    return { slotsByDate: byDate, slotsByDay: byDay };
+  }, [schedule]);
+
   // Filter slots for the selected date: prioritize exact date match, else recurring weekday slots
   const selectedDaySlots = useMemo(() => {
     const iso = formatDateISO(selectedDate);
-    const dateSpecific = schedule.filter((s) => s.date && s.date === iso);
-    if (dateSpecific.length > 0) return dateSpecific;
+    const exact = slotsByDate.get(iso);
+    if (exact && exact.length > 0) return exact;
+    return slotsByDay.get(selectedDayName.toLowerCase()) || [];
+  }, [slotsByDate, slotsByDay, selectedDate, selectedDayName]);
 
-    // Recurring weekly slots for this weekday
-    return schedule.filter((slot) => {
-      if (slot.date) return slot.date === iso;
-      return slot.day.toLowerCase() === selectedDayName.toLowerCase();
-    });
-  }, [schedule, selectedDate, selectedDayName]);
-
-  // Helper to fetch slots for any calendar cell date
-  const getSlotsForCellDate = useMemo(() => {
-    return (d: Date) => {
-      const iso = formatDateISO(d);
-      const dayName = WEEKDAYS[d.getDay()].toLowerCase();
-
-      const exact = schedule.filter((s) => s.date === iso);
-      if (exact.length > 0) return exact;
-
-      return schedule.filter((s) => {
-        if (s.date) return s.date === iso;
-        return s.day.toLowerCase() === dayName;
-      });
-    };
-  }, [schedule]);
+  // Helper to fetch slots for any calendar cell date in O(1)
+  const getSlotsForCellDate = (d: Date): RoutineSlot[] => {
+    const iso = formatDateISO(d);
+    const exact = slotsByDate.get(iso);
+    if (exact && exact.length > 0) return exact;
+    const dayName = WEEKDAYS[d.getDay()].toLowerCase();
+    return slotsByDay.get(dayName) || [];
+  };
 
   const isSameDay = (d1: Date, d2: Date) => {
     return (
@@ -156,13 +163,20 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
   const isToday = (d: Date) => isSameDay(d, today);
   const isSelected = (d: Date) => isSameDay(d, selectedDate);
 
+  const selectedIsToday = isToday(selectedDate);
+  const nowMinutes = selectedIsToday
+    ? (() => {
+        const now = new Date();
+        return now.getHours() * 60 + now.getMinutes();
+      })()
+    : null;
+
   // Parse time slot to determine real-time status (if selected date is today)
   const getSlotStatus = (timeStr: string) => {
-    if (!isToday(selectedDate)) return null;
+    if (nowMinutes === null) return null;
 
     try {
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const currentMinutes = nowMinutes;
 
       const [startPart, endPart] = timeStr.split(/\s*[-–—]\s*/);
       if (!startPart) return null;

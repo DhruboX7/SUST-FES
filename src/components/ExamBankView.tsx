@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ResourceItem, AcademicYear } from '../types';
-import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, ArrowUpRight } from 'lucide-react';
+import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, ArrowUpRight, Sparkles, CheckCircle2 } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -24,24 +24,32 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
   const [search, setSearch] = useState('');
   const [selectedYear, setSelectedYear] = useState<AcademicYear | 'all'>('all');
   const [selectedTerm, setSelectedTerm] = useState<'all' | 'final' | 'midterm'>('all');
+  const [visibleCount, setVisibleCount] = useState<number>(24);
+
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [search, selectedYear, selectedTerm]);
 
   // Filtered PYQs
-  const filtered = pyqResources.filter((item) => {
-    const s = search.toLowerCase().trim();
-    const matchesSearch =
-      !s ||
-      item.title.toLowerCase().includes(s) ||
-      item.courseCode.toLowerCase().includes(s) ||
-      item.courseTitle.toLowerCase().includes(s) ||
-      (item.description && item.description.toLowerCase().includes(s)) ||
-      (item.authorOrTeacher && item.authorOrTeacher.toLowerCase().includes(s)) ||
-      (item.sessionYear && item.sessionYear.includes(s));
+  const filtered = useMemo(() => {
+    return pyqResources.filter((item) => {
+      if (!item) return false;
+      const s = search.toLowerCase().trim();
+      const matchesSearch =
+        !s ||
+        (item.title && item.title.toLowerCase().includes(s)) ||
+        (item.courseCode && item.courseCode.toLowerCase().includes(s)) ||
+        (item.courseTitle && item.courseTitle.toLowerCase().includes(s)) ||
+        (item.description && item.description.toLowerCase().includes(s)) ||
+        (item.authorOrTeacher && item.authorOrTeacher.toLowerCase().includes(s)) ||
+        (item.sessionYear && item.sessionYear.includes(s));
 
-    const matchesYear = selectedYear === 'all' || item.year === selectedYear;
-    const matchesTerm = selectedTerm === 'all' || item.examTerm === selectedTerm || item.examTerm === 'all';
+      const matchesYear = selectedYear === 'all' || item.year === selectedYear;
+      const matchesTerm = selectedTerm === 'all' || item.examTerm === selectedTerm || item.examTerm === 'all';
 
-    return matchesSearch && matchesYear && matchesTerm;
-  });
+      return matchesSearch && matchesYear && matchesTerm;
+    });
+  }, [pyqResources, search, selectedYear, selectedTerm]);
 
   return (
     <div className="space-y-6">
@@ -141,8 +149,9 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((item) => (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.slice(0, visibleCount).map((item) => (
             <div
               key={item.id}
               className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs hover:border-amber-600/40 transition-all flex flex-col justify-between"
@@ -218,8 +227,32 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {filtered.length > 24 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400">
+              <span>
+                Showing <strong className="text-stone-800 dark:text-stone-200">{Math.min(visibleCount, filtered.length)}</strong> of <strong className="text-stone-800 dark:text-stone-200">{filtered.length}</strong> question papers
+              </span>
+              {visibleCount < filtered.length ? (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => Math.min(prev + 24, filtered.length))}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs bg-amber-800 hover:bg-amber-900 text-white shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Load More Papers (+{Math.min(24, filtered.length - visibleCount)})</span>
+                </button>
+              ) : (
+                <span className="text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                  All {filtered.length} papers displayed
+                </span>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

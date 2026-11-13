@@ -29,6 +29,18 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
   const [iframeError, setIframeError] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setIframeError(false);
+    setCopied(false);
+  }, [resource?.id]);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!resource) return;
@@ -68,7 +80,11 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
   const handleCopy = () => {
     onCopyLink(resource);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    copiedTimerRef.current = setTimeout(() => {
+      setCopied(false);
+      copiedTimerRef.current = null;
+    }, 2000);
   };
 
   const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id)}&entry_resource_title=${encodeURIComponent(resource.title)}`;

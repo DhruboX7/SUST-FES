@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { SUST_FES_COURSES } from '../data/coursesData';
 import { ResourceItem, ResourceCategory } from '../types';
@@ -37,6 +37,13 @@ export const CoursePageView: React.FC<CoursePageViewProps> = ({
 }) => {
   const { code } = useParams<{ code: string }>();
   const [copiedLink, setCopiedLink] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   // Normalize code lookup (replace spaces or hyphens)
   const normalizedCode = (code || '').replace(/-/g, ' ').toUpperCase();
@@ -80,7 +87,11 @@ export const CoursePageView: React.FC<CoursePageViewProps> = ({
   const handleCopyCourseLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => {
+      setCopiedLink(false);
+      copyTimerRef.current = null;
+    }, 2000);
   };
 
   const categories: { key: ResourceCategory; label: string; icon: React.ReactNode }[] = [

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { YearRoutine, RoutineSlot, AcademicYear } from '../../types';
 import { getStoredRoutines, saveStoredRoutines, resetStoredRoutines } from '../../utils/storage';
 import { parseScheduleWithAI, ParseScheduleResult } from '../../utils/aiScheduleParser';
@@ -108,26 +108,38 @@ export const AdminRoutinePanel: React.FC = () => {
 
   // Feedback message
   const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const timersRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach((id) => window.clearTimeout(id));
+      timersRef.current = [];
+    };
+  }, []);
 
   const showStatus = (text: string, type: 'success' | 'error' = 'success') => {
     setStatusMessage({ text, type });
-    setTimeout(() => setStatusMessage(null), 4000);
-  };
-
-  const loadData = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getStoredRoutines();
-      setRoutines(data);
-    } catch (err) {
-      console.error('Failed to load routines:', err);
-    } finally {
-      setIsLoading(false);
-    }
+    const id = window.setTimeout(() => setStatusMessage(null), 4000);
+    timersRef.current.push(id);
   };
 
   useEffect(() => {
+    let isMounted = true;
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getStoredRoutines();
+        if (isMounted) setRoutines(data);
+      } catch (err) {
+        console.error('Failed to load routines:', err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
     loadData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Current selected schedule
@@ -232,6 +244,7 @@ export const AdminRoutinePanel: React.FC = () => {
   const handlePasteSchedule = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const pasted = e.clipboardData.getData('text');
     if (pasted && pasted.trim()) {
+      e.preventDefault();
       setRawInputText(pasted);
       executeParsing(pasted);
     }
@@ -819,7 +832,8 @@ export const AdminRoutinePanel: React.FC = () => {
                             if (parseResult?.rawJsonString) {
                               navigator.clipboard.writeText(parseResult.rawJsonString);
                               setJsonCopied(true);
-                              setTimeout(() => setJsonCopied(false), 2500);
+                              const id = window.setTimeout(() => setJsonCopied(false), 2500);
+                              timersRef.current.push(id);
                             }
                           }}
                           className="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 hover:bg-emerald-200 transition-colors flex items-center gap-1 cursor-pointer"

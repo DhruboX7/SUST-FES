@@ -19,6 +19,7 @@ import {
 
 import { GalleryItem, StudentPhotoItem } from '../types';
 import { getStoredGallery, getStoredStudentPhotos } from '../utils/storage';
+import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
 import { SubmitStudentPhotoModal } from './SubmitStudentPhotoModal';
 
 export const FieldGalleryView: React.FC = () => {
@@ -44,31 +45,43 @@ export const FieldGalleryView: React.FC = () => {
     caption?: string;
   } | null>(null);
 
-  const loadData = async () => {
+  const loadData = async (isMountedCheck?: () => boolean) => {
     setIsLoading(true);
     try {
       const [galData, stuData] = await Promise.all([
         getStoredGallery(),
         getStoredStudentPhotos()
       ]);
-      setItems(galData);
-      setStudentPhotos(stuData);
+      if (isMountedCheck && !isMountedCheck()) return;
+      setItems(Array.isArray(galData) ? galData : []);
+      setStudentPhotos(Array.isArray(stuData) ? stuData : []);
     } catch (err) {
       console.error('Failed to load gallery data:', err);
     } finally {
-      setIsLoading(false);
+      if (!isMountedCheck || isMountedCheck()) {
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    loadData();
+    let isMounted = true;
+    loadData(() => isMounted);
 
-    const handleUpdate = () => {
-      loadData();
+    const handleUpdate = (e: Event) => {
+      const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!collection || collection === 'gallery' || collection === 'student_photos' || collection === 'all') {
+        if (isMounted) {
+          loadData(() => isMounted);
+        }
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   // Filter approved or featured student photos
@@ -171,20 +184,18 @@ export const FieldGalleryView: React.FC = () => {
                   })}
                 >
                   <img
-                    src={item.imageUrl}
+                    src={getOptimizedImageUrl(item.imageUrl, 640)}
                     alt={item.title}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                    }}
+                    onError={handleImageError}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold backdrop-blur-2xs">
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold">
                     <ZoomIn className="w-4 h-4" />
                     <span>View High-Res Photo</span>
                   </div>
-                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-[10px] font-mono font-semibold">
+                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/90 text-white text-[10px] font-mono font-semibold">
                     {item.year}
                   </div>
                 </div>
@@ -204,7 +215,7 @@ export const FieldGalleryView: React.FC = () => {
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px] text-stone-400">
-                    <span className="capitalize font-mono">Category: {item.category.replace('-', ' ')}</span>
+                    <span className="capitalize font-mono">Category: {(item.category || 'field').replace('-', ' ')}</span>
                     <span className="font-semibold text-emerald-800 dark:text-emerald-400">Department Archive</span>
                   </div>
                 </div>
@@ -229,42 +240,40 @@ export const FieldGalleryView: React.FC = () => {
                 })}
               >
                 <img
-                  src={photo.imageUrl}
+                  src={getOptimizedImageUrl(photo.imageUrl, 640)}
                   alt={photo.title}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                  }}
+                  onError={handleImageError}
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold backdrop-blur-2xs">
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold">
                   <ZoomIn className="w-4 h-4" />
                   <span>View Student Capture</span>
                 </div>
 
                 {/* Top Badges */}
                 <div className="absolute top-3 left-3 flex items-center gap-1">
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-800/90 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-800/95 text-white text-[10px] font-bold flex items-center gap-1">
                     <Camera className="w-3 h-3" />
                     <span>Student Lens</span>
                   </span>
                   {photo.status === 'featured' && (
-                    <span className="px-2 py-0.5 rounded-full bg-purple-700/90 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-full bg-purple-700/95 text-white text-[10px] font-bold flex items-center gap-1">
                       <Star className="w-3 h-3 fill-current" />
                       <span>Featured</span>
                     </span>
                   )}
                 </div>
 
-                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/80 backdrop-blur-xs text-white text-[10px] font-mono font-semibold">
+                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/90 text-white text-[10px] font-mono font-semibold">
                   {photo.date}
                 </div>
 
                 {/* Species badge if linked */}
                 {photo.speciesScientificName && (
                   <div className="absolute bottom-2 left-2 right-2 truncate">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/80 text-emerald-300 backdrop-blur-xs truncate max-w-full">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/85 text-emerald-300 truncate max-w-full">
                       <TreePine className="w-3 h-3 shrink-0" />
                       <span className="truncate">{photo.speciesScientificName}</span>
                     </span>
@@ -346,6 +355,7 @@ export const FieldGalleryView: React.FC = () => {
               <img
                 src={activeLightbox.url}
                 alt={activeLightbox.title}
+                onError={handleImageError}
                 loading="lazy"
                 decoding="async"
                 className="max-w-full max-h-[72vh] object-contain rounded-lg shadow-lg"

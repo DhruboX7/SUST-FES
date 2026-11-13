@@ -1,4 +1,4 @@
-import React, { useState, useId, useMemo } from 'react';
+import React, { useState, useId, useMemo, useRef, useEffect } from 'react';
 import { ResourceItem, AcademicYear, ResourceCategory, FileType } from '../types';
 import { SUST_FES_COURSES } from '../data/coursesData';
 import { parseGoogleDriveUrl, guessFileType } from '../utils/driveParser';
@@ -106,6 +106,20 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
   // Accessible ID for file upload
   const fileInputId = useId();
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+  }, []);
+
+  const scheduleTimeout = (fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms);
+    timersRef.current.push(id);
+    return id;
+  };
 
   // Handle Login
   const handlePinSubmit = (e: React.FormEvent) => {
@@ -215,7 +229,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
     onUpdateResource(updatedResource);
     setEditSuccessMsg(`Successfully updated "${updatedResource.title}"!`);
-    setTimeout(() => {
+    scheduleTimeout(() => {
       setEditSuccessMsg('');
       setEditingResource(null);
     }, 1200);
@@ -281,19 +295,21 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setDriveUrl('');
     setTitle('');
     setDescription('');
-    setTimeout(() => setAddSuccessMsg(''), 4000);
+    scheduleTimeout(() => setAddSuccessMsg(''), 4000);
   };
 
   // Manage Filtered List
   const filteredManageResources = useMemo(() => {
     return resources.filter((r) => {
+      if (!r) return false;
       if (manageSearch.trim()) {
-        const q = manageSearch.toLowerCase();
+        const q = manageSearch.toLowerCase().trim();
         const matches = 
-          r.title.toLowerCase().includes(q) ||
-          r.courseCode.toLowerCase().includes(q) ||
-          r.courseTitle.toLowerCase().includes(q) ||
-          (r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q)) ||(r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q));
+          (r.title && r.title.toLowerCase().includes(q)) ||
+          (r.courseCode && r.courseCode.toLowerCase().includes(q)) ||
+          (r.courseTitle && r.courseTitle.toLowerCase().includes(q)) ||
+          (r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q)) ||
+          (r.description && r.description.toLowerCase().includes(q));
         if (!matches) return false;
       }
       if (filterYear !== 'all' && r.year !== filterYear) return false;
@@ -331,7 +347,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     onRefreshResources(defaults);
     setShowResetConfirm(false);
     setImportStatus('Departmental library reset to official curriculum default!');
-    setTimeout(() => setImportStatus(null), 4000);
+    scheduleTimeout(() => setImportStatus(null), 4000);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -345,7 +361,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     } else {
       setImportStatus(result.message);
     }
-    setTimeout(() => setImportStatus(null), 5000);
+    scheduleTimeout(() => setImportStatus(null), 5000);
   };
 
   const handleChangePin = (e: React.FormEvent) => {
@@ -355,10 +371,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       setStoredAdminPin(newPin.trim());
       setPinSuccessMsg('Admin PIN updated successfully!');
       setNewPin('');
-      setTimeout(() => setPinSuccessMsg(''), 3000);
+      scheduleTimeout(() => setPinSuccessMsg(''), 3000);
     } else {
       setPinErrorMsg('PIN must be at least 4 characters long.');
-      setTimeout(() => setPinErrorMsg(''), 3000);
+      scheduleTimeout(() => setPinErrorMsg(''), 3000);
     }
   };
 

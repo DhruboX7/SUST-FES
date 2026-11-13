@@ -142,18 +142,18 @@ export function getStoredResources(): ResourceItem[] {
   }
 }
 
-export function saveStoredResources(resources: ResourceItem[]): void {
+export function saveStoredResources(resources: ResourceItem[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_RESOURCES, JSON.stringify(resources));
-    notifyDataUpdate('resources');
+    if (notify) notifyDataUpdate('resources');
   } catch (err) {
     console.error('Failed to save resources to storage:', err);
   }
 }
 
-export function resetStoredResourcesToDefaults(): ResourceItem[] {
+export function resetStoredResourcesToDefaults(notify = true): ResourceItem[] {
   localStorage.setItem(STORAGE_KEY_RESOURCES, JSON.stringify(INITIAL_RESOURCE_ARCHIVE));
-  notifyDataUpdate('resources');
+  if (notify) notifyDataUpdate('resources');
   return INITIAL_RESOURCE_ARCHIVE;
 }
 
@@ -243,7 +243,16 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
           });
         }
 
-        saveStoredSpecies(mergedList, false);
+        // Only write back to localStorage if merged data actually changed
+        try {
+          const prevRaw = localStorage.getItem(STORAGE_KEY_SPECIES);
+          const nextRaw = JSON.stringify(mergedList);
+          if (prevRaw !== nextRaw) {
+            localStorage.setItem(STORAGE_KEY_SPECIES, nextRaw);
+          }
+        } catch (err) {
+          console.error('Failed to save merged species to storage:', err);
+        }
         return mergedList;
       }
 
@@ -338,10 +347,12 @@ export async function getStoredGallery(): Promise<GalleryItem[]> {
             localIds.add(defItem.id);
           }
         }
-        saveStoredGallery(merged);
+        if (merged.length !== localData.length) {
+          saveStoredGallery(merged, false);
+        }
         return merged;
       }
-      saveStoredGallery(defaultData);
+      saveStoredGallery(defaultData, false);
       return defaultData;
     }
   } catch (err) {
@@ -364,10 +375,12 @@ export function getStoredGallerySync(): GalleryItem[] {
   return [];
 }
 
-export function saveStoredGallery(items: GalleryItem[]): void {
+export function saveStoredGallery(items: GalleryItem[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_GALLERY, JSON.stringify(items));
-    notifyDataUpdate('gallery');
+    if (notify) {
+      notifyDataUpdate('gallery');
+    }
   } catch (err) {
     console.error('Failed to save gallery to storage:', err);
   }
@@ -393,7 +406,7 @@ export async function getStoredTheses(): Promise<ThesisItem[]> {
   try {
     const defaultData = await fetchStaticJson<ThesisItem[]>('theses.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredTheses(defaultData);
+      saveStoredTheses(defaultData, false);
       return defaultData;
     }
   } catch (err) {
@@ -415,10 +428,12 @@ export function getStoredThesesSync(): ThesisItem[] {
   return [];
 }
 
-export function saveStoredTheses(theses: ThesisItem[]): void {
+export function saveStoredTheses(theses: ThesisItem[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_THESES, JSON.stringify(theses));
-    notifyDataUpdate('theses');
+    if (notify) {
+      notifyDataUpdate('theses');
+    }
   } catch (err) {
     console.error('Failed to save theses to storage:', err);
   }
@@ -444,7 +459,7 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
     const defaultData = await fetchStaticJson<NoticeItem[]>('notices.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredNotices(defaultData);
+      saveStoredNotices(defaultData, false);
       return defaultData;
     }
   } catch (err) {
@@ -466,10 +481,12 @@ export function getStoredNoticesSync(): NoticeItem[] {
   return [];
 }
 
-export function saveStoredNotices(notices: NoticeItem[]): void {
+export function saveStoredNotices(notices: NoticeItem[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_NOTICES, JSON.stringify(notices));
-    notifyDataUpdate('notices');
+    if (notify) {
+      notifyDataUpdate('notices');
+    }
   } catch (err) {
     console.error('Failed to save notices to storage:', err);
   }
@@ -832,13 +849,15 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   localStorage.removeItem(STORAGE_KEY_QUICKLINKS);
   localStorage.removeItem(STORAGE_KEY_STUDENT_PHOTOS);
 
-  resetStoredResourcesToDefaults();
-  await getStoredSpecies();
-  await getStoredGallery();
-  await getStoredTheses();
-  await getStoredNotices();
-  await getStoredRoutines();
-  await getStoredStudentPhotos();
+  resetStoredResourcesToDefaults(false);
+  await Promise.all([
+    getStoredSpecies(),
+    getStoredGallery(),
+    getStoredTheses(),
+    getStoredNotices(),
+    getStoredRoutines(),
+    getStoredStudentPhotos(),
+  ]);
   getStoredQuickLinks();
 
   notifyDataUpdate('all');

@@ -22,13 +22,13 @@ import {
 import { StudentPhotoItem, TreeSpecies } from '../../types';
 import { 
   getStoredStudentPhotos, 
-  saveStoredStudentPhotos, 
   updateStudentPhotoStatus, 
   deleteStudentPhoto, 
   updateStudentPhoto,
   addStudentPhotoSubmission,
   getStoredSpecies
 } from '../../utils/storage';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageUtils';
 
 export const AdminStudentPhotosPanel: React.FC = () => {
   const [photos, setPhotos] = useState<StudentPhotoItem[]>([]);
@@ -57,30 +57,41 @@ export const AdminStudentPhotosPanel: React.FC = () => {
   // Preview Lightbox
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
 
-  const loadData = async () => {
-    setIsLoading(true);
-    try {
-      const [photoData, spData] = await Promise.all([
-        getStoredStudentPhotos(),
-        getStoredSpecies()
-      ]);
-      setPhotos(photoData);
-      setSpeciesList(spData);
-    } catch (err) {
-      console.error('Failed to load student photos for admin:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const [photoData, spData] = await Promise.all([
+          getStoredStudentPhotos(),
+          getStoredSpecies()
+        ]);
+        if (!isMounted) return;
+        setPhotos(photoData);
+        setSpeciesList(spData);
+      } catch (err) {
+        console.error('Failed to load student photos for admin:', err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
     loadData();
 
-    const handleUpdate = () => {
-      getStoredStudentPhotos().then((data) => setPhotos(data)).catch(() => {});
+    const handleUpdate = (e: Event) => {
+      const col = (e as CustomEvent)?.detail?.collection;
+      if (!col || col === 'student_photos' || col === 'all') {
+        getStoredStudentPhotos().then((data) => {
+          if (isMounted) setPhotos(data);
+        }).catch(() => {});
+      }
     };
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   const pendingCount = photos.filter((p) => p.status === 'pending').length;
@@ -119,11 +130,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
 
   const handleDelete = (id: string) => {
     deleteStudentPhoto(id);
-    setPhotos((prev) => {
-      const updated = prev.filter((p) => p.id !== id);
-      saveStoredStudentPhotos(updated);
-      return updated;
-    });
+    setPhotos((prev) => prev.filter((p) => p.id !== id));
     setDeleteConfirmId(null);
     if (editingItem?.id === id) {
       setIsModalOpen(false);
@@ -197,10 +204,10 @@ export const AdminStudentPhotosPanel: React.FC = () => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
-      item.title.toLowerCase().includes(q) ||
-      item.studentName.toLowerCase().includes(q) ||
+      (item.title || '').toLowerCase().includes(q) ||
+      (item.studentName || '').toLowerCase().includes(q) ||
       (item.studentRegNo && item.studentRegNo.toLowerCase().includes(q)) ||
-      item.location.toLowerCase().includes(q) ||
+      (item.location || '').toLowerCase().includes(q) ||
       (item.speciesScientificName && item.speciesScientificName.toLowerCase().includes(q))
     );
   });
@@ -345,11 +352,11 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   onClick={() => setPreviewImage({ url: photo.imageUrl, title: photo.title })}
                 >
                   <img
-                    src={photo.imageUrl}
+                    src={getOptimizedImageUrl(photo.imageUrl, 480)}
                     alt={photo.title}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                    }}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
@@ -378,7 +385,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   {/* Species Tag if linked */}
                   {photo.speciesScientificName && (
                     <div className="absolute bottom-2 left-2 right-2 truncate">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-stone-900/90 text-emerald-300 backdrop-blur-xs">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-stone-900/95 text-emerald-300">
                         <TreePine className="w-3 h-3 shrink-0" />
                         <span className="truncate">{photo.speciesScientificName}</span>
                       </span>
@@ -672,9 +679,8 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   <img
                     src={imageUrl}
                     alt="Preview"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                    }}
+                    decoding="async"
+                    onError={handleImageError}
                     className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
                   />
                   <div className="text-[11px] text-stone-500 dark:text-stone-400">
@@ -778,6 +784,8 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               <img
                 src={previewImage.url}
                 alt={previewImage.title}
+                decoding="async"
+                onError={handleImageError}
                 className="max-w-full max-h-[78vh] object-contain rounded-lg"
               />
             </div>

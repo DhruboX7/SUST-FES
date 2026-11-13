@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { 
   HashRouter, 
   Routes, 
@@ -18,6 +18,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 import { Check, Loader2 } from 'lucide-react';
 
@@ -93,10 +94,25 @@ function AppContent() {
   const [previewResource, setPreviewResource] = useState<ResourceItem | null>(null);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
 
   const showToast = (msg: string) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    toastTimerRef.current = setTimeout(() => {
+      setToastMessage(null);
+      toastTimerRef.current = null;
+    }, 3000);
   };
 
   // Fetch Static Resources on mount, deriving URLs at load time
@@ -388,7 +404,9 @@ export default function App() {
   return (
     <LanguageProvider>
       <HashRouter>
-        <AppContent />
+        <ErrorBoundary>
+          <AppContent />
+        </ErrorBoundary>
       </HashRouter>
     </LanguageProvider>
   );

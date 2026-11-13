@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, 
   Camera, 
@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { TreeSpecies, TreePhoto } from '../../types';
 import { isMatchedPhotoForSpecies, fetchStaticJson } from '../../utils/storage';
+import { getOptimizedImageUrl, getFallbackImageUrl, handleImageError } from '../../utils/imageUtils';
 
 interface AdminSpeciesPhotosModalProps {
   species: TreeSpecies | null;
@@ -62,6 +63,19 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
   // Lightbox preview for any image
   const [previewZoomUrl, setPreviewZoomUrl] = useState<string | null>(null);
+  const successTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) window.clearTimeout(successTimerRef.current);
+    };
+  }, []);
+
+  const showSuccess = (msg: string, duration = 3000) => {
+    setSuccessMsg(msg);
+    if (successTimerRef.current) window.clearTimeout(successTimerRef.current);
+    successTimerRef.current = window.setTimeout(() => setSuccessMsg(''), duration);
+  };
 
   // Initialize state when species changes
   useEffect(() => {
@@ -137,8 +151,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     setNewUrl('');
     setNewCaption('');
     setNewCredit('');
-    setSuccessMsg('Botanical plate added to gallery list.');
-    setTimeout(() => setSuccessMsg(''), 3000);
+    showSuccess('Botanical plate added to gallery list.', 3000);
   };
 
   const handleAddBulkPhotos = () => {
@@ -181,8 +194,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     setMorePhotos((prev) => [...prev, ...toAdd]);
     setBulkUrls('');
     setIsBulkOpen(false);
-    setSuccessMsg(`Added ${toAdd.length} botanical plates in batch!`);
-    setTimeout(() => setSuccessMsg(''), 3000);
+    showSuccess(`Added ${toAdd.length} botanical plates in batch!`, 3000);
   };
 
   const handleMakePrimary = (index: number) => {
@@ -206,14 +218,12 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     }
 
     setMorePhotos(updatedPlates);
-    setSuccessMsg('Selected photo set as Primary Specimen Habit photo.');
-    setTimeout(() => setSuccessMsg(''), 3000);
+    showSuccess('Selected photo set as Primary Specimen Habit photo.', 3000);
   };
 
   const handleDeletePlate = (index: number) => {
     setMorePhotos((prev) => prev.filter((_, i) => i !== index));
-    setSuccessMsg(`Plate #${index + 1} removed from list. Click "Save Photo Changes" below to apply.`);
-    setTimeout(() => setSuccessMsg(''), 4000);
+    showSuccess(`Plate #${index + 1} removed from list. Click "Save Photo Changes" below to apply.`, 4000);
   };
 
   const handleMovePlate = (index: number, direction: 'up' | 'down') => {
@@ -304,11 +314,10 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
             if (newPlates.length > 0) {
               setMorePhotos((prev) => [...prev, ...newPlates]);
-              setSuccessMsg(`Imported ${newPlates.length} matched botanical plates from floraofbangladesh.com!`);
+              showSuccess(`Imported ${newPlates.length} matched botanical plates from floraofbangladesh.com!`, 4000);
             } else {
-              setSuccessMsg(`Found ${matchedUrls.length} matched photos on Flora of Bangladesh. All are already imported!`);
+              showSuccess(`Found ${matchedUrls.length} matched photos on Flora of Bangladesh. All are already imported!`, 4000);
             }
-            setTimeout(() => setSuccessMsg(''), 4000);
           } else {
             setErrorMsg(`No photos listed on Flora of Bangladesh for "${species.scientificName}".`);
           }
@@ -364,11 +373,10 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
           if (toAdd.length > 0) {
             setMorePhotos((prev) => [...prev, ...toAdd]);
-            setSuccessMsg(`Imported ${toAdd.length} high-resolution matched Wikimedia Commons plates!`);
+            showSuccess(`Imported ${toAdd.length} high-resolution matched Wikimedia Commons plates!`, 4000);
           } else {
-            setSuccessMsg('All matched Wikimedia plates found are already in the gallery.');
+            showSuccess('All matched Wikimedia plates found are already in the gallery.', 4000);
           }
-          setTimeout(() => setSuccessMsg(''), 4000);
         } else {
           setErrorMsg(`No direct Wikimedia images found for "${species.scientificName}".`);
         }
@@ -417,8 +425,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
       const currentUrls = new Set([primaryUrl, ...morePhotos.map((p) => p.url)]);
       if (currentUrls.has(bfisUrl)) {
-        setSuccessMsg('Official BFIS tree photo is already imported in this gallery.');
-        setTimeout(() => setSuccessMsg(''), 3000);
+        showSuccess('Official BFIS tree photo is already imported in this gallery.', 3000);
         return;
       }
 
@@ -432,8 +439,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
           sourceUrl: 'https://bfis.bforest.gov.bd/TreeInfo/public/',
         },
       ]);
-      setSuccessMsg('Added Bangladesh Forest Department (BFIS) official silviculture photo!');
-      setTimeout(() => setSuccessMsg(''), 4000);
+      showSuccess('Added Bangladesh Forest Department (BFIS) official silviculture photo!', 4000);
     } catch (err) {
       console.error(err);
       setErrorMsg('Failed to verify BFIS photo endpoint.');
@@ -647,11 +653,10 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                   onClick={() => primaryUrl && setPreviewZoomUrl(primaryUrl)}
                 >
                   <img
-                    src={primaryUrl || '/assets/hero_forestry_sust.webp'}
+                    src={primaryUrl || getFallbackImageUrl()}
                     alt="Primary Specimen"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                    }}
+                    decoding="async"
+                    onError={handleImageError}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white gap-1 font-semibold text-[11px]">
@@ -676,8 +681,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                         type="button"
                         onClick={() => {
                           setPrimaryUrl('');
-                          setSuccessMsg('Primary photo cleared. Click "Save Photo Changes" below to apply.');
-                          setTimeout(() => setSuccessMsg(''), 4000);
+                          showSuccess('Primary photo cleared. Click "Save Photo Changes" below to apply.', 4000);
                         }}
                         className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 flex items-center gap-1 hover:underline"
                       >
@@ -762,11 +766,11 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                         onClick={() => setPreviewZoomUrl(plate.url)}
                       >
                         <img
-                          src={plate.url}
+                          src={getOptimizedImageUrl(plate.url, 240)}
                           alt={plate.caption || `Plate ${index + 1}`}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                          }}
+                          loading="lazy"
+                          decoding="async"
+                          onError={handleImageError}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
@@ -981,6 +985,8 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
             <img
               src={previewZoomUrl}
               alt="Zoomed Plate"
+              decoding="async"
+              onError={handleImageError}
               className="max-w-full max-h-[82vh] object-contain rounded-lg"
             />
           </div>

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { AcademicYear, NoticeItem, YearRoutine, RoutineSlot } from '../types';
 import { getStoredNotices, getStoredRoutines } from '../utils/storage';
+import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
 import { DatedRoutineCalendar } from './routine/DatedRoutineCalendar';
 
 export const NoticesView: React.FC = () => {
@@ -54,32 +55,45 @@ export const NoticesView: React.FC = () => {
   const [selectedSemester, setSelectedSemester] = useState<1 | 2>(1);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadData = async () => {
+  const loadData = async (isMountedCheck?: () => boolean) => {
     setIsLoading(true);
     try {
       const [nData, rData] = await Promise.all([
         getStoredNotices().catch(() => []),
         getStoredRoutines().catch(() => []),
       ]);
+      if (isMountedCheck && !isMountedCheck()) return;
       setNotices(nData);
       setRoutines(rData);
     } catch (err) {
       console.error('Failed to load notices or routines:', err);
     } finally {
-      setIsLoading(false);
+      if (!isMountedCheck || isMountedCheck()) {
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    loadData();
+    let isMounted = true;
+    loadData(() => isMounted);
 
-    const handleUpdate = () => {
-      getStoredNotices().then((data) => setNotices(data)).catch(() => {});
-      getStoredRoutines().then((data) => setRoutines(data)).catch(() => {});
+    const handleUpdate = (e: Event) => {
+      const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!isMounted) return;
+      if (!collection || collection === 'notices' || collection === 'all') {
+        getStoredNotices().then((data) => isMounted && setNotices(data)).catch(() => {});
+      }
+      if (!collection || collection === 'routines' || collection === 'all') {
+        getStoredRoutines().then((data) => isMounted && setRoutines(data)).catch(() => {});
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   // Lightbox State for Notice Circular Images
@@ -231,14 +245,14 @@ export const NoticesView: React.FC = () => {
                       title="Click to expand circular in full-screen zoom view"
                     >
                       <img
-                        src={notice.imageUrl}
+                        src={getOptimizedImageUrl(notice.imageUrl, 640)}
                         alt={`Circular scan for ${notice.title}`}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                        }}
+                        loading="lazy"
+                        decoding="async"
+                        onError={handleImageError}
                         className="w-full max-h-72 object-contain bg-stone-900/5 dark:bg-black/40 group-hover:scale-102 transition-transform duration-200"
                       />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold backdrop-blur-2xs">
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold">
                         <ZoomIn className="w-5 h-5" />
                         <span>Click to Enlarge / Full-Screen Zoom</span>
                       </div>
@@ -317,6 +331,8 @@ export const NoticesView: React.FC = () => {
               <img
                 src={selectedNoticeImage.url}
                 alt={selectedNoticeImage.title}
+                onError={handleImageError}
+                decoding="async"
                 className="max-w-full max-h-[78vh] object-contain rounded-lg shadow-lg"
               />
             </div>

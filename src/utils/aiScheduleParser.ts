@@ -252,8 +252,8 @@ export function extractBracketMetadata(text: string): {
         room = roomMatch[0].trim();
       }
 
-      // Check if bracket contains teacher
-      const teacherMatch = inner.match(/(?:Prof(?:essor)?\.?|Dr\.?|Mr\.?|Ms\.?|Mrs\.?)\s+[A-Z][a-zA-Z\s.]+(?:[A-Z][a-zA-Z]+)/);
+      // Check if bracket contains teacher (non-backtracking bounded token sequence)
+      const teacherMatch = inner.match(/(?:Prof(?:essor)?\.?|Dr\.?|Mr\.?|Ms\.?|Mrs\.?)\s+[A-Z][a-zA-Z.]*(?:\s+[A-Z][a-zA-Z.]*){0,4}/);
       if (teacherMatch && !teacher) {
         teacher = teacherMatch[0].trim();
       }
@@ -584,9 +584,13 @@ export function parseScheduleStrict(
       subject_name = subject_code || 'Department Class';
     }
 
-    // Room and Teacher
-    const room = bracketRoom || (/Room\s*\d+/i.test(line) ? line.match(/Room\s*\d+/i)?.[0] || null : null);
-    const teacher = bracketTeacher || (/(?:Prof|Dr)\.?\s+[A-Za-z\s.]+/i.test(line) ? line.match(/(?:Prof|Dr)\.?\s+[A-Za-z\s.]+/i)?.[0]?.trim() || null : null);
+    // Room and Teacher (single-pass match)
+    const roomLineMatch = !bracketRoom ? line.match(/Room\s*\d+/i) : null;
+    const room = bracketRoom || (roomLineMatch ? roomLineMatch[0] : null);
+    const teacherLineMatch = !bracketTeacher
+      ? line.match(/(?:Prof|Dr)\.?\s+[A-Za-z.]+(?:\s+[A-Za-z.]+){0,4}/i)
+      : null;
+    const teacher = bracketTeacher || (teacherLineMatch ? teacherLineMatch[0].trim() : null);
 
     // Date & Recurrence
     const date = currentDateInfo?.date || null;

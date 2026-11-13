@@ -17,7 +17,8 @@ import {
   ExternalLink, 
   RefreshCw, 
   Calendar,
-  ArrowRight 
+  ArrowRight,
+  CheckCircle2
 } from 'lucide-react';
 
 interface CatalogViewProps {
@@ -106,14 +107,15 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       // 1. Search Query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
-        const courseObj = SUST_FES_COURSES.find((c) => c.code.toLowerCase() === r.courseCode.toLowerCase());
+        const rCourseCode = (r.courseCode || '').toLowerCase();
+        const courseObj = SUST_FES_COURSES.find((c) => c.code.toLowerCase() === rCourseCode);
         const shortCodeMatch = Boolean(courseObj?.shortCode && courseObj.shortCode.toLowerCase().includes(q));
         const syllabusMatch = Boolean(courseObj?.contents && courseObj.contents.some((c) => c.toLowerCase().includes(q)));
 
         const match =
-          r.title.toLowerCase().includes(q) ||
-          r.courseCode.toLowerCase().includes(q) ||
-          r.courseTitle.toLowerCase().includes(q) ||
+          (r.title && r.title.toLowerCase().includes(q)) ||
+          rCourseCode.includes(q) ||
+          (r.courseTitle && r.courseTitle.toLowerCase().includes(q)) ||
           shortCodeMatch ||
           syllabusMatch ||
           (r.authorOrTeacher && r.authorOrTeacher.toLowerCase().includes(q)) ||
@@ -142,6 +144,13 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       return true;
     });
   }, [resources, searchQuery, selectedYear, selectedSemester, selectedCategory, selectedCourseCode]);
+
+  // Progressive catalog pagination
+  const [visibleCount, setVisibleCount] = useState<number>(24);
+
+  useEffect(() => {
+    setVisibleCount(24);
+  }, [searchQuery, selectedYear, selectedSemester, selectedCategory, selectedCourseCode]);
 
   // Routines data and active calendar Year/Semester state
   const [routines, setRoutines] = useState<YearRoutine[]>([]);
@@ -174,12 +183,15 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       })
       .catch(() => {});
 
-    const handleUpdate = () => {
-      getStoredRoutines()
-        .then((data) => {
-          if (isMounted) setRoutines(data);
-        })
-        .catch(() => {});
+    const handleUpdate = (e: Event) => {
+      const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!collection || collection === 'routines' || collection === 'all') {
+        getStoredRoutines()
+          .then((data) => {
+            if (isMounted) setRoutines(data);
+          })
+          .catch(() => {});
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
@@ -443,19 +455,44 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             </div>
           ) : (
             /* Resource Cards Grid */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filteredResources.map((res) => (
-                <ResourceCard
-                  key={res.id}
-                  resource={res}
-                  isBookmarked={bookmarks.includes(res.id)}
-                  onToggleBookmark={onToggleBookmark}
-                  onPreview={onPreview}
-                  onCopyLink={onCopyLink}
-                  searchQuery={searchQuery}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredResources.slice(0, visibleCount).map((res) => (
+                  <ResourceCard
+                    key={res.id}
+                    resource={res}
+                    isBookmarked={bookmarks.includes(res.id)}
+                    onToggleBookmark={onToggleBookmark}
+                    onPreview={onPreview}
+                    onCopyLink={onCopyLink}
+                    searchQuery={searchQuery}
+                  />
+                ))}
+              </div>
+
+              {filteredResources.length > 24 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400">
+                  <span>
+                    Showing <strong className="text-stone-800 dark:text-stone-200">{Math.min(visibleCount, filteredResources.length)}</strong> of <strong className="text-stone-800 dark:text-stone-200">{filteredResources.length}</strong> materials
+                  </span>
+                  {visibleCount < filteredResources.length ? (
+                    <button
+                      type="button"
+                      onClick={() => setVisibleCount((prev) => Math.min(prev + 24, filteredResources.length))}
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      <span>Load More Materials (+{Math.min(24, filteredResources.length - visibleCount)})</span>
+                    </button>
+                  ) : (
+                    <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4" />
+                      All {filteredResources.length} materials displayed
+                    </span>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </>
       )}

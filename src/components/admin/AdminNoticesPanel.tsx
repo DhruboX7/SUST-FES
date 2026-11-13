@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { NoticeItem } from '../../types';
+import { handleImageError } from '../../utils/imageUtils';
 import { 
   Bell, 
   Plus, 
@@ -45,11 +46,12 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
   const [formError, setFormError] = useState('');
 
   const filteredNotices = useMemo(() => {
+    const q = search.toLowerCase();
     return notices.filter((item) => {
       return (
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.body.toLowerCase().includes(search.toLowerCase()) ||
-        item.date.includes(search)
+        (item.title || '').toLowerCase().includes(q) ||
+        (item.body || '').toLowerCase().includes(q) ||
+        (item.date || '').includes(search)
       );
     });
   }, [notices, search]);
@@ -468,7 +470,8 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                       <img
                         src={imageUrl}
                         alt="Circular preview"
-                        onError={(e) => ((e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp')}
+                        decoding="async"
+                        onError={handleImageError}
                         className="w-16 h-12 object-cover rounded border border-stone-300 dark:border-stone-700 shrink-0"
                       />
                       <div className="text-[11px] text-stone-500">

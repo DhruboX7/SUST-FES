@@ -97,7 +97,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const [quickLinks, setQuickLinks] = useState<QuickLinkItem[]>([]);
 
   // Load all collection stores
-  const loadAllCollections = async () => {
+  const loadAllCollections = async (isMountedCheck?: () => boolean) => {
     try {
       const [spData, galData, stuData, thData, notData] = await Promise.all([
         getStoredSpecies(),
@@ -106,6 +106,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         getStoredTheses(),
         getStoredNotices(),
       ]);
+      if (isMountedCheck && !isMountedCheck()) return;
       setSpecies(spData);
       setGallery(galData);
       setStudentPhotos(stuData);
@@ -118,14 +119,36 @@ export const AdminView: React.FC<AdminViewProps> = ({
   };
 
   useEffect(() => {
-    loadAllCollections();
+    let isMounted = true;
+    const check = () => isMounted;
+    loadAllCollections(check);
 
-    const handleUpdate = () => {
-      loadAllCollections();
+    const handleUpdate = (e: Event) => {
+      const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!isMounted) return;
+
+      if (!collection || collection === 'all') {
+        loadAllCollections(check);
+      } else if (collection === 'species') {
+        getStoredSpecies().then((d) => isMounted && setSpecies(d)).catch(() => {});
+      } else if (collection === 'gallery') {
+        getStoredGallery().then((d) => isMounted && setGallery(d)).catch(() => {});
+      } else if (collection === 'student_photos') {
+        getStoredStudentPhotos().then((d) => isMounted && setStudentPhotos(d)).catch(() => {});
+      } else if (collection === 'theses') {
+        getStoredTheses().then((d) => isMounted && setTheses(d)).catch(() => {});
+      } else if (collection === 'notices') {
+        getStoredNotices().then((d) => isMounted && setNotices(d)).catch(() => {});
+      } else if (collection === 'links') {
+        setQuickLinks(getStoredQuickLinks());
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   const handleUnlock = (e: React.FormEvent) => {

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { GalleryItem } from '../../types';
+import { getOptimizedImageUrl, handleImageError } from '../../utils/imageUtils';
 import { 
   Image as ImageIcon, 
   Plus, 
@@ -43,12 +44,13 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
   const [formError, setFormError] = useState('');
 
   const filteredItems = useMemo(() => {
+    const q = search.toLowerCase();
     return gallery.filter((item) => {
       const matchSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.location.toLowerCase().includes(search.toLowerCase()) ||
-        item.caption.toLowerCase().includes(search.toLowerCase()) ||
-        item.year.includes(search);
+        (item.title || '').toLowerCase().includes(q) ||
+        (item.location || '').toLowerCase().includes(q) ||
+        (item.caption || '').toLowerCase().includes(q) ||
+        (item.year || '').includes(search);
       const matchCat = filterCategory === 'all' || item.category === filterCategory;
       return matchSearch && matchCat;
     });
@@ -227,11 +229,11 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
           >
             <div className="relative aspect-video bg-stone-100 dark:bg-stone-800 overflow-hidden">
               <img
-                src={item.imageUrl}
+                src={getOptimizedImageUrl(item.imageUrl, 480)}
                 alt={item.title}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                }}
+                loading="lazy"
+                decoding="async"
+                onError={handleImageError}
                 className="w-full h-full object-cover"
               />
               <button

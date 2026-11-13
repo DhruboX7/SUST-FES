@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { TreeSpecies, TreePhoto, BotanyAiResult } from '../../types';
 import { isMatchedPhotoForSpecies, fetchStaticJson } from '../../utils/storage';
 import { verifyAndEnrichSpeciesWithAI, validateBinomialNomenclature } from '../../utils/botanyAi';
+import { getOptimizedImageUrl, getFallbackImageUrl, handleImageError } from '../../utils/imageUtils';
 import { AdminSpeciesPhotosModal } from './AdminSpeciesPhotosModal';
 import { 
   Trees, 
@@ -43,6 +44,19 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isSyncingFlora, setIsSyncingFlora] = useState(false);
   const [floraSyncNotice, setFloraSyncNotice] = useState('');
+  const noticeTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (noticeTimerRef.current) window.clearTimeout(noticeTimerRef.current);
+    };
+  }, []);
+
+  const showFloraNotice = (msg: string) => {
+    setFloraSyncNotice(msg);
+    if (noticeTimerRef.current) window.clearTimeout(noticeTimerRef.current);
+    noticeTimerRef.current = window.setTimeout(() => setFloraSyncNotice(''), 6000);
+  };
 
   // Photo Management Modal State
   const [managingPhotosSpecies, setManagingPhotosSpecies] = useState<TreeSpecies | null>(null);
@@ -119,10 +133,9 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         });
 
         onUpdateSpecies(updated);
-        setFloraSyncNotice(
+        showFloraNotice(
           `Synced ${speciesCount} tree species and enriched ${totalPlatesImported} authentic botanical plates from floraofbangladesh.com!`
         );
-        setTimeout(() => setFloraSyncNotice(''), 6000);
       }
     } catch (err) {
       console.error('Failed to sync with flora database:', err);
@@ -150,12 +163,11 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
     });
 
     onUpdateSpecies(cleaned);
-    setFloraSyncNotice(
+    showFloraNotice(
       totalRemoved > 0
         ? `Purged ${totalRemoved} unmatched photo(s) across catalog! Only verified species plates kept.`
         : 'All tree photos across the catalog are strictly verified and matched!'
     );
-    setTimeout(() => setFloraSyncNotice(''), 6000);
   };
 
   // Modal State
@@ -199,12 +211,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   );
 
   const filteredSpecies = useMemo(() => {
+    const q = search.toLowerCase();
     return species.filter((item) => {
       const matchSearch =
-        item.scientificName.toLowerCase().includes(search.toLowerCase()) ||
-        item.commonName.toLowerCase().includes(search.toLowerCase()) ||
-        item.banglaName.includes(search) ||
-        item.family.toLowerCase().includes(search.toLowerCase());
+        (item.scientificName || '').toLowerCase().includes(q) ||
+        (item.commonName || '').toLowerCase().includes(q) ||
+        (item.banglaName || '').includes(search) ||
+        (item.family || '').toLowerCase().includes(q);
       const matchFamily = filterFamily === 'all' || item.family === filterFamily;
       if (!matchSearch || !matchFamily) return false;
 
@@ -243,7 +256,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
     setCommonName(item.commonName);
     setBanglaName(item.banglaName);
     setFamily(item.family);
-    setUsesInput(item.uses.join(', '));
+    setUsesInput((item.uses || []).join(', '));
     setHabitat(item.habitat);
     setConservationStatus(item.conservationStatus);
     setDistribution(item.distribution);
@@ -554,11 +567,11 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                             title="Click to manage botanical photos for this species"
                           >
                             <img
-                              src={item.imageUrl || '/assets/hero_forestry_sust.webp'}
+                              src={getOptimizedImageUrl(item.imageUrl || getFallbackImageUrl(), 240)}
                               alt={item.scientificName}
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                              }}
+                              loading="lazy"
+                              decoding="async"
+                              onError={handleImageError}
                               className="w-10 h-10 object-cover rounded-lg border border-stone-200 dark:border-stone-800 group-hover:border-emerald-500 transition-colors"
                             />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center text-white">
@@ -615,7 +628,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                       </td>
                       <td className="py-3 px-4">
                         <div className="text-[11px] text-stone-600 dark:text-stone-400 max-w-xs truncate">
-                          {item.uses.slice(0, 3).join(', ')}
+                          {(item.uses || []).slice(0, 3).join(', ')}
                         </div>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -918,9 +931,8 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     <img
                       src={imageUrl}
                       alt="Tree preview"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                      }}
+                      decoding="async"
+                      onError={handleImageError}
                       className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
                     />
                     <div className="text-[11px] text-stone-500">

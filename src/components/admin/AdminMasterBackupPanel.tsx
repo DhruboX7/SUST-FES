@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   exportMasterBackupToJson, 
   importMasterBackupFromJson, 
@@ -53,6 +53,13 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [resetInput, setResetInput] = useState('');
   const [resetMessage, setResetMessage] = useState('');
+  const resetTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) window.clearTimeout(resetTimerRef.current);
+    };
+  }, []);
 
   const handlePinChange = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,7 +114,8 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
     setResetInput('');
     onRefreshAll();
     setResetMessage('All portal databases have been successfully reset to official SUST FES default data.');
-    setTimeout(() => setResetMessage(''), 6000);
+    if (resetTimerRef.current) window.clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = window.setTimeout(() => setResetMessage(''), 6000);
   };
 
   return (

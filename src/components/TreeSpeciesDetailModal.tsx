@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, 
   ChevronLeft, 
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { TreeSpecies, TreePhoto, StudentPhotoItem } from '../types';
 import { addPhotoToTreeSpecies } from '../utils/storage';
+import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
 import { useLanguage } from '../contexts/LanguageContext';
 import { 
   getLocalizedSpeciesField, 
@@ -55,6 +56,13 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
 
   // Lightbox Zoom Modal for enlarged view
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
+    };
+  }, []);
 
   // Close modal on Escape
   useEffect(() => {
@@ -193,7 +201,11 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
       setNewPhotoCaption('');
       setIsAddingPhoto(false);
       setCurrentPhotoIndex(allPhotos.length); // jump to newly added
-      setTimeout(() => setAddSuccessMsg(''), 4000);
+      if (successTimerRef.current) clearTimeout(successTimerRef.current);
+      successTimerRef.current = setTimeout(() => {
+        setAddSuccessMsg('');
+        successTimerRef.current = null;
+      }, 4000);
     }
   };
 
@@ -385,25 +397,24 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.caption}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                  }}
+                  onError={handleImageError}
+                  decoding="async"
                   className="max-h-full max-w-full object-contain group-hover:scale-102 transition-transform duration-300"
                 />
 
                 {/* Hover overlay hint */}
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold backdrop-blur-2xs">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold">
                   <ZoomIn className="w-5 h-5" />
                   <span>Click for Fullscreen Zoom</span>
                 </div>
 
                 {/* Top Badge on Photo */}
                 <div className="absolute top-3 left-3 flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-black/75 text-emerald-300 backdrop-blur-xs font-mono">
+                  <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-black/85 text-emerald-300 font-mono">
                     {activePhoto.tag || 'specimen'}
                   </span>
                   {activePhoto.isStudent && (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-700 text-white backdrop-blur-xs flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-purple-700 text-white flex items-center gap-1">
                       <User className="w-3 h-3" />
                       <span>Student Observation</span>
                     </span>
@@ -411,7 +422,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                 </div>
 
                 {/* Counter Badge */}
-                <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-black/75 text-white backdrop-blur-xs">
+                <div className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-black/85 text-white">
                   {currentPhotoIndex + 1} / {allPhotos.length}
                 </div>
 
@@ -494,11 +505,11 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                     }`}
                   >
                     <img
-                      src={p.url}
+                      src={getOptimizedImageUrl(p.url, 240)}
                       alt={`Thumbnail ${idx + 1}`}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                      }}
+                      loading="lazy"
+                      decoding="async"
+                      onError={handleImageError}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute bottom-0 inset-x-0 bg-black/70 text-[9px] text-center text-stone-300 font-mono py-0.2 capitalize">
@@ -623,6 +634,8 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
               <img
                 src={activePhoto.url}
                 alt={activePhoto.caption}
+                onError={handleImageError}
+                decoding="async"
                 className="max-w-full max-h-[78vh] object-contain rounded-lg"
               />
             </div>

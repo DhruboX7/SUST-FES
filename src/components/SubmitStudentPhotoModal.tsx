@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Camera, CheckCircle2, AlertCircle, TreePine, MapPin, Calendar, User, Hash, ExternalLink } from 'lucide-react';
 import { TreeSpecies } from '../types';
 import { getStoredSpecies, addStudentPhotoSubmission } from '../utils/storage';
+import { handleImageError } from '../utils/imageUtils';
 
 interface SubmitStudentPhotoModalProps {
   isOpen: boolean;
@@ -30,7 +31,15 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    getStoredSpecies().then((data) => setSpeciesList(data)).catch(() => {});
+    let isMounted = true;
+    getStoredSpecies()
+      .then((data) => {
+        if (isMounted) setSpeciesList(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -316,9 +325,7 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                     <img
                       src={imageUrl}
                       alt="Preview"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                      }}
+                      onError={handleImageError}
                       className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
                     />
                     <div className="text-[11px] text-stone-500 dark:text-stone-400">

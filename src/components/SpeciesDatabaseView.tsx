@@ -21,6 +21,7 @@ import {
 
 import { TreeSpecies, StudentPhotoItem } from '../types';
 import { getStoredSpecies, getStoredStudentPhotos } from '../utils/storage';
+import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
 import { SubmitStudentPhotoModal } from './SubmitStudentPhotoModal';
 import { TreeSpeciesDetailModal } from './TreeSpeciesDetailModal';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -87,8 +88,8 @@ export const SpeciesDatabaseView: React.FC = () => {
     const handleUpdate = (e: Event) => {
       const customEvt = e as CustomEvent<{ collection?: string }>;
       const collection = customEvt.detail?.collection;
-      // Only reload when species or student_photos collection was modified
-      if (!collection || collection === 'species' || collection === 'student_photos') {
+      // Only reload when species, student_photos, or all collections were modified
+      if (!collection || collection === 'species' || collection === 'student_photos' || collection === 'all') {
         if (isMounted) {
           loadData();
         }
@@ -311,7 +312,7 @@ export const SpeciesDatabaseView: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredSpecies.slice(0, visibleCount).map((sp) => {
               const studentObs = studentPhotosBySpecies.get(sp.id) || 
-                                 studentPhotosBySpecies.get(sp.scientificName.toLowerCase()) || [];
+                                 studentPhotosBySpecies.get((sp.scientificName || '').toLowerCase()) || [];
 
               const photoUrl = sp.imageUrl || '/assets/hero_forestry_sust.webp';
               const totalPhotos = 1 + (sp.morePhotos?.length || 0) + studentObs.length;
@@ -328,25 +329,24 @@ export const SpeciesDatabaseView: React.FC = () => {
                     onClick={() => setSelectedTreeDetail(sp)}
                   >
                     <img
-                      src={photoUrl}
+                      src={getOptimizedImageUrl(photoUrl, 640)}
                       alt={`${sp.scientificName} - ${sp.commonName}`}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                      }}
+                      onError={handleImageError}
                       loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/20" />
 
                     {/* Detail Trigger Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold backdrop-blur-2xs">
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold">
                       <Camera className="w-4 h-4 text-emerald-400" />
                       <span>{t('viewAllPhotos')} ({totalPhotos}) & {t('details')}</span>
                     </div>
 
                     {/* Family & Conservation Badge on Photo */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                      <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/75 text-emerald-300 backdrop-blur-xs">
+                      <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/85 text-emerald-300">
                         {t('familyLabel')} {sp.family}
                       </span>
 
@@ -381,7 +381,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                       </div>
 
                       <div className="shrink-0">
-                        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/80 text-white border border-white/20 backdrop-blur-xs flex items-center gap-1">
+                        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-black/85 text-white border border-white/20 flex items-center gap-1">
                           <Camera className="w-3 h-3 text-emerald-400" />
                           <span>{totalPhotos} {t('photosWord')}</span>
                         </span>
@@ -478,8 +478,9 @@ export const SpeciesDatabaseView: React.FC = () => {
                             title="Primary Specimen Habit"
                           >
                             <img
-                              src={photoUrl}
+                              src={getOptimizedImageUrl(photoUrl, 240)}
                               alt={sp.scientificName}
+                              onError={handleImageError}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               loading="lazy"
                               decoding="async"
@@ -498,13 +499,11 @@ export const SpeciesDatabaseView: React.FC = () => {
                               title={p.caption || `Plate ${pIdx + 1}`}
                             >
                               <img
-                                src={p.url}
+                                src={getOptimizedImageUrl(p.url, 240)}
                                 alt={p.caption || `Plate ${pIdx + 1}`}
                                 loading="lazy"
                                 decoding="async"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                                }}
+                                onError={handleImageError}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               />
                               <span className="absolute bottom-0 inset-x-0 bg-black/75 text-[8px] text-stone-300 text-center font-mono capitalize">
@@ -545,13 +544,11 @@ export const SpeciesDatabaseView: React.FC = () => {
                               title={`${obs.title} by ${obs.studentName}`}
                             >
                               <img
-                                src={obs.imageUrl}
+                                src={getOptimizedImageUrl(obs.imageUrl, 240)}
                                 alt={obs.title}
                                 loading="lazy"
                                 decoding="async"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = '/assets/hero_forestry_sust.webp';
-                                }}
+                                onError={handleImageError}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
