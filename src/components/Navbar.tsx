@@ -652,7 +652,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={group.id}
                   type="button"
                   onClick={() => setMobileSelectedGroup(group.id)}
-                  className={`relative flex flex-col sm:flex-row items-center justify-center gap-1 py-2 px-1 text-xs rounded-xl transition-all cursor-pointer ${
+                  className={`relative min-w-0 w-full overflow-hidden flex flex-col sm:flex-row items-center justify-center gap-1 py-1.5 sm:py-2 px-1 sm:px-2 text-[10px] sm:text-xs rounded-xl transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-linear-to-b from-emerald-700 to-emerald-800 dark:from-emerald-600 dark:to-emerald-700 text-white font-bold shadow-md shadow-emerald-950/25 ring-1 ring-emerald-400/40 scale-[1.02]'
                       : hasActiveChild
@@ -662,9 +662,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   aria-pressed={isSelected}
                 >
                   <GroupIcon className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-white' : hasActiveChild ? 'text-emerald-700 dark:text-emerald-400' : 'text-stone-500'}`} />
-                  <span className="truncate">{getGroupLabel(group)}</span>
+                  <span className="w-full sm:w-auto min-w-0 text-center leading-tight line-clamp-2 sm:line-clamp-1 sm:truncate">{getGroupLabel(group)}</span>
                   {hasActiveChild && !isSelected && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-stone-900 absolute top-1.5 right-1.5" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-1 ring-white dark:ring-stone-900 absolute top-1 right-1 sm:top-1.5 sm:right-1.5" />
                   )}
                 </button>
               );
