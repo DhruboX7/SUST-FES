@@ -243,12 +243,12 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
           });
         }
 
-        saveStoredSpecies(mergedList);
+        saveStoredSpecies(mergedList, false);
         return mergedList;
       }
 
-      // First run: save fetched defaults to local storage
-      saveStoredSpecies(defaultData);
+      // First run: save fetched defaults to local storage without re-triggering loadData event
+      saveStoredSpecies(defaultData, false);
       return defaultData;
     }
   } catch (err) {
@@ -276,10 +276,12 @@ export function getStoredSpeciesSync(): TreeSpecies[] {
   return [];
 }
 
-export function saveStoredSpecies(species: TreeSpecies[]): void {
+export function saveStoredSpecies(species: TreeSpecies[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_SPECIES, JSON.stringify(species));
-    notifyDataUpdate('species');
+    if (notify) {
+      notifyDataUpdate('species');
+    }
   } catch (err) {
     console.error('Failed to save species to storage:', err);
   }
@@ -570,7 +572,7 @@ export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
   try {
     const defaultData = await fetchStaticJson<StudentPhotoItem[]>('student_photos.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredStudentPhotos(defaultData);
+      saveStoredStudentPhotos(defaultData, false);
       return defaultData;
     }
   } catch (err) {
@@ -579,10 +581,12 @@ export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
   return [];
 }
 
-export function saveStoredStudentPhotos(photos: StudentPhotoItem[]): void {
+export function saveStoredStudentPhotos(photos: StudentPhotoItem[], notify = true): void {
   try {
     localStorage.setItem(STORAGE_KEY_STUDENT_PHOTOS, JSON.stringify(photos));
-    notifyDataUpdate('student_photos');
+    if (notify) {
+      notifyDataUpdate('student_photos');
+    }
   } catch (err) {
     console.error('Failed to save student photos to storage:', err);
   }

@@ -217,13 +217,13 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
               </span>
               <span className="text-stone-300 dark:text-stone-700">·</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                species.conservationStatus.includes('Critically')
+                (species.conservationStatus || '').includes('Critically')
                   ? 'bg-red-800 text-white'
-                  : species.conservationStatus.includes('Vulnerable')
+                  : (species.conservationStatus || '').includes('Vulnerable')
                   ? 'bg-amber-700 text-white'
                   : 'bg-emerald-800 text-white'
               }`}>
-                {species.conservationStatus}
+                {species.conservationStatus || 'Least Concern'}
               </span>
               {species.forestEcosystem && (
                 <>
@@ -551,7 +551,7 @@ export const TreeSpeciesDetailModal: React.FC<TreeSpeciesDetailModalProps> = ({
                 {t('economicUsesLabel')}
               </h4>
               <div className="flex flex-wrap gap-1.5">
-                {species.uses.map((use, i) => (
+                {(species.uses || []).map((use, i) => (
                   <span
                     key={i}
                     className="px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"

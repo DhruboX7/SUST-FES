@@ -81,28 +81,48 @@ export const SpeciesDatabaseView: React.FC = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
     loadData();
 
-    const handleUpdate = () => {
-      loadData();
+    const handleUpdate = (e: Event) => {
+      const customEvt = e as CustomEvent<{ collection?: string }>;
+      const collection = customEvt.detail?.collection;
+      // Only reload when species or student_photos collection was modified
+      if (!collection || collection === 'species' || collection === 'student_photos') {
+        if (isMounted) {
+          loadData();
+        }
+      }
     };
 
     window.addEventListener('sust_fes_data_updated', handleUpdate);
-    return () => window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('sust_fes_data_updated', handleUpdate);
+    };
   }, []);
 
   const families = useMemo(() => {
-    const set = new Set(species.map((s) => s.family));
+    if (!Array.isArray(species)) return [];
+    const set = new Set(species.map((s) => s.family).filter(Boolean));
     return Array.from(set).sort();
   }, [species]);
 
   const allUses = useMemo(() => {
+    if (!Array.isArray(species)) return [];
     const set = new Set<string>();
-    species.forEach((s) => s.uses.forEach((u) => set.add(u)));
+    species.forEach((s) => {
+      if (Array.isArray(s.uses)) {
+        s.uses.forEach((u) => {
+          if (u) set.add(u);
+        });
+      }
+    });
     return Array.from(set).sort();
   }, [species]);
 
   const ecosystems = useMemo(() => {
+    if (!Array.isArray(species)) return [];
     const set = new Set<string>();
     species.forEach((s) => {
       if (s.forestEcosystem) set.add(s.forestEcosystem);
@@ -111,22 +131,24 @@ export const SpeciesDatabaseView: React.FC = () => {
   }, [species]);
 
   const filteredSpecies = useMemo(() => {
+    if (!Array.isArray(species)) return [];
     return species.filter((s) => {
+      if (!s) return false;
       if (search.trim()) {
         const q = search.toLowerCase().trim();
         const matches =
-          s.scientificName.toLowerCase().includes(q) ||
-          s.commonName.toLowerCase().includes(q) ||
-          s.banglaName.toLowerCase().includes(q) ||
-          s.family.toLowerCase().includes(q) ||
-          s.distribution.toLowerCase().includes(q) ||
-          s.silviculturalNotes.toLowerCase().includes(q) ||
+          (s.scientificName && s.scientificName.toLowerCase().includes(q)) ||
+          (s.commonName && s.commonName.toLowerCase().includes(q)) ||
+          (s.banglaName && s.banglaName.toLowerCase().includes(q)) ||
+          (s.family && s.family.toLowerCase().includes(q)) ||
+          (s.distribution && s.distribution.toLowerCase().includes(q)) ||
+          (s.silviculturalNotes && s.silviculturalNotes.toLowerCase().includes(q)) ||
           (s.forestEcosystem && s.forestEcosystem.toLowerCase().includes(q));
         if (!matches) return false;
       }
       if (selectedFamily !== 'all' && s.family !== selectedFamily) return false;
       if (selectedEcosystem !== 'all' && s.forestEcosystem !== selectedEcosystem) return false;
-      if (selectedUse !== 'all' && !s.uses.includes(selectedUse)) return false;
+      if (selectedUse !== 'all' && (!Array.isArray(s.uses) || !s.uses.includes(selectedUse))) return false;
       return true;
     });
   }, [species, search, selectedFamily, selectedEcosystem, selectedUse]);
@@ -134,8 +156,9 @@ export const SpeciesDatabaseView: React.FC = () => {
   // Group approved student photos by species ID or scientific name
   const studentPhotosBySpecies = useMemo(() => {
     const map = new Map<string, StudentPhotoItem[]>();
+    if (!Array.isArray(studentPhotos)) return map;
     studentPhotos
-      .filter((p) => p.status === 'approved' || p.status === 'featured')
+      .filter((p) => p && (p.status === 'approved' || p.status === 'featured'))
       .forEach((p) => {
         if (p.treeSpeciesId) {
           const list = map.get(p.treeSpeciesId) || [];
@@ -328,13 +351,13 @@ export const SpeciesDatabaseView: React.FC = () => {
                       </span>
 
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-xs ${
-                        sp.conservationStatus.includes('Critically')
+                        (sp.conservationStatus || '').includes('Critically')
                           ? 'bg-red-800 text-white'
-                          : sp.conservationStatus.includes('Vulnerable')
+                          : (sp.conservationStatus || '').includes('Vulnerable')
                           ? 'bg-amber-700 text-white'
                           : 'bg-emerald-800 text-white'
                       }`}>
-                        {getLocalizedConservationStatus(sp.conservationStatus, lang)}
+                        {getLocalizedConservationStatus(sp.conservationStatus || 'Least Concern', lang)}
                       </span>
                     </div>
 
@@ -545,7 +568,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                 {/* Footer with Uses & Actions */}
                 <div className="p-5 pt-0 space-y-3">
                   <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex flex-wrap gap-1.5">
-                    {sp.uses.map((u, i) => (
+                    {(sp.uses || []).map((u, i) => (
                       <span
                         key={i}
                         className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300"
