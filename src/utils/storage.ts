@@ -5,6 +5,8 @@ import {
   GalleryItem, 
   ThesisItem, 
   NoticeItem, 
+  NoticeTypeDefinition,
+  NoticeBarSettings,
   QuickLinkItem,
   StudentPhotoItem,
   MasterLibraryBackup,
@@ -18,12 +20,30 @@ const STORAGE_KEY_SPECIES = 'sust_fes_species_v2';
 const STORAGE_KEY_GALLERY = 'sust_fes_gallery_v2';
 const STORAGE_KEY_THESES = 'sust_fes_theses_v2';
 const STORAGE_KEY_NOTICES = 'sust_fes_notices_v2';
+const STORAGE_KEY_NOTICE_TYPES = 'sust_fes_notice_types_v1';
+const STORAGE_KEY_NOTICE_BAR_SETTINGS = 'sust_fes_notice_bar_v1';
 const STORAGE_KEY_ROUTINES = 'sust_fes_routines_v1';
 const STORAGE_KEY_QUICKLINKS = 'sust_fes_quicklinks_v1';
 const STORAGE_KEY_STUDENT_PHOTOS = 'sust_fes_student_photos_v1';
 const STORAGE_KEY_BOOKMARKS = 'sust_fes_bookmarks_v1';
 const STORAGE_KEY_PIN = 'sust_fes_admin_pin_v1';
 const DEFAULT_PIN = 'sustfes';
+
+export const DEFAULT_NOTICE_TYPES: NoticeTypeDefinition[] = [
+  { id: 'important', label: 'Important', color: 'rose', showInBar: true, order: 1 },
+  { id: 'latest', label: 'Latest', color: 'blue', showInBar: true, order: 2 },
+  { id: 'new', label: 'New', color: 'emerald', showInBar: true, order: 3 },
+  { id: 'exam', label: 'Exam', color: 'amber', showInBar: true, order: 4 },
+  { id: 'field-tour', label: 'Field Tour', color: 'purple', showInBar: true, order: 5 },
+];
+
+export const DEFAULT_NOTICE_BAR_SETTINGS: NoticeBarSettings = {
+  enabled: true,
+  maxItems: 6,
+  autoRotate: true,
+  rotationIntervalSeconds: 5,
+  title: 'Latest Notices',
+};
 
 export const DEFAULT_QUICK_LINKS: QuickLinkItem[] = [
   {
@@ -474,8 +494,23 @@ export function saveStoredTheses(theses: ThesisItem[], notify = true): void {
 }
 
 // ==========================================
-// 5. NOTICE BOARD MANAGEMENT
+// 5. NOTICE BOARD & NOTICE TYPES MANAGEMENT
 // ==========================================
+
+const SAMPLE_NOTICE_DEFAULT_TAGS: Record<string, string[]> = {
+  'notice-1': ['important', 'latest', 'exam'],
+  'notice-2': ['new', 'field-tour'],
+  'notice-3': ['latest', 'new'],
+};
+
+function hydrateSampleNoticeTags(notices: NoticeItem[]): NoticeItem[] {
+  return notices.map((item) => {
+    if (!('tags' in item) && item.id in SAMPLE_NOTICE_DEFAULT_TAGS) {
+      return { ...item, tags: SAMPLE_NOTICE_DEFAULT_TAGS[item.id] };
+    }
+    return item;
+  });
+}
 
 export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
@@ -483,7 +518,7 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
     if (raw !== null) {
       const valid = sanitizeObjectArray<NoticeItem>(JSON.parse(raw));
       if (valid.length > 0) {
-        return valid;
+        return hydrateSampleNoticeTags(valid);
       }
     }
   } catch {
@@ -493,7 +528,7 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
     const defaultData = await fetchStaticJson<NoticeItem[]>('notices.json');
     if (defaultData && Array.isArray(defaultData)) {
-      const clean = sanitizeObjectArray<NoticeItem>(defaultData);
+      const clean = hydrateSampleNoticeTags(sanitizeObjectArray<NoticeItem>(defaultData));
       saveStoredNotices(clean, false);
       return clean;
     }
@@ -507,7 +542,7 @@ export function getStoredNoticesSync(): NoticeItem[] {
   try {
     const raw = safeStorageGet(STORAGE_KEY_NOTICES);
     if (raw) {
-      return sanitizeObjectArray<NoticeItem>(JSON.parse(raw));
+      return hydrateSampleNoticeTags(sanitizeObjectArray<NoticeItem>(JSON.parse(raw)));
     }
   } catch (err) {
     console.error('Failed to get notices sync:', err);
@@ -523,6 +558,95 @@ export function saveStoredNotices(notices: NoticeItem[], notify = true): void {
     }
   } catch (err) {
     console.error('Failed to save notices to storage:', err);
+  }
+}
+
+export function getStoredNoticeTypes(): NoticeTypeDefinition[] {
+  try {
+    const raw = safeStorageGet(STORAGE_KEY_NOTICE_TYPES);
+    if (raw !== null) {
+      const parsed = sanitizeObjectArray<NoticeTypeDefinition>(JSON.parse(raw));
+      if (parsed.length > 0) {
+        return parsed.map((t, idx) => ({
+          id: typeof t.id === 'string' && t.id.trim() ? t.id.trim() : `type-${idx + 1}`,
+          label: typeof t.label === 'string' && t.label.trim() ? t.label.trim() : 'Notice',
+          color: t.color || 'stone',
+          showInBar: t.showInBar !== false,
+          order: typeof t.order === 'number' ? t.order : idx + 1,
+        }));
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load notice types:', err);
+  }
+  return DEFAULT_NOTICE_TYPES;
+}
+
+export function saveStoredNoticeTypes(types: NoticeTypeDefinition[], notify = true): void {
+  try {
+    const clean = sanitizeObjectArray<NoticeTypeDefinition>(types).map((t, idx) => ({
+      ...t,
+      order: idx + 1,
+      showInBar: t.showInBar !== false,
+    }));
+    safeStorageSet(STORAGE_KEY_NOTICE_TYPES, JSON.stringify(clean));
+    if (notify) {
+      notifyDataUpdate('notices');
+    }
+  } catch (err) {
+    console.error('Failed to save notice types:', err);
+  }
+}
+
+export function resetStoredNoticeTypes(notify = true): NoticeTypeDefinition[] {
+  safeStorageSet(STORAGE_KEY_NOTICE_TYPES, JSON.stringify(DEFAULT_NOTICE_TYPES));
+  if (notify) {
+    notifyDataUpdate('notices');
+  }
+  return DEFAULT_NOTICE_TYPES;
+}
+
+export function getStoredNoticeBarSettings(): NoticeBarSettings {
+  try {
+    const raw = safeStorageGet(STORAGE_KEY_NOTICE_BAR_SETTINGS);
+    if (raw !== null) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return {
+          enabled: typeof parsed.enabled === 'boolean' ? parsed.enabled : DEFAULT_NOTICE_BAR_SETTINGS.enabled,
+          maxItems:
+            typeof parsed.maxItems === 'number' && parsed.maxItems >= 1 && parsed.maxItems <= 20
+              ? parsed.maxItems
+              : DEFAULT_NOTICE_BAR_SETTINGS.maxItems,
+          autoRotate:
+            typeof parsed.autoRotate === 'boolean' ? parsed.autoRotate : DEFAULT_NOTICE_BAR_SETTINGS.autoRotate,
+          rotationIntervalSeconds:
+            typeof parsed.rotationIntervalSeconds === 'number' &&
+            parsed.rotationIntervalSeconds >= 2 &&
+            parsed.rotationIntervalSeconds <= 60
+              ? parsed.rotationIntervalSeconds
+              : DEFAULT_NOTICE_BAR_SETTINGS.rotationIntervalSeconds,
+          title:
+            typeof parsed.title === 'string' && parsed.title.trim()
+              ? parsed.title.trim()
+              : DEFAULT_NOTICE_BAR_SETTINGS.title,
+        };
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load notice bar settings:', err);
+  }
+  return DEFAULT_NOTICE_BAR_SETTINGS;
+}
+
+export function saveStoredNoticeBarSettings(settings: NoticeBarSettings, notify = true): void {
+  try {
+    safeStorageSet(STORAGE_KEY_NOTICE_BAR_SETTINGS, JSON.stringify(settings));
+    if (notify) {
+      notifyDataUpdate('notices');
+    }
+  } catch (err) {
+    console.error('Failed to save notice bar settings:', err);
   }
 }
 
@@ -689,6 +813,8 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
   const gallery = getStoredGallerySync();
   const theses = getStoredThesesSync();
   const notices = getStoredNoticesSync();
+  const noticeTypes = getStoredNoticeTypes();
+  const noticeBarSettings = getStoredNoticeBarSettings();
   const quickLinks = getStoredQuickLinks();
   const studentPhotos = getStoredStudentPhotosSync();
 
@@ -702,6 +828,8 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
     gallery: customData?.gallery || gallery,
     theses: customData?.theses || theses,
     notices: customData?.notices || notices,
+    noticeTypes: customData?.noticeTypes || noticeTypes,
+    noticeBarSettings: customData?.noticeBarSettings || noticeBarSettings,
     quickLinks: customData?.quickLinks || quickLinks,
     studentPhotos: customData?.studentPhotos || studentPhotos,
   };
@@ -743,6 +871,8 @@ export function importMasterBackupFromJson(
         let gallery: GalleryItem[] = [];
         let theses: ThesisItem[] = [];
         let notices: NoticeItem[] = [];
+        let noticeTypes: NoticeTypeDefinition[] = [];
+        let noticeBarSettings: NoticeBarSettings | null = null;
         let links: QuickLinkItem[] = [];
         let studentPhotos: StudentPhotoItem[] = [];
 
@@ -755,6 +885,10 @@ export function importMasterBackupFromJson(
           if (Array.isArray(parsed.gallery)) gallery = parsed.gallery;
           if (Array.isArray(parsed.theses)) theses = parsed.theses;
           if (Array.isArray(parsed.notices)) notices = parsed.notices;
+          if (Array.isArray(parsed.noticeTypes)) noticeTypes = parsed.noticeTypes;
+          if (parsed.noticeBarSettings && typeof parsed.noticeBarSettings === 'object') {
+            noticeBarSettings = parsed.noticeBarSettings;
+          }
           if (Array.isArray(parsed.quickLinks)) links = parsed.quickLinks;
           if (Array.isArray(parsed.studentPhotos)) studentPhotos = parsed.studentPhotos;
         }
@@ -780,6 +914,8 @@ export function importMasterBackupFromJson(
         if (gallery.length > 0) saveStoredGallery(gallery);
         if (theses.length > 0) saveStoredTheses(theses);
         if (notices.length > 0) saveStoredNotices(notices);
+        if (noticeTypes.length > 0) saveStoredNoticeTypes(noticeTypes);
+        if (noticeBarSettings) saveStoredNoticeBarSettings(noticeBarSettings);
         if (links.length > 0) saveStoredQuickLinks(links);
         if (studentPhotos.length > 0) saveStoredStudentPhotos(studentPhotos);
 
@@ -881,6 +1017,8 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   safeStorageRemove(STORAGE_KEY_GALLERY);
   safeStorageRemove(STORAGE_KEY_THESES);
   safeStorageRemove(STORAGE_KEY_NOTICES);
+  safeStorageRemove(STORAGE_KEY_NOTICE_TYPES);
+  safeStorageRemove(STORAGE_KEY_NOTICE_BAR_SETTINGS);
   safeStorageRemove(STORAGE_KEY_ROUTINES);
   safeStorageRemove(STORAGE_KEY_QUICKLINKS);
   safeStorageRemove(STORAGE_KEY_STUDENT_PHOTOS);

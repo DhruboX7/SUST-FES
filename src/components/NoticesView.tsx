@@ -15,10 +15,12 @@ import {
   Image as ImageIcon,
   ZoomIn,
   FileText,
-  X
+  X,
+  Tag
 } from 'lucide-react';
-import { AcademicYear, NoticeItem, YearRoutine, RoutineSlot } from '../types';
-import { getStoredNotices, getStoredRoutines } from '../utils/storage';
+import { AcademicYear, NoticeItem, NoticeTypeDefinition, YearRoutine, RoutineSlot } from '../types';
+import { getStoredNotices, getStoredNoticeTypes, getStoredRoutines, DEFAULT_NOTICE_TYPES } from '../utils/storage';
+import { getNoticeColorStyle, resolveNoticeTagDefinitions, sortNoticesByPriority } from '../utils/noticeUtils';
 import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
 import { DatedRoutineCalendar } from './routine/DatedRoutineCalendar';
 
@@ -50,10 +52,20 @@ export const NoticesView: React.FC = () => {
   };
   const [routineViewMode, setRoutineViewMode] = useState<'calendar' | 'matrix'>('calendar');
   const [notices, setNotices] = useState<NoticeItem[]>([]);
+  const [noticeTypes, setNoticeTypes] = useState<NoticeTypeDefinition[]>(() => {
+    try {
+      return getStoredNoticeTypes();
+    } catch {
+      return DEFAULT_NOTICE_TYPES;
+    }
+  });
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<string>('all');
   const [routines, setRoutines] = useState<YearRoutine[]>([]);
   const [selectedYear, setSelectedYear] = useState<AcademicYear>(1);
   const [selectedSemester, setSelectedSemester] = useState<1 | 2>(1);
   const [isLoading, setIsLoading] = useState(true);
+
+  const focusedNoticeId = searchParams.get('notice');
 
   const loadData = async (isMountedCheck?: () => boolean) => {
     setIsLoading(true);
@@ -65,6 +77,7 @@ export const NoticesView: React.FC = () => {
       if (isMountedCheck && !isMountedCheck()) return;
       setNotices(nData);
       setRoutines(rData);
+      setNoticeTypes(getStoredNoticeTypes());
     } catch (err) {
       console.error('Failed to load notices or routines:', err);
     } finally {
@@ -82,6 +95,7 @@ export const NoticesView: React.FC = () => {
       const collection = (e as CustomEvent<{ collection?: string }>).detail?.collection;
       if (!isMounted) return;
       if (!collection || collection === 'notices' || collection === 'all') {
+        setNoticeTypes(getStoredNoticeTypes());
         getStoredNotices().then((data) => isMounted && setNotices(data)).catch(() => {});
       }
       if (!collection || collection === 'routines' || collection === 'all') {
@@ -95,6 +109,20 @@ export const NoticesView: React.FC = () => {
       window.removeEventListener('sust_fes_data_updated', handleUpdate);
     };
   }, []);
+
+  // Scroll smoothly to focused notice when navigated from the RecentNoticesBar
+  useEffect(() => {
+    if (!focusedNoticeId || isLoading) return;
+    setActiveTab('notices');
+    setSelectedTypeFilter('all');
+    const timer = setTimeout(() => {
+      const el = document.getElementById(`notice-card-${focusedNoticeId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 120);
+    return () => clearTimeout(timer);
+  }, [focusedNoticeId, isLoading]);
 
   // Lightbox State for Notice Circular Images
   const [selectedNoticeImage, setSelectedNoticeImage] = useState<{ url: string; title: string } | null>(null);
@@ -110,12 +138,15 @@ export const NoticesView: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Sort notices: pinned first, then by date descending
-  const sortedNotices = [...notices].sort((a, b) => {
-    if (a.pinned && !b.pinned) return -1;
-    if (!a.pinned && b.pinned) return 1;
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+  // Sort notices: pinned & important first, then by date descending
+  const sortedNotices = sortNoticesByPriority(notices);
+
+  const filteredNotices = selectedTypeFilter === 'all'
+    ? sortedNotices
+    : sortedNotices.filter((n) =>
+        Array.isArray(n.tags) &&
+        n.tags.some((t) => typeof t === 'string' && t.toLowerCase() === selectedTypeFilter.toLowerCase())
+      );
 
   const currentRoutine = routines.find(
     (r) => r.year === Number(selectedYear) && r.semester === selectedSemester
@@ -173,24 +204,79 @@ export const NoticesView: React.FC = () => {
       {/* NOTICES LIST */}
       {activeTab === 'notices' && (
         <div className="space-y-4">
-          {sortedNotices.length === 0 ? (
+          {/* Type Filter Strip */}
+          {noticeTypes.length > 0 && sortedNotices.length > 0 && (
+            <div className="flex items-center gap-1.5 flex-wrap bg-white dark:bg-stone-900 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 shadow-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 px-2 flex items-center gap-1">
+                <Tag className="w-3 h-3" />
+                <span>Filter:</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedTypeFilter('all')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                  selectedTypeFilter === 'all'
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                }`}
+              >
+                All ({sortedNotices.length})
+              </button>
+              {noticeTypes.map((typeDef) => {
+                const count = sortedNotices.filter(
+                  (n) => Array.isArray(n.tags) && n.tags.some((t) => t.toLowerCase() === typeDef.id.toLowerCase())
+                ).length;
+                const isSelected = selectedTypeFilter.toLowerCase() === typeDef.id.toLowerCase();
+                const style = getNoticeColorStyle(typeDef.color);
+                return (
+                  <button
+                    key={typeDef.id}
+                    type="button"
+                    onClick={() => setSelectedTypeFilter(isSelected ? 'all' : typeDef.id)}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                      isSelected
+                        ? `${style.solidBadge} shadow-xs`
+                        : `${style.badge} opacity-85 hover:opacity-100`
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : style.dot}`} />
+                    <span>{typeDef.label}</span>
+                    <span className="font-mono text-[10px] opacity-80">({count})</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {filteredNotices.length === 0 ? (
             <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
               <AlertCircle className="w-10 h-10 text-stone-400 mx-auto mb-2" />
               <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200">
-                No active announcements
+                {selectedTypeFilter === 'all'
+                  ? 'No active announcements'
+                  : 'No notices match this tag filter'}
               </h3>
               <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                There are no published departmental notices at this time. Check back soon.
+                {selectedTypeFilter === 'all'
+                  ? 'There are no published departmental notices at this time. Check back soon.'
+                  : 'Try switching back to All to inspect every published notice.'}
               </p>
             </div>
           ) : (
-            sortedNotices.map((notice) => (
+            filteredNotices.map((notice) => {
+              const tags = resolveNoticeTagDefinitions(notice, noticeTypes);
+              const isFocused = focusedNoticeId === notice.id;
+
+              return (
               <div
+                id={`notice-card-${notice.id}`}
                 key={notice.id}
                 className={`p-5 sm:p-6 rounded-2xl border transition-all ${
-                  notice.pinned
-                    ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80 shadow-xs ring-1 ring-emerald-500/10'
-                    : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 shadow-xs'
+                  isFocused
+                    ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 dark:border-emerald-500 shadow-md ring-2 ring-emerald-500/25'
+                    : notice.pinned
+                      ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80 shadow-xs ring-1 ring-emerald-500/10'
+                      : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 shadow-xs'
                 }`}
               >
                 {/* Header row */}
@@ -202,6 +288,18 @@ export const NoticesView: React.FC = () => {
                         <span>Pinned Notice</span>
                       </span>
                     )}
+                    {tags.map((tag) => {
+                      const style = getNoticeColorStyle(tag.color);
+                      return (
+                        <span
+                          key={tag.id}
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider border ${style.badge}`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+                          <span>{tag.label}</span>
+                        </span>
+                      );
+                    })}
                     <span className="text-xs text-stone-500 dark:text-stone-400 font-mono">
                       {notice.date}
                     </span>
@@ -280,7 +378,8 @@ export const NoticesView: React.FC = () => {
                   </div>
                 )}
               </div>
-            ))
+            );
+            })
           )}
         </div>
       )}

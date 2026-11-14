@@ -18,6 +18,7 @@ import { parseGoogleDriveUrl, guessFileType } from './utils/driveParser';
 import { LanguageProvider } from './contexts/LanguageContext';
 
 import { Navbar } from './components/Navbar';
+import { RecentNoticesBar } from './components/RecentNoticesBar';
 import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
@@ -267,6 +268,9 @@ function AppContent() {
         isDarkMode={isDarkMode}
         onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
       />
+
+      {/* Recent / Latest Notices Title Bar */}
+      <RecentNoticesBar />
 
       {/* Main Content Area with Lazy Loaded Routes */}
       <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 outline-hidden">

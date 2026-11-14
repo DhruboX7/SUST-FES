@@ -7,7 +7,8 @@
     "imageUrl": "/assets/hero_forestry_sust.webp",
     "attachmentUrl": "/assets/aistudio/Final_BSc_Curriculum-2025-2026_9f635d9c.pdf",
     "link": "https://www.sust.edu",
-    "pinned": true
+    "pinned": true,
+    "tags": ["important", "latest", "exam"]
   },
   {
     "id": "notice-2",
@@ -16,13 +17,15 @@
     "body": "Students of 3rd Year 1st Semester are required to submit their Sylhet Hill Forests Silvicultural Tour comprehensive field reports to the course teacher by next Sunday.",
     "imageUrl": "/assets/hero_forestry_sust.webp",
     "attachmentUrl": "https://www.sust.edu/d/fes",
-    "pinned": true
+    "pinned": true,
+    "tags": ["new", "field-tour"]
   },
   {
     "id": "notice-3",
     "title": "Call for Undergraduate Research & B.Sc. Project Proposals (4th Year)",
     "date": "2024-10-25",
     "body": "Final year students must submit their research synopsis along with supervisor preference consent form to the departmental office before November 30.",
-    "link": "https://www.sust.edu/d/fes"
+    "link": "https://www.sust.edu/d/fes",
+    "tags": ["latest", "new"]
   }
 ]

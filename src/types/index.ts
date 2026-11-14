@@ -118,6 +118,24 @@ export interface ThesisItem {
   driveUrl?: string;
 }
 
+export type NoticeTypeColor = 'rose' | 'amber' | 'emerald' | 'blue' | 'purple' | 'stone';
+
+export interface NoticeTypeDefinition {
+  id: string;
+  label: string;
+  color: NoticeTypeColor;
+  showInBar: boolean;
+  order?: number;
+}
+
+export interface NoticeBarSettings {
+  enabled: boolean;
+  maxItems: number;
+  autoRotate: boolean;
+  rotationIntervalSeconds: number;
+  title: string;
+}
+
 export interface NoticeItem {
   id: string;
   title: string;
@@ -127,6 +145,7 @@ export interface NoticeItem {
   attachmentUrl?: string;
   link?: string;
   pinned?: boolean;
+  tags?: string[];
 }
 
 export interface QuickLinkItem {
@@ -163,6 +182,8 @@ export interface MasterLibraryBackup {
   gallery: GalleryItem[];
   theses: ThesisItem[];
   notices: NoticeItem[];
+  noticeTypes?: NoticeTypeDefinition[];
+  noticeBarSettings?: NoticeBarSettings;
   quickLinks: QuickLinkItem[];
   studentPhotos?: StudentPhotoItem[];
 }

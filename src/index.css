@@ -37,3 +37,82 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.45);
 }
+
+/* Recent Notices Title Bar Smooth Transitions */
+@keyframes noticeSlideInNext {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes noticeSlideOutNext {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes noticeSlideInPrev {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes noticeSlideOutPrev {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes noticeProgressFill {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.animate-notice-in-next {
+  animation: noticeSlideInNext 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-notice-out-next {
+  animation: noticeSlideOutNext 340ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-notice-in-prev {
+  animation: noticeSlideInPrev 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-notice-out-prev {
+  animation: noticeSlideOutPrev 340ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-notice-in-next,
+  .animate-notice-out-next,
+  .animate-notice-in-prev,
+  .animate-notice-out-prev {
+    animation-duration: 1ms;
+  }
+}
