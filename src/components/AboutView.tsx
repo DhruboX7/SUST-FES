@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TreePine, MapPin, Globe, Users, Award, ShieldCheck, PlusCircle } from 'lucide-react';
+import { MapPin, Globe, Users, Award, ShieldCheck, PlusCircle } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { CONTRIBUTE_FORM_URL } from '../config';
+import { SustLogo } from './SustLogo';
 
 export const AboutView: React.FC = () => {
   usePageMeta({
@@ -15,8 +16,8 @@ export const AboutView: React.FC = () => {
       
       {/* Hero Overview */}
       <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 sm:p-8 shadow-xs">
-        <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
-          <TreePine className="w-4 h-4 text-emerald-600" />
+        <div className="flex items-center gap-2.5 text-emerald-800 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          <SustLogo size="sm" />
           <span>Shahjalal University of Science and Technology</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight mb-4">

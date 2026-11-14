@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TreePine, Home, ArrowLeft } from 'lucide-react';
+import { Home, ArrowLeft } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { SustLogo } from './SustLogo';
 
 export const NotFoundView: React.FC = () => {
   usePageMeta({
@@ -11,9 +12,7 @@ export const NotFoundView: React.FC = () => {
 
   return (
     <div className="py-20 text-center max-w-lg mx-auto px-4 animate-fade-in">
-      <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
-        <TreePine className="w-8 h-8" />
-      </div>
+      <SustLogo size="xl" className="mx-auto mb-4" />
       <span className="font-mono text-emerald-800 dark:text-emerald-400 text-sm font-bold">404 ERROR</span>
       <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 mt-1 mb-3">
         Off the Beaten Trail

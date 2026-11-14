@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { CONTRIBUTE_FORM_URL } from '../config';
 import { useLanguage } from '../contexts/LanguageContext';
+import { SustLogo } from './SustLogo';
 import { 
   Bookmark, 
   ShieldCheck, 
@@ -330,13 +331,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             to="/"
             className="flex items-center gap-2.5 text-left group whitespace-nowrap shrink-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg p-1"
           >
-            <div className="w-9 h-9 rounded-lg bg-white border border-stone-200 dark:border-stone-700 p-0.5 flex items-center justify-center shadow-xs transition-transform group-hover:scale-105 overflow-hidden shrink-0">
-              <img
-                src="/assets/aistudio/shahjalal-university-of-science-and-technology-logo-png_seeklogo-344200_2ed07cf2.png"
-                alt="Shahjalal University of Science and Technology Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <SustLogo size="md" className="transition-transform group-hover:scale-105" />
             <div>
               <span className="text-base font-bold tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-emerald-800 dark:group-hover:text-emerald-400 transition-colors whitespace-nowrap">
                 FES SUST Library

@@ -4,6 +4,7 @@ import { ResourceCategory } from '../types';
 import { CONTRIBUTE_FORM_URL } from '../config';
 import heroImg from '../assets/images/hero_forestry_sust.webp';
 import { useLanguage } from '../contexts/LanguageContext';
+import { SustLogo } from './SustLogo';
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -49,8 +50,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-10 md:py-14 text-center md:text-left">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-2xl">
-            <div className="flex items-center justify-center md:justify-start gap-2 text-emerald-300 text-xs font-semibold tracking-wider uppercase mb-2">
-              <TreePine className="w-4 h-4 text-emerald-400" />
+            <div className="flex items-center justify-center md:justify-start gap-2.5 text-emerald-300 text-xs font-semibold tracking-wider uppercase mb-2.5">
+              <SustLogo size="sm" className="border-white/30" />
               <span>{t('uniTitle')}</span>
             </div>
             

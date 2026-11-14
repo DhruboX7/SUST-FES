@@ -25,6 +25,7 @@ import {
 } from '../utils/storage';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { ErrorBoundary } from './ErrorBoundary';
+import { SustLogo } from './SustLogo';
 
 // Lazy Sub-panels to avoid loading all 9 admin modules & datasets upfront
 const AdminExamBankPanel = lazy(() => import('./admin/AdminExamBankPanel').then((m) => ({ default: m.AdminExamBankPanel })));
@@ -197,8 +198,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
     return (
       <div className="py-12 sm:py-20 flex items-center justify-center animate-fade-in">
         <div className="max-w-md w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-400 mx-auto flex items-center justify-center shadow-inner">
-            <Lock className="w-8 h-8" />
+          <div className="relative w-16 h-16 mx-auto">
+            <SustLogo size="xl" />
+            <div className="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shadow-sm ring-2 ring-white dark:ring-stone-900 absolute -bottom-1 -right-1">
+              <Lock className="w-3 h-3" />
+            </div>
           </div>
 
           <div>
@@ -254,9 +258,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
       {/* Top Console Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-5 rounded-2xl shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
+          <SustLogo size="md" className="w-10 h-10 rounded-xl" />
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">

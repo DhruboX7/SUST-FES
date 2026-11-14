@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TreePine, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { SustLogo } from './SustLogo';
 
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
@@ -11,8 +12,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Brand & Department */}
-        <div className="flex items-center gap-2">
-          <TreePine className="w-4 h-4 text-emerald-800 dark:text-emerald-500" />
+        <div className="flex items-center gap-2.5">
+          <SustLogo size="xs" />
           <span className="font-semibold text-stone-800 dark:text-stone-200">
             {t('deptTitle')}
           </span>
