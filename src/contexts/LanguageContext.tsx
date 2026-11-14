@@ -352,14 +352,22 @@ const LanguageContext = createContext<LanguageContextType>({
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('sust_fes_lang');
-      if (saved === 'bn' || saved === 'en') return saved;
+      try {
+        const saved = localStorage.getItem('sust_fes_lang');
+        if (saved === 'bn' || saved === 'en') return saved;
+      } catch {
+        // Ignore storage errors
+      }
     }
     return 'en';
   });
 
   useEffect(() => {
-    localStorage.setItem('sust_fes_lang', lang);
+    try {
+      localStorage.setItem('sust_fes_lang', lang);
+    } catch {
+      // Ignore storage errors
+    }
     document.documentElement.lang = lang;
   }, [lang]);
 

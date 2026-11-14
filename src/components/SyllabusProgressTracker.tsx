@@ -271,7 +271,7 @@ export const SyllabusProgressTracker: React.FC<SyllabusProgressTrackerProps> = (
           </div>
 
           {/* Graduation Meter Gauge */}
-          <div className="w-full lg:w-72 bg-stone-900/80 backdrop-blur-md rounded-2xl border border-stone-700/60 p-5 shrink-0 shadow-lg">
+          <div className="w-full lg:w-72 bg-stone-900/95 rounded-2xl border border-stone-700/60 p-5 shrink-0 shadow-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-stone-400 font-medium">Graduation Requirement</span>
               <span className="text-xs font-bold text-emerald-400 font-mono">

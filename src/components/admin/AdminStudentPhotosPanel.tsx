@@ -94,9 +94,9 @@ export const AdminStudentPhotosPanel: React.FC = () => {
     };
   }, []);
 
-  const pendingCount = photos.filter((p) => p.status === 'pending').length;
-  const approvedCount = photos.filter((p) => p.status === 'approved').length;
-  const featuredCount = photos.filter((p) => p.status === 'featured').length;
+  const pendingCount = photos.filter((p) => p && p.status === 'pending').length;
+  const approvedCount = photos.filter((p) => p && p.status === 'approved').length;
+  const featuredCount = photos.filter((p) => p && p.status === 'featured').length;
 
   const handleOpenAddModal = () => {
     setEditingItem(null);

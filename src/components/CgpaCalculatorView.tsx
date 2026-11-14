@@ -26,7 +26,18 @@ export const CgpaCalculatorView: React.FC = () => {
   const [courses, setCourses] = useState<CourseGradeEntry[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_CGPA);
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const valid = parsed.filter(
+            (c): c is CourseGradeEntry =>
+              Boolean(c && typeof c === 'object' && typeof c.id === 'string' && typeof c.credits === 'number')
+          );
+          if (valid.length > 0 || parsed.length === 0) {
+            return valid;
+          }
+        }
+      }
     } catch {
       // fallback
     }

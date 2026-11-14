@@ -47,13 +47,16 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
   const [formError, setFormError] = useState('');
 
   const filteredTheses = useMemo(() => {
-    return theses.filter((item) => {
+    const q = search.toLowerCase();
+    return (Array.isArray(theses) ? theses : []).filter((item) => {
+      if (!item) return false;
       const matchSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.author.toLowerCase().includes(search.toLowerCase()) ||
-        item.supervisor.toLowerCase().includes(search.toLowerCase()) ||
-        item.researchArea.toLowerCase().includes(search.toLowerCase()) ||
-        item.year.includes(search);
+        !q ||
+        (item.title || '').toLowerCase().includes(q) ||
+        (item.author || '').toLowerCase().includes(q) ||
+        (item.supervisor || '').toLowerCase().includes(q) ||
+        (item.researchArea || '').toLowerCase().includes(q) ||
+        (item.year || '').includes(search);
       const matchDegree = filterDegree === 'all' || item.degree === filterDegree;
       return matchSearch && matchDegree;
     });
@@ -75,13 +78,13 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
 
   const handleOpenEdit = (item: ThesisItem) => {
     setEditingItem(item);
-    setTitle(item.title);
-    setAuthor(item.author);
-    setSupervisor(item.supervisor);
-    setDegree(item.degree as any);
-    setYear(item.year);
-    setResearchArea(item.researchArea);
-    setAbstract(item.abstract);
+    setTitle(item.title || '');
+    setAuthor(item.author || '');
+    setSupervisor(item.supervisor || '');
+    setDegree((item.degree as any) || 'B.Sc. (Honours)');
+    setYear(item.year || '');
+    setResearchArea(item.researchArea || '');
+    setAbstract(item.abstract || '');
     setDriveUrl(item.driveUrl || '');
     setFormError('');
     setIsModalOpen(true);
@@ -353,7 +356,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in overflow-y-auto">
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">

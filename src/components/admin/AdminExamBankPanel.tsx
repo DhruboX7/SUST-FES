@@ -54,16 +54,19 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
   // All PYQ resources
   const pyqItems = useMemo(() => {
-    return resources.filter((r) => r.category === 'pyq');
+    return (Array.isArray(resources) ? resources : []).filter((r) => r && r.category === 'pyq');
   }, [resources]);
 
   const filteredItems = useMemo(() => {
+    const q = search.toLowerCase();
     return pyqItems.filter((item) => {
+      if (!item) return false;
       const matchSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.courseCode.toLowerCase().includes(search.toLowerCase()) ||
-        item.courseTitle.toLowerCase().includes(search.toLowerCase()) ||
-        (item.sessionYear && item.sessionYear.toLowerCase().includes(search.toLowerCase()));
+        !q ||
+        (item.title || '').toLowerCase().includes(q) ||
+        (item.courseCode || '').toLowerCase().includes(q) ||
+        (item.courseTitle || '').toLowerCase().includes(q) ||
+        (item.sessionYear || '').toLowerCase().includes(q);
 
       const matchYear = filterYear === 'all' || item.year === filterYear;
       const matchSemester = filterSemester === 'all' || item.semester === filterSemester;
@@ -90,13 +93,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
   const handleOpenEdit = (item: ResourceItem) => {
     setEditingItem(item);
-    setCourseCode(item.courseCode);
-    setCustomTitle(item.title);
-    setYear(item.year);
-    setSemester(item.semester);
+    setCourseCode(item.courseCode || 'FES 08211121');
+    setCustomTitle(item.title || '');
+    setYear(item.year || 1);
+    setSemester(item.semester || 1);
     setExamTerm(item.examTerm || 'final');
     setSessionYear(item.sessionYear || '2023-2024');
-    setDriveUrl(item.driveUrl);
+    setDriveUrl(item.driveUrl || '');
     setAuthor(item.authorOrTeacher || '');
     setDescription(item.description || '');
     setFormError('');
@@ -419,7 +422,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {(isAddOpen || editingItem) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
@@ -493,13 +496,17 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                   </label>
                   <select
                     value={String(year)}
-                    onChange={(e) => setYear(Number(e.target.value) as AcademicYear)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setYear(val === 'msc' ? 'msc' : (Number(val) as AcademicYear));
+                    }}
                     className="w-full px-2.5 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
                   >
                     <option value="1">1st Year</option>
                     <option value="2">2nd Year</option>
                     <option value="3">3rd Year</option>
                     <option value="4">4th Year</option>
+                    <option value="msc">M.Sc.</option>
                   </select>
                 </div>
 

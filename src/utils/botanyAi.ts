@@ -295,11 +295,12 @@ export async function verifyAndEnrichSpeciesWithAI(query: string): Promise<Botan
   const storedSpecies = getStoredSpeciesSync();
   const matchedStored = storedSpecies.find(
     (s) =>
-      s.scientificName.toLowerCase() === cleanQuery ||
-      s.commonName.toLowerCase() === cleanQuery ||
-      s.banglaName === cleanQuery ||
-      s.scientificName.toLowerCase().includes(cleanQuery) ||
-      s.commonName.toLowerCase().includes(cleanQuery)
+      s &&
+      ((s.scientificName || '').toLowerCase() === cleanQuery ||
+        (s.commonName || '').toLowerCase() === cleanQuery ||
+        (s.banglaName || '') === cleanQuery ||
+        (s.scientificName || '').toLowerCase().includes(cleanQuery) ||
+        (s.commonName || '').toLowerCase().includes(cleanQuery))
   );
   if (matchedStored) {
     return {
@@ -332,9 +333,9 @@ export async function verifyAndEnrichSpeciesWithAI(query: string): Promise<Botan
   // 3. Match by common name or Bangla name in Knowledge Base
   for (const entry of Object.values(BOTANICAL_KNOWLEDGE_BASE)) {
     if (
-      entry.commonName.toLowerCase() === cleanQuery ||
+      (entry.commonName || '').toLowerCase() === cleanQuery ||
       entry.banglaName === cleanQuery ||
-      entry.scientificName.toLowerCase().includes(cleanQuery)
+      (entry.scientificName || '').toLowerCase().includes(cleanQuery)
     ) {
       return {
         ...entry,

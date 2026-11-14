@@ -256,12 +256,15 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     try {
       const floraMap = await fetchStaticJson<Record<string, any>>('flora_bangladesh_photos.json');
       if (floraMap) {
-        const key = Object.keys(floraMap).find(
-          (k) =>
-            k.toLowerCase() === species.scientificName.trim().toLowerCase() ||
-            k.toLowerCase().includes(species.scientificName.trim().toLowerCase()) ||
-            species.scientificName.trim().toLowerCase().includes(k.toLowerCase())
-        );
+        const sciLower = (species.scientificName || '').trim().toLowerCase();
+        const key = sciLower
+          ? Object.keys(floraMap).find(
+              (k) =>
+                k.toLowerCase() === sciLower ||
+                k.toLowerCase().includes(sciLower) ||
+                sciLower.includes(k.toLowerCase())
+            )
+          : undefined;
 
         if (key && floraMap[key]) {
           const entry = floraMap[key];
@@ -415,7 +418,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     setIsSyncingFlora(true);
     setErrorMsg('');
     try {
-      const parts = species.scientificName.trim().split(' ');
+      const parts = (species.scientificName || '').trim().split(/\s+/).filter(Boolean);
       if (parts.length < 2) {
         setErrorMsg('Invalid scientific binomial format.');
         return;

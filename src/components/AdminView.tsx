@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { 
   ResourceItem, 
   TreeSpecies, 
@@ -24,22 +24,22 @@ import {
   getStoredStudentPhotos
 } from '../utils/storage';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { ErrorBoundary } from './ErrorBoundary';
 
-// Sub-panels
-import { AdminExamBankPanel } from './admin/AdminExamBankPanel';
-import { AdminLinksPanel } from './admin/AdminLinksPanel';
-import { AdminSpeciesPanel } from './admin/AdminSpeciesPanel';
-import { AdminGalleryPanel } from './admin/AdminGalleryPanel';
-import { AdminStudentPhotosPanel } from './admin/AdminStudentPhotosPanel';
-import { AdminThesesPanel } from './admin/AdminThesesPanel';
-import { AdminNoticesPanel } from './admin/AdminNoticesPanel';
-import { AdminRoutinePanel } from './admin/AdminRoutinePanel';
-import { AdminMasterBackupPanel } from './admin/AdminMasterBackupPanel';
+// Lazy Sub-panels to avoid loading all 9 admin modules & datasets upfront
+const AdminExamBankPanel = lazy(() => import('./admin/AdminExamBankPanel').then((m) => ({ default: m.AdminExamBankPanel })));
+const AdminLinksPanel = lazy(() => import('./admin/AdminLinksPanel').then((m) => ({ default: m.AdminLinksPanel })));
+const AdminSpeciesPanel = lazy(() => import('./admin/AdminSpeciesPanel').then((m) => ({ default: m.AdminSpeciesPanel })));
+const AdminGalleryPanel = lazy(() => import('./admin/AdminGalleryPanel').then((m) => ({ default: m.AdminGalleryPanel })));
+const AdminStudentPhotosPanel = lazy(() => import('./admin/AdminStudentPhotosPanel').then((m) => ({ default: m.AdminStudentPhotosPanel })));
+const AdminThesesPanel = lazy(() => import('./admin/AdminThesesPanel').then((m) => ({ default: m.AdminThesesPanel })));
+const AdminNoticesPanel = lazy(() => import('./admin/AdminNoticesPanel').then((m) => ({ default: m.AdminNoticesPanel })));
+const AdminRoutinePanel = lazy(() => import('./admin/AdminRoutinePanel').then((m) => ({ default: m.AdminRoutinePanel })));
+const AdminMasterBackupPanel = lazy(() => import('./admin/AdminMasterBackupPanel').then((m) => ({ default: m.AdminMasterBackupPanel })));
 
 import { 
   ShieldCheck, 
   Lock, 
-  Unlock, 
   Key, 
   FileText, 
   Link2, 
@@ -76,9 +76,13 @@ export const AdminView: React.FC<AdminViewProps> = ({
     description: 'Master administrative suite for academic materials, exam questions, botanical flora, field galleries, monographs, and notice circulars.',
   });
 
-  // Authentication State
+  // Authentication State (guarded against restricted iframe sessionStorage)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem('sust_fes_admin_session_unlocked') === 'true';
+    try {
+      return typeof window !== 'undefined' && window.sessionStorage?.getItem('sust_fes_admin_session_unlocked') === 'true';
+    } catch {
+      return false;
+    }
   });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
@@ -96,7 +100,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [quickLinks, setQuickLinks] = useState<QuickLinkItem[]>([]);
 
-  // Load all collection stores
+  // Load all collection stores (deferred until authenticated to save memory & bandwidth)
   const loadAllCollections = async (isMountedCheck?: () => boolean) => {
     try {
       const [spData, galData, stuData, thData, notData] = await Promise.all([
@@ -107,18 +111,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
         getStoredNotices(),
       ]);
       if (isMountedCheck && !isMountedCheck()) return;
-      setSpecies(spData);
-      setGallery(galData);
-      setStudentPhotos(stuData);
-      setTheses(thData);
-      setNotices(notData);
-      setQuickLinks(getStoredQuickLinks());
+      setSpecies(Array.isArray(spData) ? spData.filter(Boolean) : []);
+      setGallery(Array.isArray(galData) ? galData.filter(Boolean) : []);
+      setStudentPhotos(Array.isArray(stuData) ? stuData.filter(Boolean) : []);
+      setTheses(Array.isArray(thData) ? thData.filter(Boolean) : []);
+      setNotices(Array.isArray(notData) ? notData.filter(Boolean) : []);
+      const linksData = getStoredQuickLinks();
+      setQuickLinks(Array.isArray(linksData) ? linksData.filter(Boolean) : []);
     } catch (err) {
       console.error('Failed to load collections in AdminView:', err);
     }
   };
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     let isMounted = true;
     const check = () => isMounted;
     loadAllCollections(check);
@@ -130,17 +136,18 @@ export const AdminView: React.FC<AdminViewProps> = ({
       if (!collection || collection === 'all') {
         loadAllCollections(check);
       } else if (collection === 'species') {
-        getStoredSpecies().then((d) => isMounted && setSpecies(d)).catch(() => {});
+        getStoredSpecies().then((d) => isMounted && setSpecies(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'gallery') {
-        getStoredGallery().then((d) => isMounted && setGallery(d)).catch(() => {});
+        getStoredGallery().then((d) => isMounted && setGallery(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'student_photos') {
-        getStoredStudentPhotos().then((d) => isMounted && setStudentPhotos(d)).catch(() => {});
+        getStoredStudentPhotos().then((d) => isMounted && setStudentPhotos(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'theses') {
-        getStoredTheses().then((d) => isMounted && setTheses(d)).catch(() => {});
+        getStoredTheses().then((d) => isMounted && setTheses(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'notices') {
-        getStoredNotices().then((d) => isMounted && setNotices(d)).catch(() => {});
+        getStoredNotices().then((d) => isMounted && setNotices(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'links') {
-        setQuickLinks(getStoredQuickLinks());
+        const linksData = getStoredQuickLinks();
+        setQuickLinks(Array.isArray(linksData) ? linksData.filter(Boolean) : []);
       }
     };
 
@@ -149,12 +156,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
       isMounted = false;
       window.removeEventListener('sust_fes_data_updated', handleUpdate);
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
     if (verifyAdminPin(pinInput)) {
-      sessionStorage.setItem('sust_fes_admin_session_unlocked', 'true');
+      try {
+        window.sessionStorage?.setItem('sust_fes_admin_session_unlocked', 'true');
+      } catch {
+        // Ignore restricted sessionStorage errors
+      }
       setIsAuthenticated(true);
       setPinError('');
       setPinInput('');
@@ -164,14 +175,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
   };
 
   const handleLockSession = () => {
-    sessionStorage.removeItem('sust_fes_admin_session_unlocked');
+    try {
+      window.sessionStorage?.removeItem('sust_fes_admin_session_unlocked');
+    } catch {
+      // Ignore restricted sessionStorage errors
+    }
     setIsAuthenticated(false);
   };
 
-  // Derived counts
-  const pyqCount = resources.filter((r) => r.category === 'pyq').length;
+  // Safe derived counts
+  const safeResources = Array.isArray(resources) ? resources.filter((r): r is ResourceItem => Boolean(r && typeof r === 'object')) : [];
+  const pyqCount = safeResources.filter((r) => r.category === 'pyq').length;
+  const pendingPhotoCount = studentPhotos.filter((p) => p && p.status === 'pending').length;
   const totalTreePhotos = species.reduce(
-    (acc, s) => acc + (s.imageUrl ? 1 : 0) + (s.morePhotos?.length || 0),
+    (acc, s) => acc + (s?.imageUrl ? 1 : 0) + (Array.isArray(s?.morePhotos) ? s.morePhotos.length : 0),
     0
   );
 
@@ -347,9 +364,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
             {studentPhotos.length}
           </span>
-          {studentPhotos.some((p) => p.status === 'pending') && (
+          {pendingPhotoCount > 0 && (
             <span className="px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-amber-500 text-stone-950 animate-pulse">
-              {studentPhotos.filter((p) => p.status === 'pending').length} new
+              {pendingPhotoCount} new
             </span>
           )}
         </button>
@@ -417,97 +434,108 @@ export const AdminView: React.FC<AdminViewProps> = ({
         </button>
       </div>
 
-      {/* Render Active Sub-Panel */}
-      <div>
-        {activeTab === 'pyq' && (
-          <AdminExamBankPanel
-            resources={resources}
-            onAddResource={onAddResource}
-            onUpdateResource={onUpdateResource}
-            onDeleteResource={onDeleteResource}
-          />
-        )}
+      {/* Render Active Sub-Panel inside Tab-Scoped ErrorBoundary & Suspense */}
+      <ErrorBoundary resetKey={activeTab} compact>
+        <Suspense
+          fallback={
+            <div className="py-16 flex flex-col items-center justify-center space-y-3 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800">
+              <div className="w-7 h-7 rounded-full border-2 border-emerald-600 dark:border-emerald-400 border-t-transparent animate-spin" />
+              <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
+                Loading management panel...
+              </span>
+            </div>
+          }
+        >
+          {activeTab === 'pyq' && (
+            <AdminExamBankPanel
+              resources={safeResources}
+              onAddResource={onAddResource}
+              onUpdateResource={onUpdateResource}
+              onDeleteResource={onDeleteResource}
+            />
+          )}
 
-        {activeTab === 'links' && (
-          <AdminLinksPanel
-            resources={resources}
-            quickLinks={quickLinks}
-            onUpdateResource={onUpdateResource}
-            onUpdateQuickLinks={(links) => {
-              setQuickLinks(links);
-              saveStoredQuickLinks(links);
-            }}
-          />
-        )}
+          {activeTab === 'links' && (
+            <AdminLinksPanel
+              resources={safeResources}
+              quickLinks={quickLinks}
+              onUpdateResource={onUpdateResource}
+              onUpdateQuickLinks={(links) => {
+                setQuickLinks(links);
+                saveStoredQuickLinks(links);
+              }}
+            />
+          )}
 
-        {activeTab === 'species' && (
-          <AdminSpeciesPanel
-            species={species}
-            onUpdateSpecies={(newSpecies) => {
-              setSpecies(newSpecies);
-              saveStoredSpecies(newSpecies);
-            }}
-          />
-        )}
+          {activeTab === 'species' && (
+            <AdminSpeciesPanel
+              species={species}
+              onUpdateSpecies={(newSpecies) => {
+                setSpecies(newSpecies);
+                saveStoredSpecies(newSpecies);
+              }}
+            />
+          )}
 
-        {activeTab === 'gallery' && (
-          <AdminGalleryPanel
-            gallery={gallery}
-            onUpdateGallery={(newGallery) => {
-              setGallery(newGallery);
-              saveStoredGallery(newGallery);
-            }}
-          />
-        )}
+          {activeTab === 'gallery' && (
+            <AdminGalleryPanel
+              gallery={gallery}
+              onUpdateGallery={(newGallery) => {
+                setGallery(newGallery);
+                saveStoredGallery(newGallery);
+              }}
+            />
+          )}
 
-        {activeTab === 'studentPhotos' && (
-          <AdminStudentPhotosPanel />
-        )}
+          {activeTab === 'studentPhotos' && (
+            <AdminStudentPhotosPanel />
+          )}
 
-        {activeTab === 'theses' && (
-          <AdminThesesPanel
-            theses={theses}
-            onUpdateTheses={(newTheses) => {
-              setTheses(newTheses);
-              saveStoredTheses(newTheses);
-            }}
-          />
-        )}
+          {activeTab === 'theses' && (
+            <AdminThesesPanel
+              theses={theses}
+              onUpdateTheses={(newTheses) => {
+                setTheses(newTheses);
+                saveStoredTheses(newTheses);
+              }}
+            />
+          )}
 
-        {activeTab === 'notices' && (
-          <AdminNoticesPanel
-            notices={notices}
-            onUpdateNotices={(newNotices) => {
-              setNotices(newNotices);
-              saveStoredNotices(newNotices);
-            }}
-          />
-        )}
+          {activeTab === 'notices' && (
+            <AdminNoticesPanel
+              notices={notices}
+              onUpdateNotices={(newNotices) => {
+                setNotices(newNotices);
+                saveStoredNotices(newNotices);
+              }}
+            />
+          )}
 
-        {activeTab === 'routine' && (
-          <AdminRoutinePanel />
-        )}
+          {activeTab === 'routine' && (
+            <AdminRoutinePanel />
+          )}
 
-        {activeTab === 'backup' && (
-          <AdminMasterBackupPanel
-            stats={{
-              resources: resources.length,
-              pyqs: pyqCount,
-              species: species.length,
-              gallery: gallery.length,
-              studentPhotos: studentPhotos.length,
-              theses: theses.length,
-              notices: notices.length,
-              links: quickLinks.length,
-            }}
-            onRefreshAll={() => {
-              loadAllCollections();
-              const freshRes = getStoredResources();
-              onRefreshResources(freshRes);
-            }}
-          />
-        )}
-      </div>
+          {activeTab === 'backup' && (
+            <AdminMasterBackupPanel
+              stats={{
+                resources: safeResources.length,
+                pyqs: pyqCount,
+                species: species.length,
+                gallery: gallery.length,
+                studentPhotos: studentPhotos.length,
+                theses: theses.length,
+                notices: notices.length,
+                links: quickLinks.length,
+              }}
+              onRefreshAll={() => {
+                loadAllCollections();
+                const freshRes = getStoredResources();
+                onRefreshResources(freshRes);
+              }}
+            />
+          )}
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };

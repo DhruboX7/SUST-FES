@@ -387,7 +387,7 @@ export const SyllabusView: React.FC<SyllabusViewProps> = ({
                 </table>
               </div>
               <p className="text-[11px] text-stone-500 mt-2">
-                * Distinction: Degree awarded with Distinction if overall CGPA $\ge 3.75$ with no F grades or semester drops.
+                * Distinction: Degree awarded with Distinction if overall CGPA ≥ 3.75 with no F grades or semester drops.
               </p>
             </div>
           </div>

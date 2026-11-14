@@ -129,11 +129,14 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
     setEditingResource(null);
   };
 
-  const filteredResources = resources.filter((r) => {
+  const q = search.toLowerCase();
+  const filteredResources = (Array.isArray(resources) ? resources : []).filter((r) => {
+    if (!r) return false;
     const matchSearch =
-      r.title.toLowerCase().includes(search.toLowerCase()) ||
-      r.courseCode.toLowerCase().includes(search.toLowerCase()) ||
-      r.driveUrl.toLowerCase().includes(search.toLowerCase());
+      !q ||
+      (r.title || '').toLowerCase().includes(q) ||
+      (r.courseCode || '').toLowerCase().includes(q) ||
+      (r.driveUrl || '').toLowerCase().includes(q);
     const matchCat = categoryFilter === 'all' || r.category === categoryFilter;
     return matchSearch && matchCat;
   });
@@ -350,7 +353,7 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
 
       {/* Modal: Add/Edit Institutional Link */}
       {isAddLinkOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
@@ -434,7 +437,7 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
 
       {/* Modal: Quick Edit Resource Drive Link */}
       {editingResource && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">

@@ -829,11 +829,14 @@ export const AdminRoutinePanel: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            if (parseResult?.rawJsonString) {
-                              navigator.clipboard.writeText(parseResult.rawJsonString);
-                              setJsonCopied(true);
-                              const id = window.setTimeout(() => setJsonCopied(false), 2500);
-                              timersRef.current.push(id);
+                            if (parseResult?.rawJsonString && navigator.clipboard?.writeText) {
+                              navigator.clipboard.writeText(parseResult.rawJsonString)
+                                .then(() => {
+                                  setJsonCopied(true);
+                                  const id = window.setTimeout(() => setJsonCopied(false), 2500);
+                                  timersRef.current.push(id);
+                                })
+                                .catch(() => {});
                             }
                           }}
                           className="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 hover:bg-emerald-200 transition-colors flex items-center gap-1 cursor-pointer"

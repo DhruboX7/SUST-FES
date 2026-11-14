@@ -61,7 +61,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="course-detail-title"
@@ -96,7 +96,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Close course details"
-            className="p-2 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:bg-stone-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+            className="p-2 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
           >
             <X className="w-5 h-5" />
           </button>

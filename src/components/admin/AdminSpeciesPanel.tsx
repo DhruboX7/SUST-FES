@@ -74,12 +74,15 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         let totalPlatesImported = 0;
 
         const updated = species.map((sp) => {
-          const matchKey = Object.keys(floraMap).find(
-            (k) =>
-              k.toLowerCase() === sp.scientificName.trim().toLowerCase() ||
-              k.toLowerCase().includes(sp.scientificName.trim().toLowerCase()) ||
-              sp.scientificName.trim().toLowerCase().includes(k.toLowerCase())
-          );
+          const sciLower = (sp.scientificName || '').trim().toLowerCase();
+          const matchKey = sciLower
+            ? Object.keys(floraMap).find(
+                (k) =>
+                  k.toLowerCase() === sciLower ||
+                  k.toLowerCase().includes(sciLower) ||
+                  sciLower.includes(k.toLowerCase())
+              )
+            : undefined;
 
           if (matchKey && floraMap[matchKey]) {
             speciesCount++;
@@ -147,12 +150,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   const handlePurgeAllUnmatched = () => {
     let totalRemoved = 0;
     const cleaned = species.map((sp) => {
+      const sciName = sp.scientificName || '';
       const initialPhotos = sp.morePhotos || [];
-      const filtered = initialPhotos.filter((p) => isMatchedPhotoForSpecies(p.url, sp.scientificName));
+      const filtered = initialPhotos.filter((p) => p && isMatchedPhotoForSpecies(p.url, sciName));
       totalRemoved += (initialPhotos.length - filtered.length);
 
       let nextCover = sp.imageUrl;
-      if (!isMatchedPhotoForSpecies(sp.imageUrl || '', sp.scientificName)) {
+      if (!isMatchedPhotoForSpecies(sp.imageUrl || '', sciName)) {
         nextCover = filtered[0]?.url || sp.imageUrl;
       }
       return {
@@ -681,7 +685,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
 
       {/* Add / Edit Species Modal with AI Assistant */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in overflow-y-auto">
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-4 my-8 text-xs">
             <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
               <div>

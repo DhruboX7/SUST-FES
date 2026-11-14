@@ -319,7 +319,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentMobileGroupObj = navGroups.find(g => g.id === mobileSelectedGroup) || navGroups[0];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-stone-900/95 border-b border-stone-200 dark:border-stone-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Header Bar */}
@@ -547,7 +547,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {mobileMenuOpen && (
           <div
             ref={mobileMenuRef}
-            className="lg:hidden border-t border-stone-200 dark:border-stone-800 bg-white/98 dark:bg-stone-900/98 backdrop-blur-xl py-4 animate-in slide-in-from-top-2 duration-200 shadow-2xl max-h-[calc(100vh-4.5rem)] overflow-y-auto"
+            className="lg:hidden border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 py-4 animate-in slide-in-from-top-2 duration-200 shadow-2xl max-h-[calc(100vh-4.5rem)] overflow-y-auto"
           >
             <div className="space-y-4">
               {navGroups.map((group) => {

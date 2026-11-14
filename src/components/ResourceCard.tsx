@@ -26,11 +26,12 @@ interface ResourceCardProps {
 }
 
 // Highlight matching search keywords inside text
-function renderHighlightedText(text: string, query?: string): React.ReactNode {
-  if (!query || !query.trim()) return text;
+function renderHighlightedText(text: string | undefined, query?: string): React.ReactNode {
+  const safeText = text || '';
+  if (!safeText || !query || !query.trim()) return safeText;
   const trimmed = query.trim();
   const escaped = trimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const parts = text.split(new RegExp(`(${escaped})`, 'gi'));
+  const parts = safeText.split(new RegExp(`(${escaped})`, 'gi'));
   
   return parts.map((part, i) =>
     part.toLowerCase() === trimmed.toLowerCase() ? (
@@ -103,7 +104,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
     }
   })();
 
-  const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id)}&entry_resource_title=${encodeURIComponent(resource.title)}`;
+  const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id || '')}&entry_resource_title=${encodeURIComponent(resource.title || '')}`;
 
   return (
     <div className="group relative bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all flex flex-col justify-between">

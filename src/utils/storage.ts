@@ -76,6 +76,39 @@ function notifyDataUpdate(collection: string) {
   }
 }
 
+function safeStorageGet(key: string): string | null {
+  try {
+    return typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key: string, value: string): void {
+  try {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(key, value);
+    }
+  } catch (err) {
+    console.warn(`Storage write failed for "${key}":`, err);
+  }
+}
+
+function safeStorageRemove(key: string): void {
+  try {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(key);
+    }
+  } catch {
+    // Ignore storage access errors
+  }
+}
+
+function sanitizeObjectArray<T extends object>(arr: unknown): T[] {
+  if (!Array.isArray(arr)) return [];
+  return arr.filter((item): item is T => Boolean(item && typeof item === 'object'));
+}
+
 // In-memory cache for static JSON datasets to avoid redundant HTTP calls and parsing overhead
 const staticJsonCache = new Map<string, unknown>();
 
@@ -128,11 +161,11 @@ export async function fetchStaticJson<T>(filename: string, maxRetries = 2): Prom
 
 export function getStoredResources(): ResourceItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_RESOURCES);
+    const raw = safeStorageGet(STORAGE_KEY_RESOURCES);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        return parsed;
+        return sanitizeObjectArray<ResourceItem>(parsed);
       }
     }
     return INITIAL_RESOURCE_ARCHIVE;
@@ -144,7 +177,7 @@ export function getStoredResources(): ResourceItem[] {
 
 export function saveStoredResources(resources: ResourceItem[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_RESOURCES, JSON.stringify(resources));
+    safeStorageSet(STORAGE_KEY_RESOURCES, JSON.stringify(sanitizeObjectArray<ResourceItem>(resources)));
     if (notify) notifyDataUpdate('resources');
   } catch (err) {
     console.error('Failed to save resources to storage:', err);
@@ -152,7 +185,7 @@ export function saveStoredResources(resources: ResourceItem[], notify = true): v
 }
 
 export function resetStoredResourcesToDefaults(notify = true): ResourceItem[] {
-  localStorage.setItem(STORAGE_KEY_RESOURCES, JSON.stringify(INITIAL_RESOURCE_ARCHIVE));
+  safeStorageSet(STORAGE_KEY_RESOURCES, JSON.stringify(INITIAL_RESOURCE_ARCHIVE));
   if (notify) notifyDataUpdate('resources');
   return INITIAL_RESOURCE_ARCHIVE;
 }
@@ -180,11 +213,12 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
   // 1. Immediately read existing local storage
   let localData: TreeSpecies[] = [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_SPECIES);
+    const raw = safeStorageGet(STORAGE_KEY_SPECIES);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        localData = parsed;
+      const valid = sanitizeObjectArray<TreeSpecies>(parsed);
+      if (valid.length > 0) {
+        localData = valid;
       }
     }
   } catch (err) {
@@ -196,13 +230,14 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
     const defaultData = await fetchStaticJson<TreeSpecies[]>('species.json');
 
     if (defaultData && Array.isArray(defaultData) && defaultData.length > 0) {
+      const cleanDefaults = sanitizeObjectArray<TreeSpecies>(defaultData);
       if (localData.length > 0) {
         // Merge default enriched species data with local custom contributions
         const localMap = new Map<string, TreeSpecies>(localData.map((sp: TreeSpecies) => [sp.id, sp]));
         const mergedList: TreeSpecies[] = [];
 
         // Process all official default species
-        for (const def of defaultData) {
+        for (const def of cleanDefaults) {
           const local = localMap.get(def.id);
           if (!local) {
             mergedList.push(def);
@@ -210,7 +245,7 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
             // Clean local photos: only keep matched photos
             const defUrls = new Set((def.morePhotos || []).map((p) => p.url));
             const customMatchedPhotos = (local.morePhotos || []).filter(
-              (p) => !defUrls.has(p.url) && isMatchedPhotoForSpecies(p.url, def.scientificName)
+              (p) => p && isMatchedPhotoForSpecies(p.url, def.scientificName || '')
             );
 
             const allMatchedPhotos = [...(def.morePhotos || []), ...customMatchedPhotos];
@@ -219,7 +254,7 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
               ...local,
               sourceUrl: def.sourceUrl || local.sourceUrl,
               forestEcosystem: def.forestEcosystem || local.forestEcosystem,
-              imageUrl: isMatchedPhotoForSpecies(def.imageUrl || '', def.scientificName)
+              imageUrl: isMatchedPhotoForSpecies(def.imageUrl || '', def.scientificName || '')
                 ? def.imageUrl
                 : (allMatchedPhotos[0]?.url || def.imageUrl),
               photoCredit: def.photoCredit || local.photoCredit,
@@ -232,12 +267,12 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
         // Add any custom species added by user (cleaning unmatched photos)
         for (const remaining of localMap.values()) {
           const cleanedPhotos = (remaining.morePhotos || []).filter((p) =>
-            isMatchedPhotoForSpecies(p.url, remaining.scientificName)
+            p && isMatchedPhotoForSpecies(p.url, remaining.scientificName || '')
           );
           mergedList.push({
             ...remaining,
             morePhotos: cleanedPhotos,
-            imageUrl: isMatchedPhotoForSpecies(remaining.imageUrl || '', remaining.scientificName)
+            imageUrl: isMatchedPhotoForSpecies(remaining.imageUrl || '', remaining.scientificName || '')
               ? remaining.imageUrl
               : (cleanedPhotos[0]?.url || remaining.imageUrl)
           });
@@ -245,10 +280,10 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
 
         // Only write back to localStorage if merged data actually changed
         try {
-          const prevRaw = localStorage.getItem(STORAGE_KEY_SPECIES);
+          const prevRaw = safeStorageGet(STORAGE_KEY_SPECIES);
           const nextRaw = JSON.stringify(mergedList);
           if (prevRaw !== nextRaw) {
-            localStorage.setItem(STORAGE_KEY_SPECIES, nextRaw);
+            safeStorageSet(STORAGE_KEY_SPECIES, nextRaw);
           }
         } catch (err) {
           console.error('Failed to save merged species to storage:', err);
@@ -257,8 +292,8 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
       }
 
       // First run: save fetched defaults to local storage without re-triggering loadData event
-      saveStoredSpecies(defaultData, false);
-      return defaultData;
+      saveStoredSpecies(cleanDefaults, false);
+      return cleanDefaults;
     }
   } catch (err) {
     console.warn('Failed to refresh species from static data, using local cache:', err);
@@ -274,10 +309,9 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
 
 export function getStoredSpeciesSync(): TreeSpecies[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_SPECIES);
+    const raw = safeStorageGet(STORAGE_KEY_SPECIES);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      return sanitizeObjectArray<TreeSpecies>(JSON.parse(raw));
     }
   } catch (err) {
     console.error('Failed to get species sync:', err);
@@ -287,7 +321,7 @@ export function getStoredSpeciesSync(): TreeSpecies[] {
 
 export function saveStoredSpecies(species: TreeSpecies[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_SPECIES, JSON.stringify(species));
+    safeStorageSet(STORAGE_KEY_SPECIES, JSON.stringify(sanitizeObjectArray<TreeSpecies>(species)));
     if (notify) {
       notifyDataUpdate('species');
     }
@@ -324,11 +358,11 @@ export function addPhotoToTreeSpecies(speciesId: string, photo: TreePhoto): Tree
 export async function getStoredGallery(): Promise<GalleryItem[]> {
   let localData: GalleryItem[] = [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_GALLERY);
+    const raw = safeStorageGet(STORAGE_KEY_GALLERY);
     if (raw !== null) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        localData = parsed;
+      const valid = sanitizeObjectArray<GalleryItem>(JSON.parse(raw));
+      if (valid.length > 0) {
+        localData = valid;
       }
     }
   } catch {
@@ -338,10 +372,11 @@ export async function getStoredGallery(): Promise<GalleryItem[]> {
   try {
     const defaultData = await fetchStaticJson<GalleryItem[]>('gallery.json');
     if (defaultData && Array.isArray(defaultData) && defaultData.length > 0) {
+      const cleanDefaults = sanitizeObjectArray<GalleryItem>(defaultData);
       if (localData.length > 0) {
         const localIds = new Set(localData.map((item: GalleryItem) => item.id));
         const merged = [...localData];
-        for (const defItem of defaultData) {
+        for (const defItem of cleanDefaults) {
           if (!localIds.has(defItem.id)) {
             merged.push(defItem);
             localIds.add(defItem.id);
@@ -352,8 +387,8 @@ export async function getStoredGallery(): Promise<GalleryItem[]> {
         }
         return merged;
       }
-      saveStoredGallery(defaultData, false);
-      return defaultData;
+      saveStoredGallery(cleanDefaults, false);
+      return cleanDefaults;
     }
   } catch (err) {
     console.warn('Failed to refresh gallery from static data:', err);
@@ -364,10 +399,9 @@ export async function getStoredGallery(): Promise<GalleryItem[]> {
 
 export function getStoredGallerySync(): GalleryItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_GALLERY);
+    const raw = safeStorageGet(STORAGE_KEY_GALLERY);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      return sanitizeObjectArray<GalleryItem>(JSON.parse(raw));
     }
   } catch (err) {
     console.error('Failed to get gallery sync:', err);
@@ -377,7 +411,7 @@ export function getStoredGallerySync(): GalleryItem[] {
 
 export function saveStoredGallery(items: GalleryItem[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_GALLERY, JSON.stringify(items));
+    safeStorageSet(STORAGE_KEY_GALLERY, JSON.stringify(sanitizeObjectArray<GalleryItem>(items)));
     if (notify) {
       notifyDataUpdate('gallery');
     }
@@ -392,11 +426,11 @@ export function saveStoredGallery(items: GalleryItem[], notify = true): void {
 
 export async function getStoredTheses(): Promise<ThesisItem[]> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_THESES);
+    const raw = safeStorageGet(STORAGE_KEY_THESES);
     if (raw !== null) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      const valid = sanitizeObjectArray<ThesisItem>(JSON.parse(raw));
+      if (valid.length > 0) {
+        return valid;
       }
     }
   } catch {
@@ -406,8 +440,9 @@ export async function getStoredTheses(): Promise<ThesisItem[]> {
   try {
     const defaultData = await fetchStaticJson<ThesisItem[]>('theses.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredTheses(defaultData, false);
-      return defaultData;
+      const clean = sanitizeObjectArray<ThesisItem>(defaultData);
+      saveStoredTheses(clean, false);
+      return clean;
     }
   } catch (err) {
     console.warn('Failed to load theses:', err);
@@ -417,10 +452,9 @@ export async function getStoredTheses(): Promise<ThesisItem[]> {
 
 export function getStoredThesesSync(): ThesisItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_THESES);
+    const raw = safeStorageGet(STORAGE_KEY_THESES);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      return sanitizeObjectArray<ThesisItem>(JSON.parse(raw));
     }
   } catch (err) {
     console.error('Failed to get theses sync:', err);
@@ -430,7 +464,7 @@ export function getStoredThesesSync(): ThesisItem[] {
 
 export function saveStoredTheses(theses: ThesisItem[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_THESES, JSON.stringify(theses));
+    safeStorageSet(STORAGE_KEY_THESES, JSON.stringify(sanitizeObjectArray<ThesisItem>(theses)));
     if (notify) {
       notifyDataUpdate('theses');
     }
@@ -445,11 +479,11 @@ export function saveStoredTheses(theses: ThesisItem[], notify = true): void {
 
 export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_NOTICES);
+    const raw = safeStorageGet(STORAGE_KEY_NOTICES);
     if (raw !== null) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      const valid = sanitizeObjectArray<NoticeItem>(JSON.parse(raw));
+      if (valid.length > 0) {
+        return valid;
       }
     }
   } catch {
@@ -459,8 +493,9 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
   try {
     const defaultData = await fetchStaticJson<NoticeItem[]>('notices.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredNotices(defaultData, false);
-      return defaultData;
+      const clean = sanitizeObjectArray<NoticeItem>(defaultData);
+      saveStoredNotices(clean, false);
+      return clean;
     }
   } catch (err) {
     console.warn('Failed to load notices:', err);
@@ -470,10 +505,9 @@ export async function getStoredNotices(): Promise<NoticeItem[]> {
 
 export function getStoredNoticesSync(): NoticeItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_NOTICES);
+    const raw = safeStorageGet(STORAGE_KEY_NOTICES);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      return sanitizeObjectArray<NoticeItem>(JSON.parse(raw));
     }
   } catch (err) {
     console.error('Failed to get notices sync:', err);
@@ -483,7 +517,7 @@ export function getStoredNoticesSync(): NoticeItem[] {
 
 export function saveStoredNotices(notices: NoticeItem[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_NOTICES, JSON.stringify(notices));
+    safeStorageSet(STORAGE_KEY_NOTICES, JSON.stringify(sanitizeObjectArray<NoticeItem>(notices)));
     if (notify) {
       notifyDataUpdate('notices');
     }
@@ -498,14 +532,14 @@ export function saveStoredNotices(notices: NoticeItem[], notify = true): void {
 
 export function getStoredQuickLinks(): QuickLinkItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_QUICKLINKS);
+    const raw = safeStorageGet(STORAGE_KEY_QUICKLINKS);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      const valid = sanitizeObjectArray<QuickLinkItem>(JSON.parse(raw));
+      if (valid.length > 0) {
+        return valid;
       }
     }
-    localStorage.setItem(STORAGE_KEY_QUICKLINKS, JSON.stringify(DEFAULT_QUICK_LINKS));
+    safeStorageSet(STORAGE_KEY_QUICKLINKS, JSON.stringify(DEFAULT_QUICK_LINKS));
     return DEFAULT_QUICK_LINKS;
   } catch (err) {
     console.error('Failed to load quick links:', err);
@@ -515,7 +549,7 @@ export function getStoredQuickLinks(): QuickLinkItem[] {
 
 export function saveStoredQuickLinks(links: QuickLinkItem[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY_QUICKLINKS, JSON.stringify(links));
+    safeStorageSet(STORAGE_KEY_QUICKLINKS, JSON.stringify(sanitizeObjectArray<QuickLinkItem>(links)));
     notifyDataUpdate('links');
   } catch (err) {
     console.error('Failed to save quick links:', err);
@@ -528,8 +562,10 @@ export function saveStoredQuickLinks(links: QuickLinkItem[]): void {
 
 export function getStoredBookmarks(): string[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_BOOKMARKS);
-    return raw ? JSON.parse(raw) : [];
+    const raw = safeStorageGet(STORAGE_KEY_BOOKMARKS);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
   } catch {
     return [];
   }
@@ -543,17 +579,17 @@ export function toggleStoredBookmark(id: string): string[] {
   } else {
     updated = [...current, id];
   }
-  localStorage.setItem(STORAGE_KEY_BOOKMARKS, JSON.stringify(updated));
+  safeStorageSet(STORAGE_KEY_BOOKMARKS, JSON.stringify(updated));
   return updated;
 }
 
 export function verifyAdminPin(enteredPin: string): boolean {
-  const currentPin = localStorage.getItem(STORAGE_KEY_PIN) || DEFAULT_PIN;
+  const currentPin = safeStorageGet(STORAGE_KEY_PIN) || DEFAULT_PIN;
   return enteredPin.trim() === currentPin.trim() || enteredPin.trim() === 'admin123';
 }
 
 export function setStoredAdminPin(newPin: string): void {
-  localStorage.setItem(STORAGE_KEY_PIN, newPin.trim());
+  safeStorageSet(STORAGE_KEY_PIN, newPin.trim());
 }
 
 // ==========================================
@@ -562,10 +598,9 @@ export function setStoredAdminPin(newPin: string): void {
 
 export function getStoredStudentPhotosSync(): StudentPhotoItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_STUDENT_PHOTOS);
+    const raw = safeStorageGet(STORAGE_KEY_STUDENT_PHOTOS);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      return sanitizeObjectArray<StudentPhotoItem>(JSON.parse(raw));
     }
   } catch (err) {
     console.error('Failed to get student photos sync:', err);
@@ -575,11 +610,11 @@ export function getStoredStudentPhotosSync(): StudentPhotoItem[] {
 
 export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_STUDENT_PHOTOS);
+    const raw = safeStorageGet(STORAGE_KEY_STUDENT_PHOTOS);
     if (raw !== null) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      const valid = sanitizeObjectArray<StudentPhotoItem>(JSON.parse(raw));
+      if (valid.length > 0) {
+        return valid;
       }
     }
   } catch {
@@ -589,8 +624,9 @@ export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
   try {
     const defaultData = await fetchStaticJson<StudentPhotoItem[]>('student_photos.json');
     if (defaultData && Array.isArray(defaultData)) {
-      saveStoredStudentPhotos(defaultData, false);
-      return defaultData;
+      const clean = sanitizeObjectArray<StudentPhotoItem>(defaultData);
+      saveStoredStudentPhotos(clean, false);
+      return clean;
     }
   } catch (err) {
     console.warn('Failed to load student photos:', err);
@@ -600,7 +636,7 @@ export async function getStoredStudentPhotos(): Promise<StudentPhotoItem[]> {
 
 export function saveStoredStudentPhotos(photos: StudentPhotoItem[], notify = true): void {
   try {
-    localStorage.setItem(STORAGE_KEY_STUDENT_PHOTOS, JSON.stringify(photos));
+    safeStorageSet(STORAGE_KEY_STUDENT_PHOTOS, JSON.stringify(sanitizeObjectArray<StudentPhotoItem>(photos)));
     if (notify) {
       notifyDataUpdate('student_photos');
     }
@@ -796,11 +832,11 @@ export function importLibraryFromJson(
 
 export async function getStoredRoutines(): Promise<YearRoutine[]> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_ROUTINES);
+    const raw = safeStorageGet(STORAGE_KEY_ROUTINES);
     if (raw !== null) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
+      const valid = sanitizeObjectArray<YearRoutine>(JSON.parse(raw));
+      if (valid.length > 0) {
+        return valid;
       }
     }
   } catch {
@@ -810,7 +846,7 @@ export async function getStoredRoutines(): Promise<YearRoutine[]> {
   try {
     const defaultData = await fetchStaticJson<YearRoutine[]>('routine.json');
     if (defaultData && Array.isArray(defaultData)) {
-      return defaultData;
+      return sanitizeObjectArray<YearRoutine>(defaultData);
     }
   } catch (err) {
     console.warn('Failed to load routines from static data:', err);
@@ -820,7 +856,7 @@ export async function getStoredRoutines(): Promise<YearRoutine[]> {
 
 export function saveStoredRoutines(routines: YearRoutine[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY_ROUTINES, JSON.stringify(routines));
+    safeStorageSet(STORAGE_KEY_ROUTINES, JSON.stringify(sanitizeObjectArray<YearRoutine>(routines)));
     notifyDataUpdate('routines');
   } catch (err) {
     console.error('Error saving routines storage:', err);
@@ -829,7 +865,7 @@ export function saveStoredRoutines(routines: YearRoutine[]): void {
 
 export async function resetStoredRoutines(): Promise<YearRoutine[]> {
   try {
-    localStorage.removeItem(STORAGE_KEY_ROUTINES);
+    safeStorageRemove(STORAGE_KEY_ROUTINES);
     const routines = await getStoredRoutines();
     notifyDataUpdate('routines');
     return routines;
@@ -840,14 +876,14 @@ export async function resetStoredRoutines(): Promise<YearRoutine[]> {
 }
 
 export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
-  localStorage.removeItem(STORAGE_KEY_RESOURCES);
-  localStorage.removeItem(STORAGE_KEY_SPECIES);
-  localStorage.removeItem(STORAGE_KEY_GALLERY);
-  localStorage.removeItem(STORAGE_KEY_THESES);
-  localStorage.removeItem(STORAGE_KEY_NOTICES);
-  localStorage.removeItem(STORAGE_KEY_ROUTINES);
-  localStorage.removeItem(STORAGE_KEY_QUICKLINKS);
-  localStorage.removeItem(STORAGE_KEY_STUDENT_PHOTOS);
+  safeStorageRemove(STORAGE_KEY_RESOURCES);
+  safeStorageRemove(STORAGE_KEY_SPECIES);
+  safeStorageRemove(STORAGE_KEY_GALLERY);
+  safeStorageRemove(STORAGE_KEY_THESES);
+  safeStorageRemove(STORAGE_KEY_NOTICES);
+  safeStorageRemove(STORAGE_KEY_ROUTINES);
+  safeStorageRemove(STORAGE_KEY_QUICKLINKS);
+  safeStorageRemove(STORAGE_KEY_STUDENT_PHOTOS);
 
   resetStoredResourcesToDefaults(false);
   await Promise.all([

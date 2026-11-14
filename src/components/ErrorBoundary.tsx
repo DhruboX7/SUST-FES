@@ -3,6 +3,8 @@ import { AlertTriangle, RefreshCw, Home, RotateCcw } from 'lucide-react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
+  resetKey?: string;
+  compact?: boolean;
 }
 
 interface ErrorBoundaryState {
@@ -26,9 +28,19 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     };
   }
 
+  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+    if (this.state.hasError && this.props.resetKey !== prevProps.resetKey) {
+      this.setState({ hasError: false, errorMessage: '' });
+    }
+  }
+
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('Application ErrorBoundary caught an error:', error, errorInfo);
   }
+
+  handleRetry = (): void => {
+    this.setState({ hasError: false, errorMessage: '' });
+  };
 
   handleReload = (): void => {
     window.location.reload();
@@ -36,7 +48,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   handleGoHome = (): void => {
     this.setState({ hasError: false, errorMessage: '' });
-    window.location.hash = '#/';
+    try {
+      window.location.hash = '#/';
+    } catch {
+      // Ignore hash navigation errors
+    }
   };
 
   handleClearCacheAndReload = (): void => {
@@ -55,7 +71,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     } catch {
       // Ignore storage access errors
     }
-    window.location.hash = '#/';
+    try {
+      window.location.hash = '#/';
+    } catch {
+      // Ignore hash navigation errors
+    }
     window.location.reload();
   };
 
@@ -64,8 +84,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return this.props.children;
     }
 
+    const wrapperClass = this.props.compact
+      ? 'py-10 px-4 flex items-center justify-center text-stone-900 dark:text-stone-100'
+      : 'min-h-screen flex items-center justify-center p-6 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100';
+
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+      <div className={wrapperClass}>
         <div className="max-w-md w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-8 shadow-sm text-center space-y-5">
           <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 mx-auto flex items-center justify-center">
             <AlertTriangle className="w-6 h-6" />
@@ -85,24 +109,35 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2 flex-wrap">
+            <button
+              type="button"
+              onClick={this.handleRetry}
+              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-700 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Try Again</span>
+            </button>
+
             <button
               type="button"
               onClick={this.handleGoHome}
-              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-700 text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Home className="w-3.5 h-3.5" />
               <span>Return Home</span>
             </button>
 
-            <button
-              type="button"
-              onClick={this.handleReload}
-              className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Reload Page</span>
-            </button>
+            {!this.props.compact && (
+              <button
+                type="button"
+                onClick={this.handleReload}
+                className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Reload Page</span>
+              </button>
+            )}
           </div>
 
           <div className="pt-3 border-t border-stone-100 dark:border-stone-800">

@@ -135,27 +135,27 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
 
         {/* Collection Metric Pills */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6">
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Exam PYQs</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.pyqs}</div>
           </div>
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Resources</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.resources}</div>
           </div>
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Tree Species</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.species}</div>
           </div>
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Gallery Photos</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.gallery}</div>
           </div>
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Theses</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.theses}</div>
           </div>
-          <div className="bg-stone-800/80 backdrop-blur-xs p-3 rounded-xl border border-stone-700/60">
+          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
             <div className="text-[10px] uppercase font-bold text-stone-400">Notices & Links</div>
             <div className="text-xl font-bold font-mono text-emerald-400">{stats.notices + stats.links}</div>
           </div>

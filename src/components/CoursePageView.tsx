@@ -80,18 +80,23 @@ export const CoursePageView: React.FC<CoursePageViewProps> = ({
   }
 
   // Filter resources for this course
-  const courseResources = resources.filter(
-    (r) => r.courseCode.toLowerCase().replace(/\s+/g, '') === course.code.toLowerCase().replace(/\s+/g, '')
+  const targetNormalized = course.code.toLowerCase().replace(/\s+/g, '');
+  const courseResources = (Array.isArray(resources) ? resources : []).filter(
+    (r) => r && (r.courseCode || '').toLowerCase().replace(/\s+/g, '') === targetNormalized
   );
 
   const handleCopyCourseLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => {
-      setCopiedLink(false);
-      copyTimerRef.current = null;
-    }, 2000);
+    if (!navigator.clipboard?.writeText) return;
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        setCopiedLink(true);
+        if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        copyTimerRef.current = setTimeout(() => {
+          setCopiedLink(false);
+          copyTimerRef.current = null;
+        }, 2000);
+      })
+      .catch(() => {});
   };
 
   const categories: { key: ResourceCategory; label: string; icon: React.ReactNode }[] = [
