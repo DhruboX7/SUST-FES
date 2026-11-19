@@ -316,16 +316,16 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
   return (
     <div className="space-y-5">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2 flex-wrap">
-            <Bell className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2 flex-wrap">
+            <Bell className="w-5 h-5 text-[#42684D] dark:text-[#8A9C74]" />
             <span>Notice Board & Official Circular Management</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            <span className="text-xs font-mono px-2 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {notices.length} notices
             </span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]/80 mt-0.5">
             Publish department circulars, control Recent Notice Title Bar visibility, and manage notice types & tags.
           </p>
         </div>
@@ -334,10 +334,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
           <button
             type="button"
             onClick={() => setShowTypeManager((prev) => !prev)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg border flex items-center gap-1.5 transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md border flex items-center gap-1.5 transition-colors cursor-pointer ${
               showTypeManager
-                ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-400 dark:border-emerald-700'
-                : 'bg-stone-50 dark:bg-stone-800 text-stone-700 dark:text-stone-200 border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-700'
+                ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] border-[#19382B] dark:border-[#42684D]'
+                : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D]'
             }`}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -346,18 +346,18 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
           {selectedIds.length > 0 && (
             deleteConfirmId === 'batch' ? (
-              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+              <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 animate-fade-in">
                 <button
                   type="button"
                   onClick={handleBatchDelete}
-                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                  className="px-3 py-1 text-xs font-semibold bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] rounded-sm transition-colors cursor-pointer"
                 >
                   Confirm Delete ({selectedIds.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(null)}
-                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -367,7 +367,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId('batch')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Selected ({selectedIds.length})</span>
@@ -377,7 +377,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
           <button
             onClick={handleOpenAdd}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Post New Notice</span>
@@ -387,23 +387,23 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
       {/* MANAGEABLE NOTICE TYPES & TITLE BAR PANEL */}
       {showTypeManager && (
-        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-emerald-200 dark:border-emerald-900/70 p-4 sm:p-5 shadow-xs space-y-5 animate-fade-in">
+        <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#42684D]/50 dark:border-[#BBC4A6]/25 p-4 sm:p-5 space-y-5 animate-fade-in">
           {/* Section 1: Recent Notices Title Bar Controls */}
-          <div className="space-y-3 pb-4 border-b border-stone-200 dark:border-stone-800">
+          <div className="space-y-3 pb-4 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-                <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">
+                <Megaphone className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
+                <h4 className="font-editorial text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                   Recent Notices Title Bar Controls
                 </h4>
               </div>
               <button
                 type="button"
                 onClick={() => updateBarSettings({ enabled: !barSettings.enabled })}
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold border transition-colors cursor-pointer self-start sm:self-auto ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold border transition-colors cursor-pointer self-start sm:self-auto ${
                   barSettings.enabled
-                    ? 'bg-emerald-800 text-white border-emerald-700'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                    ? 'bg-[#42684D] text-[#FAF9F4] border-[#42684D]'
+                    : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25'
                 }`}
               >
                 {barSettings.enabled ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
@@ -413,7 +413,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   Title Bar Label
                 </label>
                 <input
@@ -421,18 +421,18 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                   value={barSettings.title}
                   onChange={(e) => updateBarSettings({ title: e.target.value })}
                   placeholder="Latest Notices"
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   Max Recent Notices Cycled
                 </label>
                 <select
                   value={barSettings.maxItems}
                   onChange={(e) => updateBarSettings({ maxItems: Number(e.target.value) || 6 })}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                 >
                   {[3, 5, 6, 8, 10, 15].map((num) => (
                     <option key={num} value={num}>
@@ -443,7 +443,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   Transition Interval
                 </label>
                 <select
@@ -452,7 +452,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                     updateBarSettings({ rotationIntervalSeconds: Number(e.target.value) || 5 })
                   }
                   disabled={!barSettings.autoRotate}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 disabled:opacity-50"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] disabled:opacity-50 focus:outline-none focus:border-[#42684D]"
                 >
                   {[3, 5, 7, 10, 15, 20].map((sec) => (
                     <option key={sec} value={sec}>
@@ -463,14 +463,14 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
               </div>
 
               <div className="flex items-end pb-0.5">
-                <label className="flex items-center gap-2 cursor-pointer select-none px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 w-full">
+                <label className="flex items-center gap-2 cursor-pointer select-none px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] w-full">
                   <input
                     type="checkbox"
                     checked={barSettings.autoRotate}
                     onChange={(e) => updateBarSettings({ autoRotate: e.target.checked })}
-                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded-sm accent-[#42684D]"
                   />
-                  <span className="font-semibold text-stone-700 dark:text-stone-300">
+                  <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                     Auto-cycle recent notices
                   </span>
                 </label>
@@ -482,11 +482,11 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
           <div className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                <h4 className="font-editorial text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                   <span>Manage Notice Types & Tags</span>
                 </h4>
-                <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                <p className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]/80">
                   Add, rename, recolor, or control which notice types appear in the top Recent Notices Title Bar.
                 </p>
               </div>
@@ -494,7 +494,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
               <button
                 type="button"
                 onClick={handleResetDefaultTypes}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer self-start sm:self-auto"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors cursor-pointer self-start sm:self-auto"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>Reset Defaults</span>
@@ -502,8 +502,8 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
             </div>
 
             {typeManagerError && (
-              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-2.5 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 rounded-md text-[#987453] dark:text-[#F3F1E8] text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{typeManagerError}</span>
               </div>
             )}
@@ -515,16 +515,16 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                 return (
                   <div
                     key={typeDef.id}
-                    className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-stone-950/70"
+                    className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22]"
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-[140px]">
-                      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${style.swatch}`} />
+                      <span className={`w-2.5 h-2.5 rounded-sm shrink-0 ${style.swatch}`} />
                       <input
                         type="text"
                         value={typeDef.label}
                         onChange={(e) => handleUpdateNoticeType(typeDef.id, { label: e.target.value })}
                         aria-label={`Rename notice type ${typeDef.label}`}
-                        className="w-full px-2 py-1 text-xs font-bold rounded-md border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                        className="w-full px-2 py-1 text-xs font-semibold rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                       />
                     </div>
 
@@ -535,7 +535,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           handleUpdateNoticeType(typeDef.id, { color: e.target.value as NoticeTypeColor })
                         }
                         aria-label={`Color for ${typeDef.label}`}
-                        className="px-2 py-1 text-[11px] font-semibold rounded-md border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-200"
+                        className="px-2 py-1 text-[11px] font-semibold rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                       >
                         {COLOR_OPTIONS.map((c) => (
                           <option key={c} value={c}>
@@ -550,10 +550,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           handleUpdateNoticeType(typeDef.id, { showInBar: !typeDef.showInBar })
                         }
                         title={typeDef.showInBar ? 'Shown in Title Bar (click to hide)' : 'Hidden from Title Bar (click to show)'}
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold border transition-colors cursor-pointer ${
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-sm text-[11px] font-semibold border transition-colors cursor-pointer ${
                           typeDef.showInBar
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800'
-                            : 'bg-stone-100 text-stone-500 border-stone-300 dark:bg-stone-800 dark:text-stone-400 dark:border-stone-700'
+                            ? 'bg-[#42684D] text-[#FAF9F4] border-[#42684D]'
+                            : 'bg-[#EAE7DA] dark:bg-[#19382B] text-[#8A9C74] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20'
                         }`}
                       >
                         {typeDef.showInBar ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
@@ -564,7 +564,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                         type="button"
                         onClick={() => handleDeleteNoticeType(typeDef.id)}
                         title={`Delete notice type "${typeDef.label}"`}
-                        className="p-1 text-stone-400 hover:text-rose-600 rounded transition-colors cursor-pointer"
+                        className="p-1 text-[#8A9C74] hover:text-[#987453] rounded-sm transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -577,19 +577,19 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
             {/* Add New Notice Type Form */}
             <form
               onSubmit={handleAddNoticeType}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-dashed border-stone-300 dark:border-stone-700 text-xs"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3 rounded-lg bg-[#EAE7DA]/70 dark:bg-[#142D22] border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/30 text-xs"
             >
               <input
                 type="text"
                 value={newTypeLabel}
                 onChange={(e) => setNewTypeLabel(e.target.value)}
                 placeholder="New type name (e.g., Urgent, Scholarship, Result)..."
-                className="flex-1 px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                className="flex-1 px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
               />
               <select
                 value={newTypeColor}
                 onChange={(e) => setNewTypeColor(e.target.value as NoticeTypeColor)}
-                className="px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 font-semibold"
+                className="px-2.5 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-semibold focus:outline-none focus:border-[#42684D]"
               >
                 {COLOR_OPTIONS.map((c) => (
                   <option key={c} value={c}>
@@ -597,18 +597,18 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                   </option>
                 ))}
               </select>
-              <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 cursor-pointer select-none">
+              <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={newTypeShowInBar}
                   onChange={(e) => setNewTypeShowInBar(e.target.checked)}
-                  className="w-3.5 h-3.5 rounded text-emerald-600"
+                  className="w-3.5 h-3.5 rounded-sm accent-[#42684D]"
                 />
-                <span className="font-semibold text-stone-700 dark:text-stone-300">Show in Bar</span>
+                <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">Show in Bar</span>
               </label>
               <button
                 type="submit"
-                className="px-3.5 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                className="px-3.5 py-1.5 rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Type</span>
@@ -621,13 +621,13 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
       {/* Search & Quick Type Filter Toolbar */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             placeholder="Search notices by title, date, or keywords..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74] focus:outline-none focus:border-[#42684D]"
           />
         </div>
 
@@ -635,10 +635,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
           <button
             type="button"
             onClick={() => setTypeFilter('all')}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
               typeFilter === 'all'
-                ? 'bg-emerald-800 text-white'
-                : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300'
+                ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] border-[#19382B] dark:border-[#42684D]'
+                : 'bg-[#FAF9F4] dark:bg-[#19382B] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#BBC4A6] hover:border-[#42684D]'
             }`}
           >
             All ({notices.length})
@@ -651,7 +651,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                 key={typeDef.id}
                 type="button"
                 onClick={() => setTypeFilter(active ? 'all' : typeDef.id)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-all cursor-pointer ${
                   active ? style.solidBadge : style.badge
                 }`}
               >
@@ -663,10 +663,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
       </div>
 
       {/* Notices Data Table */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 text-stone-500 font-medium uppercase tracking-wider">
+            <thead className="bg-[#EAE7DA] dark:bg-[#142D22] border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[#42684D] dark:text-[#BBC4A6] font-semibold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4 w-10">
                   <button
@@ -677,10 +677,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                         setSelectedIds(filteredNotices.map((n) => n.id));
                       }
                     }}
-                    className="text-stone-500"
+                    className="text-[#42684D] dark:text-[#BBC4A6] cursor-pointer"
                   >
                     {selectedIds.length === filteredNotices.length && filteredNotices.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-600" />
+                      <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                     ) : (
                       <Square className="w-4 h-4" />
                     )}
@@ -692,10 +692,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
               {filteredNotices.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-stone-400">
+                  <td colSpan={5} className="py-8 text-center text-[#8A9C74]">
                     No notices match your search criteria.
                   </td>
                 </tr>
@@ -705,7 +705,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                   const activeTagSet = new Set(resolvedTags.map((t) => t.id.toLowerCase()));
 
                   return (
-                    <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 align-top">
+                    <tr key={item.id} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60 align-top transition-colors">
                       <td className="py-3 px-4">
                         <button
                           onClick={() =>
@@ -713,40 +713,40 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                               prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
                             )
                           }
-                          className="text-stone-400 hover:text-emerald-600"
+                          className="text-[#8A9C74] hover:text-[#42684D] cursor-pointer"
                         >
                           {selectedIds.includes(item.id) ? (
-                            <CheckSquare className="w-4 h-4 text-emerald-600" />
+                            <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                           ) : (
                             <Square className="w-4 h-4" />
                           )}
                         </button>
                       </td>
                       <td className="py-3 px-4 space-y-1.5">
-                        <div className="font-semibold text-stone-900 dark:text-stone-100 flex items-center gap-2 flex-wrap">
+                        <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2 flex-wrap">
                           {item.pinned && (
-                            <Pin className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                            <Pin className="w-3.5 h-3.5 text-[#987453] shrink-0" />
                           )}
                           <span>{item.title}</span>
                           {item.imageUrl && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                               <ImageIcon className="w-3 h-3" /> Image Scan
                             </span>
                           )}
                           {(item.attachmentUrl || item.link) && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] dark:text-[#BBC4A6] border border-[#987453]/40">
                               <FileText className="w-3 h-3" /> Document
                             </span>
                           )}
                         </div>
 
-                        <div className="text-[11px] text-stone-500 max-w-xl line-clamp-1">
+                        <div className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]/80 max-w-xl line-clamp-1">
                           {item.body}
                         </div>
 
                         {/* Quick Inline Tag Toggles */}
                         <div className="flex items-center gap-1 flex-wrap pt-0.5">
-                          <span className="text-[10px] font-semibold text-stone-400 uppercase mr-0.5">
+                          <span className="text-[10px] font-semibold text-[#8A9C74] uppercase mr-0.5">
                             Types:
                           </span>
                           {noticeTypes.map((typeDef) => {
@@ -762,10 +762,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                                     ? `Click to remove "${typeDef.label}" tag`
                                     : `Click to add "${typeDef.label}" tag`
                                 }
-                                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border transition-all cursor-pointer ${
+                                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px] font-semibold border transition-all cursor-pointer ${
                                   isAssigned
                                     ? style.badge
-                                    : 'bg-stone-50 dark:bg-stone-950 text-stone-400 border-stone-200 dark:border-stone-800 hover:text-stone-700 dark:hover:text-stone-200'
+                                    : 'bg-[#F3F1E8] dark:bg-[#142D22] text-[#8A9C74] border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                                 }`}
                               >
                                 {isAssigned && <Check className="w-2.5 h-2.5" />}
@@ -775,16 +775,16 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           })}
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-mono text-stone-600 dark:text-stone-400 whitespace-nowrap">
+                      <td className="py-3 px-4 font-mono text-[#987453] dark:text-[#BBC4A6] whitespace-nowrap">
                         {item.date}
                       </td>
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleTogglePin(item.id)}
-                          className={`px-2 py-0.5 text-[10px] font-bold rounded-md flex items-center gap-1 transition-colors cursor-pointer ${
+                          className={`px-2 py-0.5 text-[10px] font-semibold rounded-sm flex items-center gap-1 border transition-colors cursor-pointer ${
                             item.pinned
-                              ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700'
-                              : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:text-stone-700'
+                              ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] dark:text-[#F3F1E8] border-[#987453]/60'
+                              : 'bg-[#EAE7DA]/60 dark:bg-[#142D22] text-[#8A9C74] border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                           }`}
                         >
                           <Pin className="w-3 h-3" />
@@ -798,7 +798,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                               href={item.imageUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 text-stone-400 hover:text-emerald-600 rounded"
+                              className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm"
                               title="View Circular Image"
                             >
                               <ImageIcon className="w-3.5 h-3.5" />
@@ -809,7 +809,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                               href={item.attachmentUrl || item.link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                              className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm"
                               title="Open Document Attachment"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
@@ -817,7 +817,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           )}
                           <button
                             onClick={() => handleOpenEdit(item)}
-                            className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm cursor-pointer"
                             title="Edit Notice"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -826,18 +826,18 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => handleDelete(item.id)}
-                                className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded"
+                                className="px-2 py-1 text-[10px] font-semibold bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] rounded-sm cursor-pointer"
                               >
                                 Confirm
                               </button>
-                              <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
+                              <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-[#8A9C74] cursor-pointer">
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
                           ) : (
                             <button
                               onClick={() => setDeleteConfirmId(item.id)}
-                              className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
+                              className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-sm cursor-pointer"
                               title="Delete Notice"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -856,27 +856,27 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in overflow-y-auto">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#19382B]/75 animate-fade-in overflow-y-auto">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                 {editingItem ? 'Edit Department Notice' : 'Post Official Notice'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <button onClick={() => setIsModalOpen(false)} className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 rounded-md text-[#987453] dark:text-[#F3F1E8] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{formError}</span>
               </div>
             )}
 
             <form onSubmit={handleSave} className="space-y-3">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   Notice Title *
                 </label>
                 <input
@@ -884,21 +884,21 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Semester Final Examination Routine - Autumn 2024"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                     Publication Date
                   </label>
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                     required
                   />
                 </div>
@@ -909,10 +909,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                       type="checkbox"
                       checked={pinned}
                       onChange={(e) => setPinned(e.target.checked)}
-                      className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                      className="w-4 h-4 rounded-sm accent-[#987453]"
                     />
-                    <span className="font-semibold text-stone-700 dark:text-stone-300 flex items-center gap-1">
-                      <Pin className="w-3.5 h-3.5 text-amber-500" />
+                    <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-1">
+                      <Pin className="w-3.5 h-3.5 text-[#987453]" />
                       <span>Pin to Top (Urgent Notice)</span>
                     </span>
                   </label>
@@ -921,13 +921,13 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
               {/* Notice Types / Tags Selection */}
               <div>
-                <label className="block font-semibold mb-1.5 text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                <label className="block font-semibold mb-1.5 text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                   <span>Notice Types & Tags (Shown in Title Bar)</span>
                 </label>
-                <div className="flex flex-wrap gap-1.5 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-950/60">
+                <div className="flex flex-wrap gap-1.5 p-2.5 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22]">
                   {noticeTypes.length === 0 ? (
-                    <span className="text-[11px] text-stone-400">
+                    <span className="text-[11px] text-[#8A9C74]">
                       No notice types defined. Open Manage Types & Title Bar to add types.
                     </span>
                   ) : (
@@ -939,10 +939,10 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           key={typeDef.id}
                           type="button"
                           onClick={() => handleToggleFormTag(typeDef.id)}
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all cursor-pointer ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-[11px] font-semibold border transition-all cursor-pointer ${
                             active
                               ? style.solidBadge
-                              : `${style.badge} opacity-65 hover:opacity-100`
+                              : `${style.badge} opacity-70 hover:opacity-100`
                           }`}
                         >
                           {active && <Check className="w-3 h-3" />}
@@ -956,7 +956,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
               {/* Notice Body */}
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   Notice Body & Directives *
                 </label>
                 <textarea
@@ -964,21 +964,21 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                   onChange={(e) => setBody(e.target.value)}
                   placeholder="Full circular announcement text, room instructions, deadlines..."
                   rows={4}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
                   required
                 />
               </div>
 
               {/* ATTACHMENT / IMAGE OPTION INSIDE NOTICE */}
-              <div className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-950/60 space-y-3">
-                <div className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+              <div className="p-3.5 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] space-y-3">
+                <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                   <span>Circular Image & Document Attachments</span>
                 </div>
 
                 {/* Circular Image Field */}
                 <div>
-                  <label className="block font-medium mb-1 text-stone-600 dark:text-stone-400">
+                  <label className="block font-medium mb-1 text-[#42684D] dark:text-[#BBC4A6]">
                     Circular Image URL (Scan / Photo / Banner)
                   </label>
                   <input
@@ -986,18 +986,18 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     placeholder="https://... or /assets/..."
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-mono focus:outline-none focus:border-[#42684D]"
                   />
                   {imageUrl && (
-                    <div className="mt-2 p-2 border border-stone-200 dark:border-stone-800 rounded-lg bg-white dark:bg-stone-900 flex items-center gap-3">
+                    <div className="mt-2 p-2 border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 rounded-md bg-[#FAF9F4] dark:bg-[#19382B] flex items-center gap-3">
                       <img
                         src={imageUrl}
                         alt="Circular preview"
                         decoding="async"
                         onError={handleImageError}
-                        className="w-16 h-12 object-cover rounded border border-stone-300 dark:border-stone-700 shrink-0"
+                        className="w-16 h-12 object-cover rounded-sm border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 shrink-0"
                       />
-                      <div className="text-[11px] text-stone-500">
+                      <div className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]">
                         Image preview active. Will display inline with full-screen zoom modal on notice board.
                       </div>
                     </div>
@@ -1006,7 +1006,7 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
 
                 {/* Document Attachment Field */}
                 <div>
-                  <label className="block font-medium mb-1 text-stone-600 dark:text-stone-400">
+                  <label className="block font-medium mb-1 text-[#42684D] dark:text-[#BBC4A6]">
                     Document Attachment URL (PDF Routine / Form / Drive link)
                   </label>
                   <input
@@ -1014,22 +1014,22 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                     value={attachmentUrl}
                     onChange={(e) => setAttachmentUrl(e.target.value)}
                     placeholder="https://... (e.g. Google Drive link or PDF download)"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-mono focus:outline-none focus:border-[#42684D]"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] rounded-md cursor-pointer transition-colors"
                 >
                   {editingItem ? 'Save Notice' : 'Publish Notice'}
                 </button>

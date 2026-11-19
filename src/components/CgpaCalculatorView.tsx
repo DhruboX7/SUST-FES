@@ -133,42 +133,42 @@ export const CgpaCalculatorView: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      
+
       {/* Banner */}
-      <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-950 rounded-2xl p-6 sm:p-8 text-white border border-emerald-900/40 shadow-sm">
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 shadow-sm">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Calculator className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+            <Calculator className="w-4 h-4 text-[#8A9C74]" />
             <span>Academic Performance Tools</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+          <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
             SUST CGPA & Semester GPA Calculator
           </h1>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#BBC4A6] leading-relaxed">
             Calibrated to the official SUST 4.00 grading scale (A+ at 80% and above). Automatically pre-populate courses from the FES department OBE curriculum or enter custom scores.
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left: Course Grades Table (2 Cols) */}
         <div className="lg:col-span-2 space-y-6">
-          
-          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-stone-200 dark:border-stone-800">
+
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               <div>
-                <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                <h2 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                   Semester Course Scores
                 </h2>
-                <p className="text-xs text-stone-500 dark:text-stone-400">
+                <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]">
                   Select letter grades to calculate weighted Grade Point Average.
                 </p>
               </div>
 
               {/* Pre-fill Quick Select Dropdown */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-stone-500 font-semibold">Load Semester:</span>
+                <span className="text-xs text-[#42684D] dark:text-[#8A9C74] font-semibold">Load Semester:</span>
                 <select
                   aria-label="Load semester courses"
                   onChange={(e) => {
@@ -178,7 +178,7 @@ export const CgpaCalculatorView: React.FC = () => {
                     handleLoadCurriculumSemester(Number(y) as AcademicYear, Number(s) as 1 | 2);
                   }}
                   defaultValue=""
-                  className="px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-medium text-stone-800 dark:text-stone-200"
+                  className="px-2.5 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-xs font-medium text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                 >
                   <option value="" disabled>Select Semester...</option>
                   <option value="1-1">1st Year, Sem 1</option>
@@ -195,11 +195,11 @@ export const CgpaCalculatorView: React.FC = () => {
 
             {/* Courses List */}
             {courses.length === 0 ? (
-              <div className="py-12 text-center text-stone-400">
+              <div className="py-12 text-center text-[#8A9C74]">
                 <p className="text-xs mb-3">No courses added to the calculator.</p>
                 <button
                   onClick={handleAddCustomCourse}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-semibold"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add First Course</span>
@@ -210,15 +210,15 @@ export const CgpaCalculatorView: React.FC = () => {
                 {courses.map((c) => (
                   <div
                     key={c.id}
-                    className="p-3 sm:p-4 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="p-3 sm:p-4 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 text-xs font-mono font-semibold text-emerald-800 dark:text-emerald-400">
+                      <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#987453] dark:text-[#BBC4A6]">
                         <span>{c.courseCode}</span>
                         <span aria-hidden="true">·</span>
                         <span>{c.credits} Credits</span>
                       </div>
-                      <div className="text-sm font-bold text-stone-900 dark:text-stone-100 truncate mt-0.5">
+                      <div className="text-sm font-bold text-[#19382B] dark:text-[#F3F1E8] truncate mt-0.5">
                         {c.courseTitle}
                       </div>
                     </div>
@@ -226,7 +226,7 @@ export const CgpaCalculatorView: React.FC = () => {
                     <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
                       {/* Credit Input */}
                       <div className="flex items-center gap-1">
-                        <span className="text-[11px] text-stone-400">Cr:</span>
+                        <span className="text-[11px] text-[#8A9C74]">Cr:</span>
                         <input
                           type="number"
                           step="0.5"
@@ -235,7 +235,7 @@ export const CgpaCalculatorView: React.FC = () => {
                           value={c.credits}
                           onChange={(e) => handleCreditsChange(c.id, parseFloat(e.target.value) || 0)}
                           aria-label={`Credits for ${c.courseCode}`}
-                          className="w-14 px-2 py-1 text-xs font-mono font-semibold text-center rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900"
+                          className="w-14 px-2 py-1 text-xs font-mono font-semibold text-center rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                         />
                       </div>
 
@@ -245,7 +245,7 @@ export const CgpaCalculatorView: React.FC = () => {
                           value={c.letterGrade}
                           onChange={(e) => handleGradeChange(c.id, e.target.value)}
                           aria-label={`Grade for ${c.courseCode}`}
-                          className="px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-bold text-emerald-800 dark:text-emerald-400"
+                          className="px-3 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-xs font-bold text-[#42684D] dark:text-[#BBC4A6] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                         >
                           {SUST_GRADE_SCALE.map((s) => (
                             <option key={s.letter} value={s.letter}>
@@ -259,7 +259,7 @@ export const CgpaCalculatorView: React.FC = () => {
                       <button
                         onClick={() => handleRemoveCourse(c.id)}
                         aria-label={`Remove ${c.courseCode}`}
-                        className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg transition-colors"
+                        className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-md transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -270,10 +270,10 @@ export const CgpaCalculatorView: React.FC = () => {
             )}
 
             {/* Actions Bar */}
-            <div className="flex items-center justify-between pt-4 mt-6 border-t border-stone-200 dark:border-stone-800">
+            <div className="flex items-center justify-between pt-4 mt-6 border-t border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               <button
                 onClick={handleAddCustomCourse}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-lg text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#EAE7DA] dark:bg-[#142D22] hover:bg-[#BBC4A6]/40 text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 rounded-md text-xs font-semibold transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Another Course</span>
@@ -281,7 +281,7 @@ export const CgpaCalculatorView: React.FC = () => {
 
               <button
                 onClick={handleReset}
-                className="inline-flex items-center gap-1 text-xs text-stone-500 dark:text-stone-400 hover:text-red-500 transition-colors"
+                className="inline-flex items-center gap-1 text-xs text-[#987453] dark:text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] font-medium transition-colors"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>Clear All</span>
@@ -290,17 +290,17 @@ export const CgpaCalculatorView: React.FC = () => {
           </div>
 
           {/* Grading Scale Reference Table */}
-          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-3 flex items-center gap-1.5">
-              <Award className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 shadow-xs">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#42684D] dark:text-[#BBC4A6] mb-3 flex items-center gap-1.5">
+              <Award className="w-4 h-4 text-[#987453] dark:text-[#8A9C74]" />
               <span>Official SUST 4.00 Grading Scale (A+ at 80%+)</span>
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs">
               {SUST_GRADE_SCALE.map((s) => (
-                <div key={s.letter} className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800">
-                  <div className="font-extrabold text-sm text-emerald-800 dark:text-emerald-400">{s.letter}</div>
-                  <div className="font-mono text-xs font-semibold text-stone-800 dark:text-stone-200">{s.gradePoint.toFixed(2)}</div>
-                  <div className="text-[10px] text-stone-500 dark:text-stone-400">{s.marksRange}</div>
+                <div key={s.letter} className="p-2.5 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
+                  <div className="font-extrabold text-sm text-[#42684D] dark:text-[#8A9C74]">{s.letter}</div>
+                  <div className="font-mono text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8]">{s.gradePoint.toFixed(2)}</div>
+                  <div className="text-[10px] text-[#8A9C74]">{s.marksRange}</div>
                 </div>
               ))}
             </div>
@@ -310,27 +310,27 @@ export const CgpaCalculatorView: React.FC = () => {
 
         {/* Right: Results Card & Target Predictor (1 Col) */}
         <div className="space-y-6">
-          
+
           {/* Main GPA Score Card */}
-          <div className="bg-gradient-to-b from-emerald-900 to-emerald-950 rounded-2xl p-6 text-white border border-emerald-800 shadow-lg text-center">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
+          <div className="bg-[#19382B] rounded-lg p-6 text-[#F3F1E8] border border-[#42684D]/50 shadow-sm text-center">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#8A9C74]">
               Semester GPA
             </span>
-            <div className="text-5xl font-black tracking-tight my-2 font-mono">
+            <div className="font-editorial text-5xl font-bold tracking-tight my-2 font-mono text-[#F3F1E8]">
               {gpa.toFixed(2)}
             </div>
-            <div className="text-xs text-emerald-200">
+            <div className="text-xs text-[#BBC4A6]">
               Based on {totalCredits} credit hours ({earnedCredits} earned)
             </div>
 
-            <div className="mt-6 pt-4 border-t border-emerald-800/80 grid grid-cols-2 gap-3 text-left">
+            <div className="mt-6 pt-4 border-t border-[#42684D]/40 grid grid-cols-2 gap-3 text-left">
               <div>
-                <div className="text-[11px] text-emerald-300">Total Credits</div>
-                <div className="text-base font-bold font-mono">{totalCredits}</div>
+                <div className="text-[11px] text-[#8A9C74]">Total Credits</div>
+                <div className="text-base font-bold font-mono text-[#F3F1E8]">{totalCredits}</div>
               </div>
               <div>
-                <div className="text-[11px] text-emerald-300">Honors Standing</div>
-                <div className="text-xs font-semibold">
+                <div className="text-[11px] text-[#8A9C74]">Honors Standing</div>
+                <div className="text-xs font-semibold text-[#F3F1E8]">
                   {gpa >= 3.75 ? 'First Class Distinction' : gpa >= 3.00 ? 'Second Class Upper' : gpa >= 2.50 ? 'Second Class Lower' : 'Passing Grade'}
                 </div>
               </div>
@@ -338,20 +338,20 @@ export const CgpaCalculatorView: React.FC = () => {
           </div>
 
           {/* Target CGPA Predictor */}
-          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs space-y-4">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 shadow-xs space-y-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-              <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100">
+              <TrendingUp className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
+              <h3 className="text-sm font-bold text-[#19382B] dark:text-[#F3F1E8]">
                 Target CGPA Predictor
               </h3>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+            <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] leading-relaxed">
               Find out what GPA you must score in upcoming semesters to achieve your goal.
             </p>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-stone-600 dark:text-stone-400 mb-1 font-medium">
+                <label className="block text-[#42684D] dark:text-[#BBC4A6] mb-1 font-medium">
                   Current Cumulative CGPA
                 </label>
                 <input
@@ -361,13 +361,13 @@ export const CgpaCalculatorView: React.FC = () => {
                   max="4.0"
                   value={currentCgpa}
                   onChange={(e) => setCurrentCgpa(e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 font-mono font-semibold"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-stone-600 dark:text-stone-400 mb-1 font-medium">
+                  <label className="block text-[#42684D] dark:text-[#BBC4A6] mb-1 font-medium">
                     Credits Completed
                   </label>
                   <input
@@ -376,11 +376,11 @@ export const CgpaCalculatorView: React.FC = () => {
                     min="0"
                     value={completedCredits}
                     onChange={(e) => setCompletedCredits(e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 font-mono font-semibold"
+                    className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
                 <div>
-                  <label className="block text-stone-600 dark:text-stone-400 mb-1 font-medium">
+                  <label className="block text-[#42684D] dark:text-[#BBC4A6] mb-1 font-medium">
                     Upcoming Credits
                   </label>
                   <input
@@ -389,13 +389,13 @@ export const CgpaCalculatorView: React.FC = () => {
                     min="1"
                     value={upcomingCredits}
                     onChange={(e) => setUpcomingCredits(e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 font-mono font-semibold"
+                    className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-stone-600 dark:text-stone-400 mb-1 font-medium">
+                <label className="block text-[#42684D] dark:text-[#BBC4A6] mb-1 font-medium">
                   Desired Target CGPA
                 </label>
                 <input
@@ -405,27 +405,27 @@ export const CgpaCalculatorView: React.FC = () => {
                   max="4.0"
                   value={targetCgpa}
                   onChange={(e) => setTargetCgpa(e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 font-mono font-semibold"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                 />
               </div>
             </div>
 
             {/* Target Output */}
             {reqGpa !== null && (
-              <div className={`p-4 rounded-xl border text-center ${
-                reqGpa > 4.00 
-                  ? 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900 text-red-900 dark:text-red-200' 
-                  : reqGpa < 2.00 
-                  ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900 text-emerald-900 dark:text-emerald-200' 
-                  : 'bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100'
+              <div className={`p-4 rounded-md border text-center ${
+                reqGpa > 4.00
+                  ? 'bg-[#987453]/15 border-[#987453]/60 text-[#19382B] dark:text-[#F3F1E8]'
+                  : reqGpa <= 2.00
+                  ? 'bg-[#EAE7DA] dark:bg-[#142D22] border-[#42684D]/60 text-[#19382B] dark:text-[#F3F1E8]'
+                  : 'bg-[#F3F1E8] dark:bg-[#142D22] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8]'
               }`}>
-                <div className="text-[11px] font-bold uppercase tracking-wider mb-1">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#987453] dark:text-[#8A9C74] mb-1">
                   Required Upcoming GPA
                 </div>
                 <div className="text-3xl font-black font-mono">
                   {reqGpa.toFixed(2)}
                 </div>
-                <div className="text-[11px] mt-1">
+                <div className="text-[11px] mt-1 text-[#42684D] dark:text-[#BBC4A6]">
                   {reqGpa > 4.00
                     ? 'Mathematically unattainable within this credit load. Increase upcoming credits or adjust target.'
                     : reqGpa <= 2.00

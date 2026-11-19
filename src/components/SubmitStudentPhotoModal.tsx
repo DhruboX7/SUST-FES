@@ -122,35 +122,37 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
     onClose();
   };
 
+  const selectedSpecies = speciesList.find((s) => s.id === selectedSpeciesId);
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#11261D]/85 animate-fade-in"
       onClick={handleResetAndClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="relative max-w-xl w-full max-h-[92vh] flex flex-col bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative max-w-xl w-full max-h-[92vh] flex flex-col bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-md bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center shrink-0">
               <Camera className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 leading-snug">
+              <h2 className="font-editorial text-base sm:text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug">
                 Submit Field Tour / Student Photo
               </h2>
-              <p className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-[11px] sm:text-xs text-[#42684D] dark:text-[#BBC4A6]">
                 Department of Forestry and Environmental Science, SUST
               </p>
             </div>
           </div>
           <button
             onClick={handleResetAndClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800 transition-colors"
+            className="p-1.5 rounded-md text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] transition-colors"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -161,20 +163,20 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {isSubmitted ? (
             <div className="py-8 px-4 text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="w-14 h-14 rounded-lg bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100">
-                Photo Submitted for Department Review!
+              <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">
+                Photo Submitted for Department Review
               </h3>
-              <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong>{studentName}</strong>. Your field capture has been registered in the FES digital archive. It will appear on the public Student Lens and Tree Species profiles once approved by departmental administrators in the Manage console.
+              <p className="text-xs sm:text-sm text-[#42684D] dark:text-[#BBC4A6] max-w-md mx-auto leading-relaxed">
+                Thank you, <strong className="text-[#19382B] dark:text-[#F3F1E8]">{studentName}</strong>. Your field capture has been registered in the FES digital archive. It will appear on the public Student Lens and Tree Species profiles once approved by departmental administrators in the Manage console.
               </p>
               <div className="pt-4">
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="px-6 py-2.5 rounded-xl font-bold text-xs bg-emerald-800 hover:bg-emerald-700 text-white shadow-xs transition-colors"
+                  className="px-6 py-2.5 rounded-md font-semibold text-xs bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] shadow-xs transition-colors"
                 >
                   Done
                 </button>
@@ -183,8 +185,8 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               {errorMsg && (
-                <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
+                <div className="p-3 rounded-md bg-[#987453]/15 border border-[#987453]/60 text-[#19382B] dark:text-[#F3F1E8] text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-[#987453] shrink-0" />
                   <span>{errorMsg}</span>
                 </div>
               )}
@@ -192,24 +194,24 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
               {/* Student Credentials Row */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-1">
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Student Name *
                   </label>
                   <div className="relative">
-                    <User className="w-3.5 h-3.5 absolute left-3 top-2.5 text-stone-400" />
+                    <User className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#8A9C74]" />
                     <input
                       type="text"
                       required
                       value={studentName}
                       onChange={(e) => setStudentName(e.target.value)}
                       placeholder="e.g. Tanvir Ahmed"
-                      className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                      className="w-full pl-9 pr-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Session / Batch
                   </label>
                   <input
@@ -217,22 +219,22 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                     value={studentBatch}
                     onChange={(e) => setStudentBatch(e.target.value)}
                     placeholder="e.g. 2021-22"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Registration No.
                   </label>
                   <div className="relative">
-                    <Hash className="w-3.5 h-3.5 absolute left-3 top-2.5 text-stone-400" />
+                    <Hash className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#8A9C74]" />
                     <input
                       type="text"
                       value={studentRegNo}
                       onChange={(e) => setStudentRegNo(e.target.value)}
                       placeholder="2021134018"
-                      className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                      className="w-full pl-9 pr-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                     />
                   </div>
                 </div>
@@ -241,7 +243,7 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
               {/* Title & Linked Tree Species */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Observation Title *
                   </label>
                   <input
@@ -250,19 +252,19 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Mature Dipterocarpus turbinatus Foliage"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1 flex items-center gap-1">
-                    <TreePine className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1 flex items-center gap-1">
+                    <TreePine className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                     <span>Associated Tree Species</span>
                   </label>
                   <select
                     value={selectedSpeciesId}
                     onChange={(e) => setSelectedSpeciesId(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   >
                     <option value="">General Forest / Campus Habitat</option>
                     {speciesList.map((sp) => (
@@ -271,14 +273,19 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                       </option>
                     ))}
                   </select>
+                  {selectedSpecies && (
+                    <div className="mt-1 text-xs text-[#987453] dark:text-[#BBC4A6]">
+                      Linked taxon: <span className="font-scientific">{selectedSpecies.scientificName}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Field Location & Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-stone-400" />
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-[#987453]" />
                     <span>Field Tour Location *</span>
                   </label>
                   <input
@@ -287,29 +294,29 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g. Lawachara National Park / SUST Campus"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1 flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-[#8A9C74]" />
                     <span>Observation Date</span>
                   </label>
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                   />
                 </div>
               </div>
 
               {/* Image URL & Live Preview */}
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1 flex items-center justify-between">
+                <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1 flex items-center justify-between">
                   <span>Photo URL (Direct Image Link or Google Drive Share) *</span>
-                  <span className="text-[10px] text-stone-400 font-normal">JPG, PNG, WebP</span>
+                  <span className="text-[10px] text-[#8A9C74] font-normal">JPG, PNG, WebP</span>
                 </label>
                 <input
                   type="text"
@@ -317,18 +324,18 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://... or Google Drive shared file link"
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                 />
 
                 {imageUrl && (
-                  <div className="mt-2 p-2 border border-stone-200 dark:border-stone-800 rounded-lg bg-stone-50 dark:bg-stone-950 flex items-center gap-3">
+                  <div className="mt-2 p-2 border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] flex items-center gap-3">
                     <img
                       src={imageUrl}
                       alt="Preview"
                       onError={handleImageError}
-                      className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
+                      className="w-16 h-12 object-cover rounded-sm border border-[#BBC4A6] dark:border-[#BBC4A6]/30 shrink-0"
                     />
-                    <div className="text-[11px] text-stone-500 dark:text-stone-400">
+                    <div className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]">
                       Live thumbnail preview. Ensure the image link is publicly accessible so faculty and classmates can view it.
                     </div>
                   </div>
@@ -337,7 +344,7 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
 
               {/* Caption / Morphological Notes */}
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                   Morphological Notes / Observations
                 </label>
                 <textarea
@@ -345,22 +352,22 @@ export const SubmitStudentPhotoModal: React.FC<SubmitStudentPhotoModalProps> = (
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Describe specimen habit, bark characteristics, flowering stage, canopy position, or ecological setting..."
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                  className="px-4 py-2 text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs transition-colors"
+                  className="px-5 py-2 text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md shadow-xs transition-colors"
                 >
                   Submit Photo
                 </button>

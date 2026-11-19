@@ -14,7 +14,6 @@ import {
   ZoomIn,
   X,
   ExternalLink,
-  Sparkles
 } from 'lucide-react';
 
 import { GalleryItem, StudentPhotoItem } from '../types';
@@ -101,26 +100,27 @@ export const FieldGalleryView: React.FC = () => {
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in">
       
-      {/* Banner */}
-      <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-950 rounded-2xl p-6 sm:p-8 text-white border border-emerald-900/40 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      {/* Editorial Banner */}
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/50 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Camera className="w-4 h-4 text-emerald-400" />
-            <span>Visual Field & Research Chronicle</span>
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+            <Camera className="w-4 h-4 text-[#8A9C74]" />
+            <span>Visual Field &amp; Research Chronicle</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
-            Field Excursion & Student Gallery
+          <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
+            Field Excursion &amp; Student Gallery
           </h1>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
-            Photographic archive documenting annual silvicultural expeditions across Lawachara, the Sundarbans, Sylhet hill reserves, departmental laboratories, and field observations captured by SUST forestry students.
+          <p className="text-xs sm:text-sm text-[#F3F1E8]/85 leading-relaxed">
+            Documentary chronicle of annual silvicultural expeditions across Lawachara, the Sundarbans, Sylhet hill reserves, departmental laboratories, and student field observations.
           </p>
         </div>
 
         {/* Submit Photo Button */}
         <div className="shrink-0 flex items-center">
           <button
+            type="button"
             onClick={() => setIsSubmitModalOpen(true)}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 shadow-md hover:shadow-lg transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-md text-xs sm:text-sm font-semibold bg-[#42684D] hover:bg-[#8A9C74] hover:text-[#11261D] text-[#F3F1E8] transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Submit a Field Photo</span>
@@ -129,24 +129,25 @@ export const FieldGalleryView: React.FC = () => {
       </div>
 
       {/* Category Tabs & Actions Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200 dark:border-stone-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15 pb-3">
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
           {categories.map((c) => {
             const isActive = selectedCategory === c.key;
             return (
               <button
+                type="button"
                 key={c.key}
                 onClick={() => setSelectedCategory(c.key)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer border ${
                   isActive
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 hover:text-stone-900 dark:hover:text-stone-100'
+                    ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] border-[#19382B] dark:border-[#8A9C74]'
+                    : 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 hover:border-[#42684D] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
-                {c.isSpecial && <Camera className="w-3.5 h-3.5 text-emerald-400" />}
+                {c.isSpecial && <Camera className="w-3.5 h-3.5 text-[#8A9C74]" />}
                 <span>{c.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isActive ? 'bg-emerald-700 text-white' : 'bg-stone-100 dark:bg-stone-800 text-stone-500'
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-xs font-mono ${
+                  isActive ? 'bg-[#42684D] dark:bg-[#19382B] text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6]'
                 }`}>
                   {c.count}
                 </span>
@@ -156,31 +157,58 @@ export const FieldGalleryView: React.FC = () => {
         </div>
 
         {/* Student Lens Tip */}
-        <div className="text-[11px] text-stone-500 dark:text-stone-400 hidden lg:flex items-center gap-1">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span>Students can submit field tour & tree photos directly for admin review</span>
+        <div className="text-[11px] text-[#987453] dark:text-[#BBC4A6] hidden lg:flex items-center gap-1.5 font-medium">
+          <Camera className="w-3.5 h-3.5" />
+          <span>Students can submit field tour &amp; tree observations for editorial review</span>
         </div>
       </div>
 
       {/* Grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, idx) => (
+            <div
+              key={idx}
+              className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden"
+            >
+              <div className="aspect-[4/3] bg-[#EAE7DA] dark:bg-[#142D22]" />
+              <div className="p-5 space-y-2.5">
+                <div className="h-3 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-1/3" />
+                <div className="h-4 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-3/4" />
+                <div className="h-10 bg-[#F3F1E8] dark:bg-[#11261D] rounded-sm" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (selectedCategory === 'students' ? publicStudentPhotos.length === 0 : (selectedCategory === 'all' ? items.length + publicStudentPhotos.length === 0 : items.filter((i) => i.category === selectedCategory).length === 0)) ? (
+        <div className="text-center py-16 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+          <ImageIcon className="w-10 h-10 text-[#8A9C74] mx-auto mb-3" />
+          <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
+            No Photographs in This Category
+          </h3>
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-sm mx-auto">
+            Select another field category or contribute a field expedition photograph for editorial review.
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Render General Gallery Items (unless filtered to students only) */}
         {selectedCategory !== 'students' &&
           items
             .filter((i) => selectedCategory === 'all' || i.category === selectedCategory)
             .map((item) => (
-              <div
+              <article
                 key={item.id}
-                className="group bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs hover:border-emerald-500/50 transition-all flex flex-col justify-between"
+                className="group bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden hover:border-[#42684D] dark:hover:border-[#8A9C74] transition-colors flex flex-col justify-between"
               >
                 <div 
-                  className="relative aspect-video overflow-hidden bg-stone-950 cursor-pointer"
+                  className="relative aspect-[4/3] overflow-hidden bg-[#19382B] cursor-pointer"
                   onClick={() => setActiveLightbox({
                     url: item.imageUrl,
                     title: item.title,
                     location: item.location,
                     caption: item.caption,
-                    credit: 'SUST Department Archive'
+                    credit: item.photographer || 'SUST Department of Forestry & Environmental Science'
                   })}
                 >
                   <img
@@ -189,54 +217,57 @@ export const FieldGalleryView: React.FC = () => {
                     onError={handleImageError}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold">
+                  <div className="absolute inset-0 bg-[#19382B]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-[#F3F1E8] text-xs font-semibold">
                     <ZoomIn className="w-4 h-4" />
-                    <span>View High-Res Photo</span>
+                    <span>View Photograph</span>
                   </div>
-                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/90 text-white text-[10px] font-mono font-semibold">
+                  <div className="absolute top-3 right-3 px-2 py-0.5 rounded-sm bg-[#19382B]/90 text-[#F3F1E8] text-[10px] font-mono tabular-nums font-semibold border border-[#BBC4A6]/25">
                     {item.year}
                   </div>
                 </div>
 
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400 mb-1.5 font-medium">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-xs text-[#987453] dark:text-[#BBC4A6] mb-1.5 font-medium">
+                      <MapPin className="w-3.5 h-3.5 shrink-0" />
                       <span className="truncate">{item.location}</span>
                     </div>
-                    <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
+                    <h3 className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-2">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                    <p className="text-xs text-[#42684D] dark:text-[#F3F1E8]/80 leading-relaxed">
                       {item.caption}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px] text-stone-400">
-                    <span className="capitalize font-mono">Category: {(item.category || 'field').replace('-', ' ')}</span>
-                    <span className="font-semibold text-emerald-800 dark:text-emerald-400">Department Archive</span>
+                  <div className="mt-4 pt-3 border-t border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15 flex items-center justify-between gap-2 text-[11px] text-[#8A9C74] dark:text-[#BBC4A6]">
+                    <span className="capitalize font-mono shrink-0">{(item.category || 'field').replace('-', ' ')}</span>
+                    <span className="font-medium text-[#42684D] dark:text-[#8A9C74] truncate text-right" title={item.photographer || 'Department Archive'}>
+                      {item.photographer || 'SUST FES Archive'}
+                    </span>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
 
         {/* Render Student Photos (when 'all' or 'students') */}
         {(selectedCategory === 'all' || selectedCategory === 'students') &&
           publicStudentPhotos.map((photo) => (
-            <div
+            <article
               key={photo.id}
-              className="group bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs hover:border-emerald-500/50 transition-all flex flex-col justify-between ring-1 ring-emerald-500/10"
+              className="group bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden hover:border-[#42684D] dark:hover:border-[#8A9C74] transition-colors flex flex-col justify-between"
             >
               <div 
-                className="relative aspect-video overflow-hidden bg-stone-950 cursor-pointer"
+                className="relative aspect-[4/3] overflow-hidden bg-[#19382B] cursor-pointer"
                 onClick={() => setActiveLightbox({
                   url: photo.imageUrl,
                   title: photo.title,
                   location: photo.location,
                   caption: photo.caption,
-                  credit: `Captured by ${photo.studentName} ${photo.studentBatch ? `(${photo.studentBatch})` : ''}`
+                  credit: `Photograph · ${photo.studentName} ${photo.studentBatch ? `(${photo.studentBatch})` : ''}`
                 })}
               >
                 <img
@@ -245,37 +276,38 @@ export const FieldGalleryView: React.FC = () => {
                   onError={handleImageError}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90"
                 />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white text-xs font-bold">
+                <div className="absolute inset-0 bg-[#19382B]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-[#F3F1E8] text-xs font-semibold">
                   <ZoomIn className="w-4 h-4" />
                   <span>View Student Capture</span>
                 </div>
 
                 {/* Top Badges */}
-                <div className="absolute top-3 left-3 flex items-center gap-1">
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-800/95 text-white text-[10px] font-bold flex items-center gap-1">
+                <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                  <span className="px-2 py-0.5 rounded-sm bg-[#42684D]/95 text-[#F3F1E8] text-[10px] font-semibold flex items-center gap-1">
                     <Camera className="w-3 h-3" />
                     <span>Student Lens</span>
                   </span>
                   {photo.status === 'featured' && (
-                    <span className="px-2 py-0.5 rounded-full bg-purple-700/95 text-white text-[10px] font-bold flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-sm bg-[#987453] text-[#FAF9F4] text-[10px] font-semibold flex items-center gap-1">
                       <Star className="w-3 h-3 fill-current" />
                       <span>Featured</span>
                     </span>
                   )}
                 </div>
 
-                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-stone-900/90 text-white text-[10px] font-mono font-semibold">
+                <div className="absolute top-3 right-3 px-2 py-0.5 rounded-sm bg-[#19382B]/90 text-[#F3F1E8] text-[10px] font-mono font-semibold border border-[#BBC4A6]/25">
                   {photo.date}
                 </div>
 
                 {/* Species badge if linked */}
                 {photo.speciesScientificName && (
-                  <div className="absolute bottom-2 left-2 right-2 truncate">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-black/85 text-emerald-300 truncate max-w-full">
-                      <TreePine className="w-3 h-3 shrink-0" />
-                      <span className="truncate">{photo.speciesScientificName}</span>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 truncate">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-xs bg-[#19382B]/90 text-[#FAF9F4] border border-[#BBC4A6]/30 truncate max-w-full">
+                      <TreePine className="w-3 h-3 text-[#8A9C74] shrink-0" />
+                      <span className="font-scientific truncate">{photo.speciesScientificName}</span>
                     </span>
                   </div>
                 )}
@@ -283,53 +315,54 @@ export const FieldGalleryView: React.FC = () => {
 
               <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400 mb-1.5 font-medium">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-xs text-[#987453] dark:text-[#BBC4A6] mb-1.5 font-medium">
+                    <MapPin className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">{photo.location}</span>
                   </div>
-                  <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-1">
+                  <h3 className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-1">
                     {photo.title}
                   </h3>
-                  <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed line-clamp-3">
+                  <p className="text-xs text-[#42684D] dark:text-[#F3F1E8]/80 leading-relaxed line-clamp-3">
                     {photo.caption}
                   </p>
                 </div>
 
                 {/* Student Attribution Footer */}
-                <div className="mt-3 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px]">
-                  <div className="flex items-center gap-1.5 font-semibold text-stone-800 dark:text-stone-200">
-                    <User className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                <div className="mt-3 pt-3 border-t border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15 flex items-center justify-between text-[11px]">
+                  <div className="flex items-center gap-1.5 font-semibold text-[#19382B] dark:text-[#F3F1E8]">
+                    <User className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74] shrink-0" />
                     <span className="truncate">{photo.studentName}</span>
                     {photo.studentBatch && (
-                      <span className="text-stone-400 font-normal">({photo.studentBatch})</span>
+                      <span className="text-[#987453] dark:text-[#BBC4A6] font-normal">({photo.studentBatch})</span>
                     )}
                   </div>
-                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-[#42684D] dark:text-[#8A9C74] font-semibold uppercase tracking-wider">
                     Verified Capture
                   </span>
                 </div>
               </div>
-            </div>
+            </article>
           ))}
       </div>
+      )}
 
       {/* Lightbox Modal */}
       {activeLightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#11261D]/90"
           onClick={() => setActiveLightbox(null)}
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-stone-900 border border-stone-700 rounded-2xl shadow-2xl overflow-hidden"
+            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-[#19382B] border border-[#BBC4A6]/30 rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 bg-stone-950 border-b border-stone-800 text-white shrink-0">
+            <div className="flex items-center justify-between p-4 bg-[#142D22] border-b border-[#BBC4A6]/20 text-[#F3F1E8] shrink-0">
               <div className="pr-4 truncate">
-                <h3 className="font-bold text-sm sm:text-base truncate">{activeLightbox.title}</h3>
+                <h3 className="font-semibold text-sm sm:text-base truncate">{activeLightbox.title}</h3>
                 {activeLightbox.credit && (
-                  <p className="text-xs text-stone-400 truncate">{activeLightbox.credit}</p>
+                  <p className="text-xs text-[#BBC4A6] truncate">{activeLightbox.credit}</p>
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
@@ -337,33 +370,35 @@ export const FieldGalleryView: React.FC = () => {
                   href={activeLightbox.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
+                  className="px-2.5 py-1 rounded-md bg-[#42684D] hover:bg-[#8A9C74] hover:text-[#11261D] text-[#F3F1E8] text-xs font-medium flex items-center gap-1.5 transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Open Original</span>
                 </a>
                 <button
+                  type="button"
                   onClick={() => setActiveLightbox(null)}
-                  className="p-1.5 text-stone-400 hover:text-white rounded-lg hover:bg-stone-800 transition-colors"
+                  className="p-1.5 text-[#BBC4A6] hover:text-[#F3F1E8] rounded-md hover:bg-[#19382B] transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-black/60">
+            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#11261D]">
               <img
                 src={activeLightbox.url}
                 alt={activeLightbox.title}
                 onError={handleImageError}
                 loading="lazy"
                 decoding="async"
-                className="max-w-full max-h-[72vh] object-contain rounded-lg shadow-lg"
+                referrerPolicy="no-referrer"
+                className="max-w-full max-h-[72vh] object-contain rounded-md"
               />
             </div>
 
             {activeLightbox.caption && (
-              <div className="p-3 bg-stone-950 border-t border-stone-800 text-xs text-stone-300 text-center">
+              <div className="p-3 bg-[#142D22] border-t border-[#BBC4A6]/20 text-xs text-[#BBC4A6] text-center">
                 {activeLightbox.caption}
               </div>
             )}

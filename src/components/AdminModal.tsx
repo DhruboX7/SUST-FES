@@ -27,11 +27,8 @@ import {
   Edit3,
   Copy,
   ArrowLeft,
-  Filter,
-  Tag,
   CheckSquare,
-  Square,
-  Sparkles
+  Square
 } from 'lucide-react';
 
 interface AdminModalProps {
@@ -381,25 +378,25 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 animate-fade-in">
-      <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden text-stone-900 dark:text-stone-100 transition-colors">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-[#19382B]/80 animate-fade-in">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden text-[#19382B] dark:text-[#F3F1E8] transition-colors">
         
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-800 text-white shadow-xs">
+            <div className="p-2 rounded-md bg-[#42684D] text-[#FAF9F4]">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                <h2 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                   Manage Department Library
                 </h2>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-[11px] font-semibold">
+                <span className="px-2 py-0.5 rounded-sm bg-[#FAF9F4] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[11px] font-mono font-semibold">
                   {resources.length} Materials
                 </span>
               </div>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]/80">
                 Edit, categorize, and organize Google Drive links & curriculum resources
               </p>
             </div>
@@ -407,7 +404,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            className="p-2 rounded-md text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -416,11 +413,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({
         {/* Auth Gate if not logged in */}
         {!isAuthenticated ? (
           <div className="p-8 sm:p-12 flex flex-col items-center justify-center text-center max-w-md mx-auto my-auto">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-lg bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center mb-4">
               <Lock className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-bold mb-2">Departmental Access Key</h3>
-            <p className="text-sm text-stone-600 dark:text-stone-400 mb-6">
+            <h3 className="font-editorial text-xl font-semibold mb-2 text-[#19382B] dark:text-[#F3F1E8]">Departmental Access Key</h3>
+            <p className="text-sm text-[#42684D] dark:text-[#BBC4A6]/80 mb-6">
               Enter the administrator PIN to edit, add, or manage course materials in the departmental library.
             </p>
 
@@ -431,11 +428,11 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   value={pinInput}
                   onChange={(e) => setPinInput(e.target.value)}
                   placeholder="Enter PIN (Default: sustfes)"
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-center font-mono text-base tracking-widest focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                  className="w-full px-4 py-2.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-center font-mono text-base tracking-widest focus:border-[#42684D] focus:outline-none"
                   autoFocus
                 />
                 {pinError && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-2 font-medium">
+                  <p className="text-xs text-[#987453] mt-2 font-semibold">
                     {pinError}
                   </p>
                 )}
@@ -444,7 +441,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               <div className="flex flex-col gap-2">
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-sm rounded-xl transition-colors shadow-xs"
+                  className="w-full py-2.5 bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] font-semibold text-sm rounded-md transition-colors cursor-pointer"
                 >
                   Unlock Management Section
                 </button>
@@ -452,9 +449,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <button
                   type="button"
                   onClick={handleQuickUnlock}
-                  className="w-full py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-medium text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full py-2 bg-[#EAE7DA] dark:bg-[#142D22] hover:border-[#42684D] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8] font-medium text-xs rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <Key className="w-3.5 h-3.5 text-emerald-600" />
+                  <Key className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                   <span>One-Click Quick Access (Default: sustfes)</span>
                 </button>
               </div>
@@ -465,16 +462,16 @@ export const AdminModal: React.FC<AdminModalProps> = ({
           <div className="flex-1 flex flex-col overflow-hidden">
             
             {/* Tab Navigation */}
-            <div className="flex border-b border-stone-200 dark:border-stone-800 px-6 gap-6 bg-white dark:bg-stone-900 shrink-0 overflow-x-auto no-scrollbar">
+            <div className="flex border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 px-6 gap-6 bg-[#FAF9F4] dark:bg-[#19382B] shrink-0 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => {
                   setActiveTab('manage');
                   setEditingResource(null);
                 }}
-                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'manage'
-                    ? 'border-emerald-700 text-emerald-800 dark:border-emerald-400 dark:text-emerald-300'
-                    : 'border-transparent text-stone-500 hover:text-stone-800'
+                    ? 'border-[#42684D] text-[#19382B] dark:border-[#8A9C74] dark:text-[#F3F1E8]'
+                    : 'border-transparent text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 <Edit3 className="w-4 h-4" />
@@ -485,10 +482,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   setActiveTab('add');
                   setEditingResource(null);
                 }}
-                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'add'
-                    ? 'border-emerald-700 text-emerald-800 dark:border-emerald-400 dark:text-emerald-300'
-                    : 'border-transparent text-stone-500 hover:text-stone-800'
+                    ? 'border-[#42684D] text-[#19382B] dark:border-[#8A9C74] dark:text-[#F3F1E8]'
+                    : 'border-transparent text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 <PlusCircle className="w-4 h-4" />
@@ -499,10 +496,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   setActiveTab('backup');
                   setEditingResource(null);
                 }}
-                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap ${
+                className={`py-3 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'backup'
-                    ? 'border-emerald-700 text-emerald-800 dark:border-emerald-400 dark:text-emerald-300'
-                    : 'border-transparent text-stone-500 hover:text-stone-800'
+                    ? 'border-[#42684D] text-[#19382B] dark:border-[#8A9C74] dark:text-[#F3F1E8]'
+                    : 'border-transparent text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 <Download className="w-4 h-4" />
@@ -520,26 +517,26 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   {editingResource ? (
                     <div className="max-w-3xl mx-auto space-y-5 animate-fade-in">
                       {/* Edit Header */}
-                      <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
+                      <div className="flex items-center justify-between pb-3 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => setEditingResource(null)}
-                            className="p-1.5 rounded-lg text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                            className="p-1.5 rounded-md text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors cursor-pointer"
                             title="Back to list"
                           >
                             <ArrowLeft className="w-4 h-4" />
                           </button>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100">
+                              <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                                 Edit Course Material
                               </h3>
-                              <span className="font-mono text-xs px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-bold">
+                              <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 font-semibold">
                                 {editingResource.courseCode}
                               </span>
                             </div>
-                            <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                            <p className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]/80">
                               Modify title, curriculum category, Drive link, and topics
                             </p>
                           </div>
@@ -548,7 +545,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         <button
                           type="button"
                           onClick={() => setEditingResource(null)}
-                          className="text-xs text-stone-500 hover:text-stone-800 dark:hover:text-stone-200"
+                          className="text-xs text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
                         >
                           Cancel
                         </button>
@@ -556,15 +553,15 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                       {/* Success / Error Messages */}
                       {editSuccessMsg && (
-                        <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
-                          <Check className="w-4 h-4 shrink-0" />
+                        <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] text-xs font-medium flex items-center gap-2">
+                          <Check className="w-4 h-4 shrink-0 text-[#42684D] dark:text-[#8A9C74]" />
                           <span>{editSuccessMsg}</span>
                         </div>
                       )}
 
                       {editFormError && (
-                        <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs font-medium flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 shrink-0" />
+                        <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 text-[#987453] dark:text-[#F3F1E8] text-xs font-medium flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                           <span>{editFormError}</span>
                         </div>
                       )}
@@ -573,7 +570,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       <form onSubmit={handleSaveEdit} className="space-y-4">
                         {/* 1. Title */}
                         <div>
-                          <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                          <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                             Document / Material Title *
                           </label>
                           <input
@@ -582,14 +579,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             value={editTitle}
                             onChange={(e) => setEditTitle(e.target.value)}
                             placeholder="e.g. FES 211 Silviculture: Nursery Management Slides"
-                            className="w-full px-3.5 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                            className="w-full px-3.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                           />
                         </div>
 
                         {/* 2. Google Drive URL */}
                         <div>
                           <div className="flex items-center justify-between mb-1">
-                            <label className="text-xs font-semibold text-stone-700 dark:text-stone-300">
+                            <label className="text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                               Google Drive or Share URL *
                             </label>
                             {editDriveUrl.trim() && (
@@ -597,7 +594,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 href={editDriveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[11px] text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-1"
+                                className="text-[11px] text-[#42684D] dark:text-[#8A9C74] hover:underline inline-flex items-center gap-1"
                               >
                                 <span>Test Link</span>
                                 <ExternalLink className="w-3 h-3" />
@@ -610,16 +607,16 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             value={editDriveUrl}
                             onChange={(e) => setEditDriveUrl(e.target.value)}
                             placeholder="https://drive.google.com/file/d/..."
-                            className="w-full px-3.5 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs font-mono focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                            className="w-full px-3.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs font-mono focus:border-[#42684D] focus:outline-none"
                           />
                           {editDriveUrl.trim() && (
                             <div className="mt-1.5 text-[11px]">
                               {parsedEditDrive.valid ? (
-                                <span className="text-emerald-700 dark:text-emerald-400 font-medium">
+                                <span className="text-[#42684D] dark:text-[#8A9C74] font-medium">
                                   ✓ Valid link ({parsedEditDrive.fileType.toUpperCase()}) · File ID: {parsedEditDrive.fileId}
                                 </span>
                               ) : (
-                                <span className="text-amber-700 dark:text-amber-400">
+                                <span className="text-[#987453]">
                                   ⚠ Note: {parsedEditDrive.errorMessage}
                                 </span>
                               )}
@@ -630,7 +627,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         {/* 3. Year & Semester Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                            <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                               Academic Year
                             </label>
                             <select
@@ -639,7 +636,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 const val = e.target.value;
                                 handleEditYearChange(val === 'msc' ? 'msc' : (Number(val) as AcademicYear));
                               }}
-                              className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                              className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             >
                               <option value="1">1st Year B.Sc.</option>
                               <option value="2">2nd Year B.Sc.</option>
@@ -650,7 +647,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           </div>
 
                           <div>
-                            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                            <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                               Semester
                             </label>
                             <select
@@ -659,7 +656,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 const val = e.target.value;
                                 setEditSemester(val === 'all' ? 'all' : (Number(val) as 1 | 2));
                               }}
-                              className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                              className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             >
                               <option value="1">Semester I</option>
                               <option value="2">Semester II</option>
@@ -670,7 +667,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                         {/* 4. Course Code & Title */}
                         <div>
-                          <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                          <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                             Curriculum Course
                           </label>
                           <select
@@ -681,7 +678,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               const found = SUST_FES_COURSES.find((c) => c.code === code);
                               if (found) setEditCustomCourseTitle(found.title);
                             }}
-                            className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600 truncate"
+                            className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none truncate"
                           >
                             {availableCoursesForEdit.map((c) => (
                               <option key={c.id} value={c.code}>
@@ -697,7 +694,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               value={editCustomCourseTitle}
                               onChange={(e) => setEditCustomCourseTitle(e.target.value)}
                               placeholder="Enter custom course name..."
-                              className="mt-2 w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                              className="mt-2 w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             />
                           )}
                         </div>
@@ -705,13 +702,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         {/* 5. Category & Exam Term / Session */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                            <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                               Resource Category
                             </label>
                             <select
                               value={editCategory}
                               onChange={(e) => setEditCategory(e.target.value as ResourceCategory)}
-                              className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                              className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             >
                               <option value="slides">Lecture Slides</option>
                               <option value="notes">Class Notes / Handouts</option>
@@ -724,13 +721,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                           {editCategory === 'pyq' ? (
                             <div>
-                              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                              <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                                 Exam Term
                               </label>
                               <select
                                 value={editExamTerm}
-                                onChange={(e) => setEditExamTerm(e.target.value as any)}
-                                className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                                onChange={(e) => setEditExamTerm(e.target.value as 'midterm' | 'final' | 'quiz' | 'all')}
+                                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                               >
                                 <option value="final">Semester Final Exam</option>
                                 <option value="midterm">Midterm Examination</option>
@@ -740,7 +737,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             </div>
                           ) : (
                             <div>
-                              <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                              <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                                 Academic Session / Year
                               </label>
                               <input
@@ -748,16 +745,16 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 value={editSessionYear}
                                 onChange={(e) => setEditSessionYear(e.target.value)}
                                 placeholder="e.g. 2023-2024"
-                                className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                               />
                             </div>
                           )}
                         </div>
 
-                        {/* 6. Teacher & Directory Path */}
+                        {/* 6. Teacher */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                            <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                               Teacher / Contributor
                             </label>
                             <input
@@ -765,19 +762,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               value={editAuthor}
                               onChange={(e) => setEditAuthor(e.target.value)}
                               placeholder="e.g. Prof. Dr. A. Rahman or CR 28th"
-                              className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                              className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             />
                           </div>
-
-                          
                         </div>
-
-                        {/* 7. Keywords */}
-                        
 
                         {/* 8. Description */}
                         <div>
-                          <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                          <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                             Description / Topics Covered
                           </label>
                           <textarea
@@ -785,22 +777,22 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             value={editDescription}
                             onChange={(e) => setEditDescription(e.target.value)}
                             placeholder="Add brief summary, chapters covered, or exam focus areas..."
-                            className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                            className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                           />
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="pt-3 flex items-center justify-end gap-3 border-t border-stone-200 dark:border-stone-800">
+                        <div className="pt-3 flex items-center justify-end gap-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                           <button
                             type="button"
                             onClick={() => setEditingResource(null)}
-                            className="px-4 py-2 rounded-xl border border-stone-300 dark:border-stone-700 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                            className="px-4 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors cursor-pointer"
                           >
                             Cancel
                           </button>
                           <button
                             type="submit"
-                            className="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors"
+                            className="px-5 py-2 rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
                           >
                             <Check className="w-4 h-4" />
                             <span>Save Changes</span>
@@ -814,18 +806,18 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       {/* Filter Bar */}
                       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <div className="relative flex-1">
-                          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+                          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
                           <input
                             type="text"
                             value={manageSearch}
                             onChange={(e) => setManageSearch(e.target.value)}
                             placeholder="Search by title, course code, path, or keyword..."
-                            className="w-full pl-9 pr-4 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                            className="w-full pl-9 pr-8 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                           />
                           {manageSearch && (
                             <button
                               onClick={() => setManageSearch('')}
-                              className="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                              className="absolute right-2.5 top-2.5 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
                             >
                               <X className="w-3.5 h-3.5" />
                             </button>
@@ -840,7 +832,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               const val = e.target.value;
                               setFilterYear(val === 'all' ? 'all' : (val === 'msc' ? 'msc' : (Number(val) as AcademicYear)));
                             }}
-                            className="px-2.5 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs shrink-0"
+                            className="px-2.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs shrink-0 focus:border-[#42684D] focus:outline-none"
                           >
                             <option value="all">All Years</option>
                             <option value="1">1st Year</option>
@@ -853,8 +845,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           {/* Category filter */}
                           <select
                             value={filterCategory}
-                            onChange={(e) => setFilterCategory(e.target.value as any)}
-                            className="px-2.5 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs shrink-0"
+                            onChange={(e) => setFilterCategory(e.target.value as ResourceCategory | 'all')}
+                            className="px-2.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs shrink-0 focus:border-[#42684D] focus:outline-none"
                           >
                             <option value="all">All Types</option>
                             <option value="slides">Slides</option>
@@ -869,7 +861,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           <button
                             type="button"
                             onClick={() => setActiveTab('add')}
-                            className="px-3 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 shadow-xs transition-colors shrink-0"
+                            className="px-3 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] rounded-md text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition-colors shrink-0 cursor-pointer"
                           >
                             <PlusCircle className="w-3.5 h-3.5" />
                             <span>Add Material</span>
@@ -878,17 +870,17 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       </div>
 
                       {/* Header summary & Bulk actions */}
-                      <div className="flex items-center justify-between text-xs px-1 text-stone-500 dark:text-stone-400">
+                      <div className="flex items-center justify-between text-xs px-1 text-[#42684D] dark:text-[#BBC4A6]">
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={handleToggleSelectAll}
-                            className="hover:text-stone-800 dark:hover:text-stone-200 flex items-center gap-1 font-medium"
+                            className="hover:text-[#19382B] dark:hover:text-[#F3F1E8] flex items-center gap-1 font-medium cursor-pointer"
                           >
                             {selectedIds.length === filteredManageResources.length && filteredManageResources.length > 0 ? (
-                              <CheckSquare className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                              <CheckSquare className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                             ) : (
-                              <Square className="w-3.5 h-3.5 text-stone-400" />
+                              <Square className="w-3.5 h-3.5 text-[#8A9C74]" />
                             )}
                             <span>Select All</span>
                           </button>
@@ -900,13 +892,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                         {selectedIds.length > 0 && (
                           <div className="flex items-center gap-2 animate-fade-in">
-                            <span className="font-semibold text-emerald-800 dark:text-emerald-400">
+                            <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                               {selectedIds.length} selected
                             </span>
                             <button
                               type="button"
                               onClick={handleBatchDelete}
-                              className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[11px] font-semibold flex items-center gap-1 transition-colors"
+                              className="px-2.5 py-1 bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] rounded-sm text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3 h-3" />
                               <span>Delete Selected</span>
@@ -916,12 +908,12 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       </div>
 
                       {/* Table / Material Rows */}
-                      <div className="border border-stone-200 dark:border-stone-800 rounded-xl overflow-hidden bg-white dark:bg-stone-900 shadow-xs">
-                        <div className="max-h-[52vh] overflow-y-auto divide-y divide-stone-100 dark:divide-stone-800">
+                      <div className="border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-lg overflow-hidden bg-[#FAF9F4] dark:bg-[#142D22]">
+                        <div className="max-h-[52vh] overflow-y-auto divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
                           {filteredManageResources.length === 0 ? (
                             <div className="p-8 text-center">
-                              <AlertCircle className="w-8 h-8 text-stone-300 dark:text-stone-700 mx-auto mb-2" />
-                              <p className="text-xs font-semibold text-stone-600 dark:text-stone-400">
+                              <AlertCircle className="w-8 h-8 text-[#8A9C74] mx-auto mb-2" />
+                              <p className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6]">
                                 No course materials match the current filters.
                               </p>
                               <button
@@ -931,7 +923,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                   setFilterYear('all');
                                   setFilterCategory('all');
                                 }}
-                                className="mt-2 text-xs text-emerald-700 dark:text-emerald-400 hover:underline"
+                                className="mt-2 text-xs text-[#42684D] dark:text-[#8A9C74] hover:underline cursor-pointer"
                               >
                                 Reset search and filters
                               </button>
@@ -940,8 +932,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             filteredManageResources.map((item) => (
                               <div
                                 key={item.id}
-                                className={`p-3.5 hover:bg-stone-50 dark:hover:bg-stone-800/60 transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-                                  selectedIds.includes(item.id) ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : ''
+                                className={`p-3.5 hover:bg-[#EAE7DA]/60 dark:hover:bg-[#19382B]/70 transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                                  selectedIds.includes(item.id) ? 'bg-[#EAE7DA]/70 dark:bg-[#19382B]/80' : ''
                                 }`}
                               >
                                 {/* Left: Selection checkbox + course info */}
@@ -949,10 +941,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                   <button
                                     type="button"
                                     onClick={() => handleToggleSelectId(item.id)}
-                                    className="mt-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 shrink-0"
+                                    className="mt-1 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] shrink-0 cursor-pointer"
                                   >
                                     {selectedIds.includes(item.id) ? (
-                                      <CheckSquare className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                                      <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                                     ) : (
                                       <Square className="w-4 h-4" />
                                     )}
@@ -960,37 +952,33 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                                      <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">
+                                      <span className="font-mono font-semibold text-xs px-2 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                                         {item.courseCode}
                                       </span>
-                                      <span className="text-[11px] px-2 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 capitalize font-medium">
+                                      <span className="text-[11px] px-2 py-0.5 rounded-sm bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 capitalize font-medium">
                                         {item.category === 'pyq' ? 'PYQ' : item.category}
                                       </span>
-                                      <span className="text-[11px] text-stone-400">
+                                      <span className="text-[11px] text-[#8A9C74]">
                                         {item.year === 'msc' ? 'M.Sc.' : `Year ${item.year}`} · Sem {item.semester}
                                       </span>
                                       {item.sessionYear && (
-                                        <span className="text-[11px] text-stone-400 font-mono">
+                                        <span className="text-[11px] text-[#987453] dark:text-[#BBC4A6] font-mono">
                                           ({item.sessionYear})
                                         </span>
                                       )}
                                     </div>
 
-                                    <h4 className="text-xs font-semibold text-stone-900 dark:text-stone-100 truncate">
+                                    <h4 className="text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] truncate">
                                       {item.title}
                                     </h4>
-
-                                    
-
-                                    
                                   </div>
                                 </div>
 
                                 {/* Right: Action buttons (Edit, Link, Duplicate, Delete) */}
                                 <div className="flex items-center gap-1.5 self-end sm:self-center shrink-0">
                                   {deleteConfirmId === item.id ? (
-                                    <div className="flex items-center gap-1.5 bg-rose-50 dark:bg-rose-950/60 p-1 rounded-lg border border-rose-200 dark:border-rose-800 animate-fade-in">
-                                      <span className="text-[10px] font-semibold text-rose-700 dark:text-rose-300 pl-1">
+                                    <div className="flex items-center gap-1.5 bg-[#EAE7DA] dark:bg-[#19382B] p-1 rounded-md border border-[#987453]/60 animate-fade-in">
+                                      <span className="text-[10px] font-semibold text-[#987453] pl-1">
                                         Delete?
                                       </span>
                                       <button
@@ -999,25 +987,25 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                           onDeleteResource(item.id);
                                           setDeleteConfirmId(null);
                                         }}
-                                        className="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-[10px] font-bold"
+                                        className="px-2 py-0.5 bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] rounded-sm text-[10px] font-semibold cursor-pointer"
                                       >
                                         Yes
                                       </button>
                                       <button
                                         type="button"
                                         onClick={() => setDeleteConfirmId(null)}
-                                        className="px-2 py-0.5 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 text-stone-700 dark:text-stone-300 rounded text-[10px]"
+                                        className="px-2 py-0.5 bg-[#F3F1E8] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] rounded-sm text-[10px] cursor-pointer"
                                       >
                                         No
                                       </button>
                                     </div>
                                   ) : (
                                     <>
-                                      {/* EDIT BUTTON (Always prominently visible in Manage Library) */}
+                                      {/* EDIT BUTTON */}
                                       <button
                                         type="button"
                                         onClick={() => handleStartEdit(item)}
-                                        className="px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs"
+                                        className="px-2.5 py-1.5 rounded-md bg-[#EAE7DA] dark:bg-[#19382B] hover:border-[#42684D] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[#19382B] dark:text-[#F3F1E8] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                                         title="Edit this course material"
                                       >
                                         <Edit3 className="w-3.5 h-3.5" />
@@ -1029,7 +1017,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                         href={item.driveUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-1.5 rounded-lg text-stone-400 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                                        className="p-1.5 rounded-md text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] transition-colors"
                                         title="Redirect to Google Drive"
                                       >
                                         <ExternalLink className="w-3.5 h-3.5" />
@@ -1039,7 +1027,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                       <button
                                         type="button"
                                         onClick={() => handleDuplicate(item)}
-                                        className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                                        className="p-1.5 rounded-md text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] transition-colors cursor-pointer"
                                         title="Duplicate as template"
                                       >
                                         <Copy className="w-3.5 h-3.5" />
@@ -1049,7 +1037,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                       <button
                                         type="button"
                                         onClick={() => setDeleteConfirmId(item.id)}
-                                        className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                                        className="p-1.5 rounded-md text-[#8A9C74] hover:text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] transition-colors cursor-pointer"
                                         title="Delete material"
                                       >
                                         <Trash2 className="w-3.5 h-3.5" />
@@ -1072,22 +1060,22 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <form onSubmit={handleAddSubmit} className="space-y-5 max-w-2xl mx-auto">
                   
                   {addSuccessMsg && (
-                    <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
-                      <Check className="w-4 h-4 shrink-0" />
+                    <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] text-xs font-medium flex items-center gap-2">
+                      <Check className="w-4 h-4 shrink-0 text-[#42684D] dark:text-[#8A9C74]" />
                       <span>{addSuccessMsg}</span>
                     </div>
                   )}
 
                   {formError && (
-                    <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs font-medium flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
+                    <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 text-[#987453] dark:text-[#F3F1E8] text-xs font-medium flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                       <span>{formError}</span>
                     </div>
                   )}
 
                   {/* 1. Google Drive URL */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                       Google Drive Link or Document Share URL *
                     </label>
                     <input
@@ -1096,14 +1084,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       value={driveUrl}
                       onChange={(e) => setDriveUrl(e.target.value)}
                       placeholder="Paste any link: https://drive.google.com/file/d/..."
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                     />
 
                     {driveUrl.trim() && (
                       <div className="mt-2 text-xs">
                         {parsedDrive.valid ? (
-                          <div className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 flex items-start gap-2">
-                            <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <div className="p-2.5 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] flex items-start gap-2">
+                            <Check className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74] shrink-0 mt-0.5" />
                             <div>
                               <div className="font-semibold text-xs">
                                 ✓ Valid Google Drive Link Detected! ({parsedDrive.fileType.toUpperCase()})
@@ -1114,8 +1102,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                          <div className="p-2.5 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 text-[#987453] dark:text-[#F3F1E8] flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-[#987453] shrink-0" />
                             <span>{parsedDrive.errorMessage}</span>
                           </div>
                         )}
@@ -1125,7 +1113,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                   {/* 2. Resource Title */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                       Resource Title *
                     </label>
                     <input
@@ -1134,14 +1122,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="e.g. FES 211: Silviculture Nursery Management & Tending Slides"
-                      className="w-full px-3.5 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
+                      className="w-full px-3.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                     />
                   </div>
 
                   {/* 3. Year & Semester Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                      <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                         Academic Year
                       </label>
                       <select
@@ -1150,7 +1138,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           const val = e.target.value;
                           handleYearChange(val === 'msc' ? 'msc' : (Number(val) as AcademicYear));
                         }}
-                        className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                        className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       >
                         <option value="1">1st Year B.Sc.</option>
                         <option value="2">2nd Year B.Sc.</option>
@@ -1161,7 +1149,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                      <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                         Semester
                       </label>
                       <select
@@ -1170,7 +1158,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           const val = e.target.value;
                           setSemester(val === 'all' ? 'all' : (Number(val) as 1 | 2));
                         }}
-                        className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                        className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       >
                         <option value="1">Semester I</option>
                         <option value="2">Semester II</option>
@@ -1181,13 +1169,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                   {/* 4. Course Code & Title */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                       Department Course
                     </label>
                     <select
                       value={selectedCourseCode}
                       onChange={(e) => setSelectedCourseCode(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600 truncate"
+                      className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none truncate"
                     >
                       {availableCoursesForAdd.map((c) => (
                         <option key={c.id} value={c.code}>
@@ -1203,7 +1191,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         value={customCourseTitle}
                         onChange={(e) => setCustomCourseTitle(e.target.value)}
                         placeholder="Enter course title (e.g. Sundarbans Field Tour Handbook)"
-                        className="mt-2 w-full px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                        className="mt-2 w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       />
                     )}
                   </div>
@@ -1211,13 +1199,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   {/* 5. Resource Category & Exam Term */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                      <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                         Resource Category
                       </label>
                       <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value as ResourceCategory)}
-                        className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600"
+                        className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       >
                         <option value="slides">Lecture Slides</option>
                         <option value="notes">Class Notes / Handouts</option>
@@ -1230,13 +1218,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                     {category === 'pyq' ? (
                       <div>
-                        <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                        <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                           Exam Term
                         </label>
                         <select
                           value={examTerm}
-                          onChange={(e) => setExamTerm(e.target.value as any)}
-                          className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                          onChange={(e) => setExamTerm(e.target.value as 'midterm' | 'final' | 'quiz' | 'all')}
+                          className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                         >
                           <option value="final">Semester Final Exam</option>
                           <option value="midterm">Midterm Examination</option>
@@ -1246,7 +1234,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       </div>
                     ) : (
                       <div>
-                        <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                        <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                           Academic Session / Year
                         </label>
                         <input
@@ -1254,16 +1242,16 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           value={sessionYear}
                           onChange={(e) => setSessionYear(e.target.value)}
                           placeholder="e.g. 2023-2024"
-                          className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                          className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                         />
                       </div>
                     )}
                   </div>
 
-                  {/* 6. Teacher, Path, Keywords & Description */}
+                  {/* 6. Teacher & Description */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                      <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                         Teacher / Contributor
                       </label>
                       <input
@@ -1271,17 +1259,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         value={authorOrTeacher}
                         onChange={(e) => setAuthorOrTeacher(e.target.value)}
                         placeholder="e.g. Course Teacher or CR 28th Batch"
-                        className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                        className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       />
                     </div>
-
-                    
                   </div>
 
-                  
-
                   <div>
-                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                       Brief Description / Topics Covered
                     </label>
                     <input
@@ -1289,7 +1273,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Topics covered, exam hints, etc."
-                      className="w-full px-3 py-2 rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs"
+                      className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                     />
                   </div>
 
@@ -1298,7 +1282,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     <button
                       type="submit"
                       disabled={!parsedDrive.valid}
-                      className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-xs rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2"
+                      className="w-full py-2.5 bg-[#42684D] hover:bg-[#19382B] disabled:opacity-50 disabled:cursor-not-allowed text-[#FAF9F4] font-semibold text-xs rounded-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <PlusCircle className="w-4 h-4" />
                       <span>Add Resource to Department Library</span>
@@ -1312,17 +1296,17 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                 <div className="space-y-6 max-w-xl mx-auto">
                   
                   {/* Backup Card */}
-                  <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 space-y-3">
-                    <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-xs">
-                      <Download className="w-4 h-4 text-emerald-700" />
+                  <div className="p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] space-y-3">
+                    <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold text-xs">
+                      <Download className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                       <span>Download Archive Backup</span>
                     </div>
-                    <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                      Export all {resources.length} study items into a portable <code className="text-emerald-700 font-mono">.json</code> file. You can save this on your personal Google Drive or laptop to ensure the department's links are never lost.
+                    <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] leading-relaxed">
+                      Export all {resources.length} study items into a portable <code className="text-[#19382B] dark:text-[#F3F1E8] font-mono">.json</code> file. You can save this on your personal Google Drive or laptop to ensure the department's links are never lost.
                     </p>
                     <button
                       onClick={() => exportLibraryToJson(resources)}
-                      className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors"
+                      className="px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] rounded-md text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
                       <span>Export sust-fes-library-backup.json</span>
@@ -1330,19 +1314,19 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   </div>
 
                   {/* Restore Card */}
-                  <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 space-y-3">
-                    <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-xs">
-                      <Upload className="w-4 h-4 text-teal-700" />
+                  <div className="p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] space-y-3">
+                    <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold text-xs">
+                      <Upload className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                       <span>Restore / Import Backup</span>
                     </div>
-                    <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                    <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] leading-relaxed">
                       Upload a previously exported JSON backup file to instantly reload or restore documents.
                     </p>
 
                     <div>
                       <label 
                         htmlFor={fileInputId}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#19382B] dark:bg-[#42684D] hover:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#FAF9F4] rounded-md text-xs font-semibold cursor-pointer transition-colors"
                       >
                         <Upload className="w-4 h-4" />
                         <span>Select Backup File (.json)</span>
@@ -1357,39 +1341,39 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                     </div>
 
                     {importStatus && (
-                      <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400 mt-2">
+                      <p className="text-xs font-medium text-[#42684D] dark:text-[#8A9C74] mt-2">
                         {importStatus}
                       </p>
                     )}
                   </div>
 
                   {/* Reset to Defaults */}
-                  <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 space-y-3">
-                    <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-xs">
-                      <RefreshCw className="w-4 h-4 text-stone-600" />
+                  <div className="p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] space-y-3">
+                    <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold text-xs">
+                      <RefreshCw className="w-4 h-4 text-[#987453]" />
                       <span>Reset to Official Curriculum Defaults</span>
                     </div>
-                    <p className="text-xs text-stone-600 dark:text-stone-400">
+                    <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]">
                       Re-seeds the library with the official SUST FES syllabus course list and representative lecture/PYQ links.
                     </p>
 
                     {showResetConfirm ? (
-                      <div className="p-3 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 rounded-lg space-y-2">
-                        <p className="text-xs text-amber-800 dark:text-amber-300 font-medium">
+                      <div className="p-3 bg-[#EAE7DA] dark:bg-[#19382B] border border-[#987453]/60 rounded-md space-y-2">
+                        <p className="text-xs text-[#987453] dark:text-[#F3F1E8] font-medium">
                           Are you sure you want to restore the official default archive? Any custom additions will be replaced.
                         </p>
                         <div className="flex gap-2">
                           <button
                             type="button"
                             onClick={handleConfirmReset}
-                            className="px-3 py-1 bg-amber-700 hover:bg-amber-800 text-white rounded text-xs font-semibold"
+                            className="px-3 py-1 bg-[#987453] hover:bg-[#19382B] text-[#FAF9F4] rounded-sm text-xs font-semibold cursor-pointer"
                           >
                             Yes, Reset Library
                           </button>
                           <button
                             type="button"
                             onClick={() => setShowResetConfirm(false)}
-                            className="px-3 py-1 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 rounded text-xs"
+                            className="px-3 py-1 bg-[#FAF9F4] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#BBC4A6] rounded-sm text-xs cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -1399,7 +1383,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowResetConfirm(true)}
-                        className="px-3 py-1.5 border border-stone-300 dark:border-stone-700 hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 rounded-lg text-xs font-medium transition-colors"
+                        className="px-3 py-1.5 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#987453] text-[#19382B] dark:text-[#F3F1E8] rounded-md text-xs font-medium transition-colors cursor-pointer"
                       >
                         Restore Default Archive
                       </button>
@@ -1407,9 +1391,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   </div>
 
                   {/* Change PIN Card */}
-                  <form onSubmit={handleChangePin} className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 space-y-3">
-                    <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-xs">
-                      <Key className="w-4 h-4 text-amber-600" />
+                  <form onSubmit={handleChangePin} className="p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] space-y-3">
+                    <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold text-xs">
+                      <Key className="w-4 h-4 text-[#987453]" />
                       <span>Change Administrator PIN</span>
                     </div>
 
@@ -1419,23 +1403,23 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         value={newPin}
                         onChange={(e) => setNewPin(e.target.value)}
                         placeholder="New PIN (min 4 chars)"
-                        className="flex-1 px-3 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-mono"
+                        className="flex-1 px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] text-xs font-mono focus:border-[#42684D] focus:outline-none"
                       />
                       <button
                         type="submit"
-                        className="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-white rounded-lg text-xs font-semibold transition-colors"
+                        className="px-3 py-1.5 bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] rounded-md text-xs font-semibold transition-colors cursor-pointer"
                       >
                         Update PIN
                       </button>
                     </div>
 
                     {pinSuccessMsg && (
-                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                      <p className="text-xs font-medium text-[#42684D] dark:text-[#8A9C74]">
                         {pinSuccessMsg}
                       </p>
                     )}
                     {pinErrorMsg && (
-                      <p className="text-xs font-medium text-rose-600 dark:text-rose-400">
+                      <p className="text-xs font-medium text-[#987453]">
                         {pinErrorMsg}
                       </p>
                     )}

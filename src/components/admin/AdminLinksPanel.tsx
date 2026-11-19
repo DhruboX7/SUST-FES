@@ -144,35 +144,35 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Switcher & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-            <Link2 className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="text-base font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+            <Link2 className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
             <span>Link Management & Institutional URL Center</span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-0.5">
             Audit, update, and validate external portal links, Google Drive IDs, syllabus PDFs, and student contribution links.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center p-1 bg-stone-100 dark:bg-stone-800 rounded-lg text-xs">
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center p-1 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 rounded-md text-xs">
             <button
               onClick={() => setActiveSection('quicklinks')}
-              className={`px-3 py-1.5 font-medium rounded-md transition-colors ${
+              className={`px-3 py-1.5 font-medium rounded-sm transition-colors cursor-pointer ${
                 activeSection === 'quicklinks'
-                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400'
+                  ? 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] shadow-xs'
+                  : 'text-[#42684D] dark:text-[#BBC4A6]'
               }`}
             >
               Institutional Links ({quickLinks.length})
             </button>
             <button
               onClick={() => setActiveSection('resources')}
-              className={`px-3 py-1.5 font-medium rounded-md transition-colors ${
+              className={`px-3 py-1.5 font-medium rounded-sm transition-colors cursor-pointer ${
                 activeSection === 'resources'
-                  ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400'
+                  ? 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] shadow-xs'
+                  : 'text-[#42684D] dark:text-[#BBC4A6]'
               }`}
             >
               Resource Drive Links ({resources.length})
@@ -182,7 +182,7 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
           {activeSection === 'quicklinks' && (
             <button
               onClick={handleOpenAddLink}
-              className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Link</span>
@@ -197,17 +197,17 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
           {quickLinks.map((link) => (
             <div
               key={link.id}
-              className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-4 flex flex-col justify-between hover:border-emerald-500 transition-colors shadow-xs"
+              className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-4 flex flex-col justify-between hover:border-[#42684D] dark:hover:border-[#8A9C74] transition-colors shadow-xs"
             >
               <div>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] dark:text-[#BBC4A6]">
                     {link.category}
                   </span>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEditLink(link)}
-                      className="p-1 text-stone-400 hover:text-blue-600 rounded"
+                      className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] rounded-sm cursor-pointer"
                       title="Edit Link"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -217,14 +217,14 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                         <button
                           type="button"
                           onClick={() => handleDeleteQuickLink(link.id)}
-                          className="px-2 py-0.5 text-[10px] font-bold bg-rose-600 text-white rounded hover:bg-rose-700"
+                          className="px-2 py-0.5 text-[10px] font-bold bg-[#987453] text-[#F3F1E8] rounded-sm hover:bg-[#19382B] cursor-pointer"
                         >
                           Confirm
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteConfirmId(null)}
-                          className="p-1 text-stone-400 hover:text-stone-600"
+                          className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -232,7 +232,7 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                     ) : (
                       <button
                         onClick={() => setDeleteConfirmId(link.id)}
-                        className="p-1 text-stone-400 hover:text-rose-600 rounded"
+                        className="p-1 text-[#8A9C74] hover:text-[#987453] rounded-sm cursor-pointer"
                         title="Delete Link"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -241,25 +241,25 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                   </div>
                 </div>
 
-                <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-1">
+                <h4 className="text-sm font-bold text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-1">
                   {link.title}
                 </h4>
                 {link.description && (
-                  <p className="text-xs text-stone-500 dark:text-stone-400 mb-3 line-clamp-2">
+                  <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mb-3 line-clamp-2">
                     {link.description}
                   </p>
                 )}
               </div>
 
-              <div className="pt-2 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-xs">
-                <span className="font-mono text-[11px] text-stone-400 truncate max-w-[180px]">
+              <div className="pt-2 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15 flex items-center justify-between text-xs">
+                <span className="font-mono text-[11px] text-[#8A9C74] truncate max-w-[180px]">
                   {link.url}
                 </span>
                 <a
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 hover:underline font-medium"
+                  className="inline-flex items-center gap-1 text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:underline font-medium"
                 >
                   <span>Test Link</span>
                   <ExternalLink className="w-3 h-3" />
@@ -275,19 +275,19 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
               <input
                 type="text"
                 placeholder="Search resource title or drive URL..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
               />
             </div>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value as any)}
-              className="px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+              className="px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
             >
               <option value="all">All Resource Types</option>
               <option value="slides">Slides</option>
@@ -298,10 +298,10 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
             </select>
           </div>
 
-          <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 text-stone-500 font-medium uppercase tracking-wider">
+                <thead className="bg-[#EAE7DA] dark:bg-[#142D22] border-b border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 text-[#42684D] dark:text-[#BBC4A6] font-medium uppercase tracking-wider">
                   <tr>
                     <th className="py-3 px-4">Resource</th>
                     <th className="py-3 px-4">Course</th>
@@ -309,17 +309,17 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+                <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
                   {filteredResources.slice(0, 50).map((res) => (
-                    <tr key={res.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40">
+                    <tr key={res.id} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60">
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-stone-900 dark:text-stone-100">{res.title}</div>
-                        <div className="text-[10px] text-stone-400 capitalize">{res.category} · {res.fileType}</div>
+                        <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">{res.title}</div>
+                        <div className="text-[10px] text-[#8A9C74] capitalize">{res.category} · {res.fileType}</div>
                       </td>
-                      <td className="py-3 px-4 font-mono text-emerald-700 dark:text-emerald-400">
+                      <td className="py-3 px-4 font-mono text-[#42684D] dark:text-[#BBC4A6]">
                         {res.courseCode}
                       </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-stone-500 max-w-[280px] truncate">
+                      <td className="py-3 px-4 font-mono text-[11px] text-[#8A9C74] max-w-[280px] truncate">
                         {res.driveUrl}
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -328,14 +328,14 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
                             href={res.driveUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 text-stone-400 hover:text-emerald-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm"
                             title="Open in Drive"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                           <button
                             onClick={() => handleOpenEditResource(res)}
-                            className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] rounded-sm cursor-pointer"
                             title="Update Drive Link"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -353,48 +353,48 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
 
       {/* Modal: Add/Edit Institutional Link */}
       {isAddLinkOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/85 animate-fade-in">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                 {editingLink ? 'Edit Institutional Link' : 'Add New Link'}
               </h3>
-              <button onClick={() => setIsAddLinkOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <button onClick={() => setIsAddLinkOpen(false)} className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveQuickLink} className="space-y-3">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Link Title</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">Link Title</label>
                 <input
                   type="text"
                   value={linkTitle}
                   onChange={(e) => setLinkTitle(e.target.value)}
                   placeholder="e.g. Department Portal"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Destination URL</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">Destination URL</label>
                 <input
                   type="url"
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Category</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">Category</label>
                 <select
                   value={linkCategory}
                   onChange={(e) => setLinkCategory(e.target.value as any)}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                 >
                   <option value="portal">Official Portal</option>
                   <option value="drive">Google Drive Archive</option>
@@ -405,27 +405,27 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Description</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">Description</label>
                 <textarea
                   value={linkDescription}
                   onChange={(e) => setLinkDescription(e.target.value)}
                   placeholder="Brief note on what this link provides..."
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => setIsAddLinkOpen(false)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] rounded-md shadow-xs cursor-pointer"
                 >
                   Save Link
                 </button>
@@ -437,47 +437,47 @@ export const AdminLinksPanel: React.FC<AdminLinksPanelProps> = ({
 
       {/* Modal: Quick Edit Resource Drive Link */}
       {editingResource && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/85 animate-fade-in">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                 Update Resource Drive URL
               </h3>
-              <button onClick={() => setEditingResource(null)} className="text-stone-400 hover:text-stone-600">
+              <button onClick={() => setEditingResource(null)} className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveResourceLink} className="space-y-3">
               <div>
-                <div className="font-semibold text-stone-900 dark:text-stone-100">{editingResource.title}</div>
-                <div className="font-mono text-emerald-700 dark:text-emerald-400 text-[11px]">{editingResource.courseCode} · {editingResource.courseTitle}</div>
+                <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">{editingResource.title}</div>
+                <div className="font-mono text-[#42684D] dark:text-[#BBC4A6] text-[11px]">{editingResource.courseCode} · {editingResource.courseTitle}</div>
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#F3F1E8]">
                   New Google Drive Link / Download URL
                 </label>
                 <input
                   type="url"
                   value={newDriveUrl}
                   onChange={(e) => setNewDriveUrl(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => setEditingResource(null)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] rounded-md hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] rounded-md shadow-xs cursor-pointer"
                 >
                   Update URL
                 </button>

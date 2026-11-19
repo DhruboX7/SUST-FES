@@ -28,25 +28,25 @@ export const BookmarksView: React.FC<BookmarksViewProps> = ({
 
   return (
     <div className="space-y-6 animate-fade-in">
-      
+
       {/* Header */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Bookmark className="w-4 h-4 fill-emerald-800 dark:fill-emerald-400" />
+          <div className="flex items-center gap-2 text-[#987453] dark:text-[#8A9C74] text-xs font-semibold uppercase tracking-wider mb-2">
+            <Bookmark className="w-4 h-4 fill-[#987453] dark:fill-[#8A9C74]" />
             <span>{t('savedVault')}</span>
           </div>
-          <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+          <h1 className="font-editorial text-2xl font-semibold text-[#19382B] dark:text-[#F3F1E8] tracking-tight">
             {t('savedTitle')}
           </h1>
-          <p className="text-stone-600 dark:text-stone-400 text-xs sm:text-sm mt-1">
+          <p className="text-[#42684D] dark:text-[#BBC4A6] text-xs sm:text-sm mt-1">
             {t('savedDesc')} ({bookmarkedResources.length} {bookmarkedResources.length === 1 ? t('resourceWord') : t('resourcesWord')}).
           </p>
         </div>
 
         <Link
           to="/"
-          className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 flex items-center gap-1.5 transition-colors"
+          className="self-start sm:self-auto px-4 py-2 text-xs font-semibold rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[#19382B] dark:text-[#F3F1E8] hover:bg-[#BBC4A6]/40 flex items-center gap-1.5 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>{t('backToCatalog')}</span>
@@ -55,17 +55,17 @@ export const BookmarksView: React.FC<BookmarksViewProps> = ({
 
       {/* Grid or Empty State */}
       {bookmarkedResources.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8">
-          <Bookmark className="w-12 h-12 text-stone-300 dark:text-stone-700 mx-auto mb-3" />
-          <h2 className="text-base font-bold text-stone-800 dark:text-stone-200 mb-1">
+        <div className="text-center py-16 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+          <Bookmark className="w-12 h-12 text-[#8A9C74] mx-auto mb-3" />
+          <h2 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
             {t('noBookmarksYet')}
           </h2>
-          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto mb-6">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-sm mx-auto mb-6">
             {t('noBookmarksDesc')}
           </p>
           <Link
             to="/"
-            className="inline-flex px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-semibold rounded-lg transition-colors"
+            className="inline-flex px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] text-xs font-semibold rounded-md transition-colors"
           >
             {t('exploreCatalog')}
           </Link>

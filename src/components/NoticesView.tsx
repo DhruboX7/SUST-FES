@@ -154,46 +154,50 @@ export const NoticesView: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      
+
       {/* Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 to-stone-900 rounded-2xl p-6 sm:p-8 text-white border border-emerald-800/40 shadow-sm">
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 shadow-sm">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <Bell className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+            <Bell className="w-4 h-4 text-[#8A9C74]" />
             <span>FES SUST Departmental Bulletin</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+          <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
             Notices & Class Routine
           </h1>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#BBC4A6] leading-relaxed">
             Stay informed on upcoming semester exams, field tours, thesis submissions, official circular scans, and weekly class schedules.
           </p>
         </div>
       </div>
 
       {/* Mode Tabs */}
-      <div className="flex items-center gap-2 border-b border-stone-200 dark:border-stone-800 pb-3">
+      <div className="flex items-center gap-2 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 pb-3">
         <button
           onClick={() => handleTabChange('notices')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
             activeTab === 'notices'
-              ? 'bg-emerald-800 text-white shadow-xs'
-              : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 hover:text-stone-900'
+              ? 'bg-[#42684D] text-[#F3F1E8] shadow-xs'
+              : 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
           }`}
         >
           <Bell className="w-3.5 h-3.5" />
           <span>Department Notices</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-700/60 text-white">
+          <span className={`px-1.5 py-0.5 rounded-sm text-[10px] font-mono font-bold ${
+            activeTab === 'notices'
+              ? 'bg-[#19382B] text-[#F3F1E8]'
+              : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'
+          }`}>
             {notices.length}
           </span>
         </button>
 
         <button
           onClick={() => handleTabChange('routine')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
             activeTab === 'routine'
-              ? 'bg-emerald-800 text-white shadow-xs'
-              : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 hover:text-stone-900'
+              ? 'bg-[#42684D] text-[#F3F1E8] shadow-xs'
+              : 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
@@ -206,18 +210,18 @@ export const NoticesView: React.FC = () => {
         <div className="space-y-4">
           {/* Type Filter Strip */}
           {noticeTypes.length > 0 && sortedNotices.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap bg-white dark:bg-stone-900 p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 shadow-xs">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 px-2 flex items-center gap-1">
+            <div className="flex items-center gap-1.5 flex-wrap bg-[#FAF9F4] dark:bg-[#19382B] p-2.5 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#42684D] dark:text-[#8A9C74] px-2 flex items-center gap-1">
                 <Tag className="w-3 h-3" />
                 <span>Filter:</span>
               </span>
               <button
                 type="button"
                 onClick={() => setSelectedTypeFilter('all')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                   selectedTypeFilter === 'all'
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                    ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] shadow-xs'
+                    : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 All ({sortedNotices.length})
@@ -233,13 +237,12 @@ export const NoticesView: React.FC = () => {
                     key={typeDef.id}
                     type="button"
                     onClick={() => setSelectedTypeFilter(isSelected ? 'all' : typeDef.id)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold border transition-colors cursor-pointer ${
                       isSelected
                         ? `${style.solidBadge} shadow-xs`
-                        : `${style.badge} opacity-85 hover:opacity-100`
+                        : `${style.badge} opacity-90 hover:opacity-100`
                     }`}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : style.dot}`} />
                     <span>{typeDef.label}</span>
                     <span className="font-mono text-[10px] opacity-80">({count})</span>
                   </button>
@@ -248,15 +251,28 @@ export const NoticesView: React.FC = () => {
             </div>
           )}
 
-          {filteredNotices.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
-              <AlertCircle className="w-10 h-10 text-stone-400 mx-auto mb-2" />
-              <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200">
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="p-6 rounded-lg bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 space-y-3"
+                >
+                  <div className="h-3.5 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-1/3" />
+                  <div className="h-5 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-2/3" />
+                  <div className="h-12 bg-[#F3F1E8] dark:bg-[#11261D] rounded-sm" />
+                </div>
+              ))}
+            </div>
+          ) : filteredNotices.length === 0 ? (
+            <div className="text-center py-12 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8 shadow-xs">
+              <AlertCircle className="w-10 h-10 text-[#8A9C74] mx-auto mb-2" />
+              <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                 {selectedTypeFilter === 'all'
                   ? 'No active announcements'
                   : 'No notices match this tag filter'}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-1">
                 {selectedTypeFilter === 'all'
                   ? 'There are no published departmental notices at this time. Check back soon.'
                   : 'Try switching back to All to inspect every published notice.'}
@@ -271,19 +287,19 @@ export const NoticesView: React.FC = () => {
               <div
                 id={`notice-card-${notice.id}`}
                 key={notice.id}
-                className={`p-5 sm:p-6 rounded-2xl border transition-all ${
+                className={`p-5 sm:p-6 rounded-lg border transition-colors ${
                   isFocused
-                    ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 dark:border-emerald-500 shadow-md ring-2 ring-emerald-500/25'
+                    ? 'bg-[#EAE7DA] dark:bg-[#142D22] border-[#42684D] shadow-md ring-1 ring-[#42684D]'
                     : notice.pinned
-                      ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80 shadow-xs ring-1 ring-emerald-500/10'
-                      : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 shadow-xs'
+                      ? 'bg-[#EAE7DA]/70 dark:bg-[#142D22] border-[#987453]/60 shadow-xs'
+                      : 'bg-[#FAF9F4] dark:bg-[#19382B] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs'
                 }`}
               >
                 {/* Header row */}
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     {notice.pinned && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-800 text-white uppercase tracking-wider shadow-xs">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-sm text-[10px] font-bold bg-[#987453] text-[#F3F1E8] uppercase tracking-wider shadow-xs">
                         <Pin className="w-3 h-3" />
                         <span>Pinned Notice</span>
                       </span>
@@ -293,14 +309,13 @@ export const NoticesView: React.FC = () => {
                       return (
                         <span
                           key={tag.id}
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider border ${style.badge}`}
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider border ${style.badge}`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
                           <span>{tag.label}</span>
                         </span>
                       );
                     })}
-                    <span className="text-xs text-stone-500 dark:text-stone-400 font-mono">
+                    <span className="text-xs text-[#987453] dark:text-[#8A9C74] font-mono font-medium">
                       {notice.date}
                     </span>
                   </div>
@@ -311,7 +326,7 @@ export const NoticesView: React.FC = () => {
                       href={notice.attachmentUrl || notice.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-emerald-800 dark:text-emerald-400 hover:underline inline-flex items-center gap-1.5 font-semibold shrink-0"
+                      className="text-xs text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:underline inline-flex items-center gap-1.5 font-semibold shrink-0"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>{notice.attachmentUrl?.endsWith('.pdf') ? 'Download PDF' : 'Attachment Link'}</span>
@@ -320,26 +335,26 @@ export const NoticesView: React.FC = () => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 mb-2 leading-snug">
+                <h2 className="font-editorial text-base sm:text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-2 leading-snug">
                   {notice.title}
-                </h3>
+                </h2>
 
                 {/* Body Text */}
-                <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed whitespace-pre-line mb-4">
+                <p className="text-xs sm:text-sm text-[#42684D] dark:text-[#BBC4A6] leading-relaxed whitespace-pre-line mb-4">
                   {notice.body}
                 </p>
 
                 {/* INLINE CIRCULAR IMAGE PREVIEW */}
                 {notice.imageUrl && (
-                  <div className="mt-4 pt-4 border-t border-stone-100 dark:border-stone-800">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1.5">
-                      <ImageIcon className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                  <div className="mt-4 pt-4 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-[#987453] dark:text-[#8A9C74] mb-2 flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                       <span>Official Notice Circular Scan / Attached Image</span>
                     </div>
 
-                    <div 
+                    <div
                       onClick={() => setSelectedNoticeImage({ url: notice.imageUrl!, title: notice.title })}
-                      className="relative group cursor-pointer max-w-md rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-stone-950 shadow-xs hover:border-emerald-500 transition-all"
+                      className="relative group cursor-pointer max-w-md rounded-md overflow-hidden border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] shadow-xs hover:border-[#42684D] transition-colors"
                       title="Click to expand circular in full-screen zoom view"
                     >
                       <img
@@ -347,10 +362,11 @@ export const NoticesView: React.FC = () => {
                         alt={`Circular scan for ${notice.title}`}
                         loading="lazy"
                         decoding="async"
+                        referrerPolicy="no-referrer"
                         onError={handleImageError}
-                        className="w-full max-h-72 object-contain bg-stone-900/5 dark:bg-black/40 group-hover:scale-102 transition-transform duration-200"
+                        className="w-full max-h-72 object-contain bg-[#EAE7DA]/40 dark:bg-[#11261D]"
                       />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-bold">
+                      <div className="absolute inset-0 bg-[#19382B]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-[#F3F1E8] text-xs font-bold">
                         <ZoomIn className="w-5 h-5" />
                         <span>Click to Enlarge / Full-Screen Zoom</span>
                       </div>
@@ -360,14 +376,14 @@ export const NoticesView: React.FC = () => {
 
                 {/* FOOTER ACTIONS: DOCUMENT DOWNLOADS */}
                 {(notice.attachmentUrl || notice.link) && (
-                  <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center gap-3">
+                  <div className="mt-4 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 flex items-center gap-3">
                     <a
                       href={notice.attachmentUrl || notice.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors"
                     >
-                      <FileText className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                      <FileText className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
                       <span>
                         {notice.attachmentUrl?.includes('.pdf')
                           ? 'Download Official Circular Document (PDF)'
@@ -386,21 +402,21 @@ export const NoticesView: React.FC = () => {
 
       {/* FULL-SCREEN IMAGE LIGHTBOX MODAL */}
       {selectedNoticeImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#11261D]/92 animate-fade-in"
           onClick={() => setSelectedNoticeImage(null)}
           role="dialog"
           aria-modal="true"
         >
-          <div 
-            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-stone-900 border border-stone-700 rounded-2xl shadow-2xl overflow-hidden"
+          <div
+            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-[#142D22] border border-[#BBC4A6]/30 rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Lightbox Header */}
-            <div className="flex items-center justify-between p-4 border-b border-stone-800 bg-stone-950 text-white shrink-0">
+            <div className="flex items-center justify-between p-4 border-b border-[#BBC4A6]/20 bg-[#19382B] text-[#F3F1E8] shrink-0">
               <div className="flex items-center gap-2 truncate pr-4">
-                <ImageIcon className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="font-bold text-xs sm:text-sm truncate">
+                <ImageIcon className="w-4 h-4 text-[#8A9C74] shrink-0" />
+                <span className="font-semibold text-xs sm:text-sm truncate">
                   {selectedNoticeImage.title}
                 </span>
               </div>
@@ -409,7 +425,7 @@ export const NoticesView: React.FC = () => {
                   href={selectedNoticeImage.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
+                  className="px-2.5 py-1 rounded-md bg-[#42684D] hover:bg-[#8A9C74] text-[#F3F1E8] hover:text-[#19382B] text-xs font-medium flex items-center gap-1.5 transition-colors"
                   title="Open full resolution in new tab"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -417,7 +433,7 @@ export const NoticesView: React.FC = () => {
                 </a>
                 <button
                   onClick={() => setSelectedNoticeImage(null)}
-                  className="p-1.5 text-stone-400 hover:text-white rounded-lg hover:bg-stone-800 transition-colors"
+                  className="p-1.5 text-[#BBC4A6] hover:text-[#F3F1E8] rounded-md hover:bg-[#42684D]/40 transition-colors"
                   aria-label="Close image viewer"
                 >
                   <X className="w-5 h-5" />
@@ -426,18 +442,19 @@ export const NoticesView: React.FC = () => {
             </div>
 
             {/* Lightbox Image Viewport */}
-            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-black/60">
+            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#11261D]">
               <img
                 src={selectedNoticeImage.url}
                 alt={selectedNoticeImage.title}
                 onError={handleImageError}
                 decoding="async"
-                className="max-w-full max-h-[78vh] object-contain rounded-lg shadow-lg"
+                referrerPolicy="no-referrer"
+                className="max-w-full max-h-[78vh] object-contain rounded-md shadow-lg"
               />
             </div>
 
             {/* Lightbox Footer */}
-            <div className="p-2.5 bg-stone-950 border-t border-stone-800 text-center text-[11px] text-stone-400 font-mono">
+            <div className="p-2.5 bg-[#19382B] border-t border-[#BBC4A6]/20 text-center text-[11px] text-[#BBC4A6] font-mono">
               Press Escape or click outside to close viewer
             </div>
           </div>
@@ -447,22 +464,22 @@ export const NoticesView: React.FC = () => {
       {/* ROUTINE TABLE */}
       {activeTab === 'routine' && (
         <div className="space-y-4">
-          
+
           {/* Year, Semester & View Mode Filter Bar */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs">
             <div className="flex flex-wrap items-center gap-4">
               {/* Year Selector */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Year:</span>
-                <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                <span className="text-xs font-bold text-[#19382B] dark:text-[#F3F1E8]">Year:</span>
+                <div className="flex gap-1 p-1 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 rounded-md">
                   {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
                     <button
                       key={yr}
                       onClick={() => setSelectedYear(yr)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                         selectedYear === yr
-                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                          ? 'bg-[#42684D] text-[#F3F1E8] shadow-xs'
+                          : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                       }`}
                     >
                       Year {yr}
@@ -473,16 +490,16 @@ export const NoticesView: React.FC = () => {
 
               {/* Semester Selector */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Semester:</span>
-                <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                <span className="text-xs font-bold text-[#19382B] dark:text-[#F3F1E8]">Semester:</span>
+                <div className="flex gap-1 p-1 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 rounded-md">
                   {[1, 2].map((sem) => (
                     <button
                       key={sem}
                       onClick={() => setSelectedSemester(sem as 1 | 2)}
-                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                         selectedSemester === sem
-                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                          ? 'bg-[#987453] text-[#F3F1E8] shadow-xs'
+                          : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                       }`}
                     >
                       Sem {sem}
@@ -493,14 +510,14 @@ export const NoticesView: React.FC = () => {
             </div>
 
             {/* Calendar vs. Timetable Grid View Switcher */}
-            <div className="flex items-center gap-1.5 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl border border-stone-200 dark:border-stone-700/60 self-start md:self-auto">
+            <div className="flex items-center gap-1 p-1 bg-[#EAE7DA] dark:bg-[#142D22] rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 self-start md:self-auto">
               <button
                 type="button"
                 onClick={() => setRoutineViewMode('calendar')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                   routineViewMode === 'calendar'
-                    ? 'bg-white dark:bg-stone-900 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/30'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                    ? 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] shadow-xs border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25'
+                    : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -509,10 +526,10 @@ export const NoticesView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setRoutineViewMode('matrix')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                   routineViewMode === 'matrix'
-                    ? 'bg-white dark:bg-stone-900 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/30'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                    ? 'bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] shadow-xs border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25'
+                    : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
@@ -534,12 +551,12 @@ export const NoticesView: React.FC = () => {
           {routineViewMode === 'matrix' && (
             <div>
               {!currentRoutine || currentRoutine.schedule.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
-                  <Calendar className="w-10 h-10 text-stone-400 mx-auto mb-2" />
-                  <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200">
+                <div className="text-center py-12 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8 shadow-xs">
+                  <Calendar className="w-10 h-10 text-[#8A9C74] mx-auto mb-2" />
+                  <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                     Routine not published for Year {selectedYear} Semester {selectedSemester}
                   </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                  <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-1">
                     Contact the batch representative or department office for tentative slots.
                   </p>
                 </div>
@@ -548,31 +565,31 @@ export const NoticesView: React.FC = () => {
                   {currentRoutine.schedule.map((slot, idx) => (
                     <div
                       key={idx}
-                      className="p-4 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs flex flex-col justify-between"
+                      className="p-4 rounded-lg bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs flex flex-col justify-between"
                     >
                       <div>
-                        <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 mb-1">
-                          <span className="font-bold text-emerald-800 dark:text-emerald-400">{slot.day}</span>
-                          <span className="font-mono flex items-center gap-1 font-semibold text-stone-700 dark:text-stone-300">
-                            <Clock className="w-3 h-3 text-stone-400" />
+                        <div className="flex items-center justify-between text-xs text-[#42684D] dark:text-[#8A9C74] mb-1">
+                          <span className="font-bold text-[#19382B] dark:text-[#F3F1E8]">{slot.day}</span>
+                          <span className="font-mono flex items-center gap-1 font-semibold text-[#42684D] dark:text-[#BBC4A6]">
+                            <Clock className="w-3 h-3 text-[#8A9C74]" />
                             {slot.time}
                           </span>
                         </div>
-                        <div className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-0.5">
+                        <div className="font-mono text-xs font-bold text-[#987453] dark:text-[#BBC4A6] mb-0.5">
                           {slot.courseCode}
                         </div>
-                        <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
+                        <h4 className="text-sm font-bold text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-2">
                           {slot.courseTitle}
                         </h4>
                       </div>
 
-                      <div className="pt-2 border-t border-stone-100 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 space-y-1">
+                      <div className="pt-2 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 text-xs text-[#42684D] dark:text-[#BBC4A6] space-y-1">
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0" />
+                          <MapPin className="w-3.5 h-3.5 text-[#987453] dark:text-[#8A9C74] shrink-0" />
                           <span className="truncate">{slot.room}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-500 shrink-0" />
+                          <User className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74] shrink-0" />
                           <span className="truncate">{slot.teacher}</span>
                         </div>
                       </div>

@@ -13,8 +13,7 @@ import {
   X, 
   AlertCircle,
   CheckSquare,
-  Square,
-  Sparkles
+  Square
 } from 'lucide-react';
 
 interface AdminExamBankPanelProps {
@@ -201,16 +200,16 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="text-base font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
             <span>Exam Question Bank Management (PYQ)</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            <span className="text-xs font-mono px-2 py-0.5 rounded-sm bg-[#EAE7DA] text-[#19382B] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {pyqItems.length} papers
             </span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-0.5">
             Administer previous semester midterm, final, and quiz examination questions by course code and academic session.
           </p>
         </div>
@@ -218,18 +217,18 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
         <div className="flex items-center gap-2">
           {selectedIds.length > 0 && (
             deleteConfirmId === 'batch' ? (
-              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+              <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 animate-in fade-in">
                 <button
                   type="button"
                   onClick={handleBatchDelete}
-                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                  className="px-3 py-1 text-xs font-semibold bg-[#987453] hover:bg-[#19382B] text-[#F3F1E8] rounded-sm transition-colors shadow-xs cursor-pointer"
                 >
                   Confirm Delete ({selectedIds.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(null)}
-                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  className="p-1 text-[#42684D] hover:text-[#19382B] dark:text-[#BBC4A6] dark:hover:text-[#F3F1E8] cursor-pointer"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -239,7 +238,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId('batch')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#987453] hover:bg-[#19382B] text-[#F3F1E8] flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Selected ({selectedIds.length})</span>
@@ -249,7 +248,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
           <button
             onClick={handleOpenAdd}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Exam Paper</span>
@@ -260,13 +259,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
       {/* Filter Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
         <div className="relative sm:col-span-1">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             placeholder="Search course or session..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-1 focus:ring-[#42684D]"
           />
         </div>
 
@@ -274,7 +273,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
           <select
             value={String(filterYear)}
             onChange={(e) => setFilterYear(e.target.value === 'all' ? 'all' : (Number(e.target.value) as AcademicYear))}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Academic Years</option>
             <option value="1">1st Year</option>
@@ -288,7 +287,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
           <select
             value={String(filterSemester)}
             onChange={(e) => setFilterSemester(e.target.value === 'all' ? 'all' : (Number(e.target.value) as 1 | 2))}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Semesters</option>
             <option value="1">1st Semester</option>
@@ -300,7 +299,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
           <select
             value={filterTerm}
             onChange={(e) => setFilterTerm(e.target.value as any)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Exam Terms</option>
             <option value="final">Final Term</option>
@@ -311,15 +310,15 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
       </div>
 
       {/* Questions Data Table */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 text-stone-500 font-medium uppercase tracking-wider">
+            <thead className="bg-[#EAE7DA] dark:bg-[#142D22] border-b border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 text-[#42684D] dark:text-[#BBC4A6] font-medium uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4 w-10">
-                  <button onClick={handleSelectAll} className="flex items-center text-stone-500">
+                  <button onClick={handleSelectAll} className="flex items-center text-[#42684D] dark:text-[#BBC4A6] cursor-pointer">
                     {selectedIds.length === filteredItems.length && filteredItems.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-600" />
+                      <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                     ) : (
                       <Square className="w-4 h-4" />
                     )}
@@ -332,37 +331,37 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
               {filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-stone-400">
+                  <td colSpan={6} className="py-8 text-center text-[#8A9C74]">
                     No examination questions match your current filters.
                   </td>
                 </tr>
               ) : (
                 filteredItems.map((item) => (
-                  <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40 transition-colors">
+                  <tr key={item.id} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60 transition-colors">
                     <td className="py-3 px-4">
-                      <button onClick={() => handleToggleSelect(item.id)} className="text-stone-400 hover:text-emerald-600">
+                      <button onClick={() => handleToggleSelect(item.id)} className="text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#BBC4A6] cursor-pointer">
                         {selectedIds.includes(item.id) ? (
-                          <CheckSquare className="w-4 h-4 text-emerald-600" />
+                          <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                         ) : (
                           <Square className="w-4 h-4" />
                         )}
                       </button>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-stone-900 dark:text-stone-100">{item.title}</div>
-                      <div className="text-[11px] font-mono text-emerald-700 dark:text-emerald-400">{item.courseCode} · {item.courseTitle}</div>
+                      <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">{item.title}</div>
+                      <div className="text-[11px] font-mono text-[#42684D] dark:text-[#BBC4A6]">{item.courseCode} · {item.courseTitle}</div>
                     </td>
-                    <td className="py-3 px-4 font-mono">
+                    <td className="py-3 px-4 font-mono text-[#19382B] dark:text-[#F3F1E8]">
                       Year {item.year}, Sem {item.semester}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-mono text-stone-700 dark:text-stone-300">{item.sessionYear || '—'}</div>
-                      <div className="text-[10px] uppercase font-bold text-stone-500">{item.examTerm || 'final'}</div>
+                      <div className="font-mono text-[#19382B] dark:text-[#F3F1E8]">{item.sessionYear || '—'}</div>
+                      <div className="text-[10px] uppercase font-bold text-[#987453] dark:text-[#BBC4A6]">{item.examTerm || 'final'}</div>
                     </td>
-                    <td className="py-3 px-4 text-stone-600 dark:text-stone-400 truncate max-w-[140px]">
+                    <td className="py-3 px-4 text-[#42684D] dark:text-[#BBC4A6] truncate max-w-[140px]">
                       {item.authorOrTeacher || 'Dept. Archive'}
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -371,14 +370,14 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                           href={item.driveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 text-stone-400 hover:text-emerald-600 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                          className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]"
                           title="Open Drive Link"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                         <button
                           onClick={() => handleOpenEdit(item)}
-                          className="p-1.5 text-stone-400 hover:text-blue-600 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                          className="p-1.5 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] rounded-sm hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] cursor-pointer"
                           title="Edit Question"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
@@ -390,13 +389,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                                 onDeleteResource(item.id);
                                 setDeleteConfirmId(null);
                               }}
-                              className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded-md"
+                              className="px-2 py-1 text-[10px] font-bold bg-[#987453] text-[#F3F1E8] rounded-sm cursor-pointer"
                             >
                               Confirm
                             </button>
                             <button
                               onClick={() => setDeleteConfirmId(null)}
-                              className="p-1 text-stone-400 hover:text-stone-600"
+                              className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -404,7 +403,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                         ) : (
                           <button
                             onClick={() => setDeleteConfirmId(item.id)}
-                            className="p-1.5 text-stone-400 hover:text-rose-600 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-sm hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] cursor-pointer"
                             title="Delete Question"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -422,10 +421,10 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {(isAddOpen || editingItem) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/85 animate-fade-in">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-lg w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                 {editingItem ? 'Edit Exam Question Paper' : 'Add Past Year Question (PYQ)'}
               </h3>
               <button
@@ -433,22 +432,22 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                   setIsAddOpen(false);
                   setEditingItem(null);
                 }}
-                className="p-1.5 text-stone-400 hover:text-stone-600 rounded-lg"
+                className="p-1.5 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] rounded-md cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 rounded-md text-[#987453] dark:text-[#F3F1E8] text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{formError}</span>
               </div>
             )}
 
             <form onSubmit={editingItem ? handleSaveEdit : handleSaveAdd} className="space-y-3.5 text-xs">
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                   Select Course Code
                 </label>
                 <select
@@ -465,7 +464,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                       }
                     }
                   }}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                 >
                   {SUST_FES_COURSES.map((c) => (
                     <option key={c.id} value={c.code}>
@@ -476,7 +475,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                   Paper Title
                 </label>
                 <input
@@ -484,14 +483,14 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                   value={customTitle}
                   onChange={(e) => setCustomTitle(e.target.value)}
                   placeholder="e.g. FES 08211121 Final Exam 2023"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Year Level
                   </label>
                   <select
@@ -500,7 +499,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                       const val = e.target.value;
                       setYear(val === 'msc' ? 'msc' : (Number(val) as AcademicYear));
                     }}
-                    className="w-full px-2.5 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-2.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="1">1st Year</option>
                     <option value="2">2nd Year</option>
@@ -511,13 +510,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Semester
                   </label>
                   <select
                     value={String(semester)}
                     onChange={(e) => setSemester(Number(e.target.value) as 1 | 2)}
-                    className="w-full px-2.5 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-2.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="1">1st Sem</option>
                     <option value="2">2nd Sem</option>
@@ -525,13 +524,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Exam Term
                   </label>
                   <select
                     value={examTerm}
                     onChange={(e) => setExamTerm(e.target.value as any)}
-                    className="w-full px-2.5 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-2.5 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="final">Final Term</option>
                     <option value="midterm">Midterm</option>
@@ -542,7 +541,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Academic Session
                   </label>
                   <input
@@ -550,12 +549,12 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                     value={sessionYear}
                     onChange={(e) => setSessionYear(e.target.value)}
                     placeholder="2023-2024"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                     Uploaded / Provided By
                   </label>
                   <input
@@ -563,13 +562,13 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     placeholder="CR 29th Batch"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                   Google Drive or PDF URL
                 </label>
                 <input
@@ -577,16 +576,16 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                   value={driveUrl}
                   onChange={(e) => setDriveUrl(e.target.value)}
                   placeholder="https://drive.google.com/file/d/..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
-                <p className="text-[11px] text-stone-400 mt-1">
+                <p className="text-[11px] text-[#8A9C74] mt-1">
                   Accepts Google Drive share links, preview URLs, or direct PDF links. Automatically parsed.
                 </p>
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                   Optional Notes / Paper Description
                 </label>
                 <textarea
@@ -594,24 +593,24 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Contains Part A and Part B questions, total 70 marks..."
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => {
                     setIsAddOpen(false);
                     setEditingItem(null);
                   }}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] rounded-md transition-colors shadow-xs cursor-pointer"
                 >
                   {editingItem ? 'Save Changes' : 'Publish Question Paper'}
                 </button>

@@ -121,87 +121,87 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Overview Metric Banner */}
-      <div className="bg-gradient-to-r from-stone-900 to-emerald-950 rounded-2xl border border-emerald-900/40 p-6 text-white shadow-sm">
-        <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
-          <ShieldCheck className="w-4 h-4" />
+      <div className="bg-[#19382B] rounded-lg border border-[#BBC4A6]/25 p-6 text-[#F3F1E8]">
+        <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+          <ShieldCheck className="w-4 h-4 text-[#8A9C74]" />
           <span>Utmost Admin Power · Master Department Archive Control</span>
         </div>
-        <h3 className="text-xl sm:text-2xl font-bold tracking-tight mb-2">
+        <h3 className="font-editorial text-xl sm:text-2xl font-bold tracking-tight mb-2 text-[#F3F1E8]">
           Department Portal Database & System Settings
         </h3>
-        <p className="text-xs sm:text-sm text-stone-300 max-w-2xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#BBC4A6] max-w-2xl leading-relaxed">
           Centralized management for persistent storage, one-click master JSON backups, data restoration, and departmental credentials.
         </p>
 
-        {/* Collection Metric Pills */}
+        {/* Collection Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6">
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Exam PYQs</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.pyqs}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Exam PYQs</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.pyqs}</div>
           </div>
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Resources</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.resources}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Resources</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.resources}</div>
           </div>
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Tree Species</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.species}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Tree Species</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.species}</div>
           </div>
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Gallery Photos</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.gallery}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Gallery Photos</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.gallery}</div>
           </div>
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Theses</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.theses}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Theses</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.theses}</div>
           </div>
-          <div className="bg-stone-800/90 p-3 rounded-xl border border-stone-700/60">
-            <div className="text-[10px] uppercase font-bold text-stone-400">Notices & Links</div>
-            <div className="text-xl font-bold font-mono text-emerald-400">{stats.notices + stats.links}</div>
+          <div className="bg-[#142D22] p-3 rounded-md border border-[#BBC4A6]/20">
+            <div className="text-[10px] uppercase font-semibold tracking-wider text-[#8A9C74]">Notices & Links</div>
+            <div className="text-xl font-bold font-mono text-[#F3F1E8] mt-0.5">{stats.notices + stats.links}</div>
           </div>
         </div>
       </div>
 
       {resetMessage && (
-        <div className="p-4 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 font-semibold flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+        <div className="p-4 rounded-lg bg-[#EAE7DA] dark:bg-[#19382B] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] font-semibold flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6] shrink-0" />
           <span>{resetMessage}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 1. MASTER BACKUP & RESTORE */}
-        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-base mb-1">
-              <Database className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+            <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-editorial font-bold text-lg mb-1">
+              <Database className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
               <span>Full Master JSON Backup & Data Portability</span>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mb-6">
+            <p className="text-xs text-[#42684D] dark:text-[#8A9C74] mb-6 leading-relaxed">
               Download the entire library in a single JSON backup file (including Exam Questions, Resources, Tree Species, Gallery, Theses, Notices, and Links), or restore from an existing backup file.
             </p>
 
             <div className="space-y-4">
-              <div className="p-4 bg-stone-50 dark:bg-stone-950 rounded-xl border border-stone-200 dark:border-stone-800 flex items-center justify-between gap-4">
+              <div className="p-4 bg-[#EAE7DA]/70 dark:bg-[#142D22] rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 flex items-center justify-between gap-4">
                 <div>
-                  <div className="font-bold text-xs text-stone-900 dark:text-stone-100">Export Master Backup</div>
-                  <div className="text-[11px] text-stone-500">Download all 6 database collections into a timestamped JSON file.</div>
+                  <div className="font-semibold text-xs text-[#19382B] dark:text-[#F3F1E8]">Export Master Backup</div>
+                  <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">Download all 6 database collections into a timestamped JSON file.</div>
                 </div>
                 <button
                   type="button"
                   onClick={() => exportMasterBackupToJson()}
-                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-xs transition-colors shrink-0"
+                  className="px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold flex items-center gap-2 transition-colors shrink-0"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download Backup</span>
                 </button>
               </div>
 
-              <div className="p-4 bg-stone-50 dark:bg-stone-950 rounded-xl border border-stone-200 dark:border-stone-800 space-y-2">
-                <div className="font-bold text-xs text-stone-900 dark:text-stone-100">Restore from Master Backup</div>
-                <div className="text-[11px] text-stone-500">Select a previously exported JSON backup file to overwrite/update the portal database.</div>
+              <div className="p-4 bg-[#EAE7DA]/70 dark:bg-[#142D22] rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 space-y-2">
+                <div className="font-semibold text-xs text-[#19382B] dark:text-[#F3F1E8]">Restore from Master Backup</div>
+                <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">Select a previously exported JSON backup file to overwrite/update the portal database.</div>
                 
-                <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-xs">
+                <label className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#19382B] dark:bg-[#42684D] hover:bg-[#42684D] dark:hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold cursor-pointer transition-colors">
                   <Upload className="w-4 h-4" />
                   <span>{isImporting ? 'Restoring Database...' : 'Select Backup JSON File'}</span>
                   <input
@@ -215,13 +215,17 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
 
                 {importStatus && (
                   <div
-                    className={`mt-2 p-3 rounded-lg text-xs flex items-center gap-2 ${
+                    className={`mt-2 p-3 rounded-md text-xs flex items-center gap-2 border ${
                       importStatus.success
-                        ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                        : 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+                        ? 'bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] border-[#42684D]'
+                        : 'bg-[#F3F1E8] dark:bg-[#19382B] text-[#987453] dark:text-[#F3F1E8] border-[#987453]'
                     }`}
                   >
-                    {importStatus.success ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+                    {importStatus.success ? (
+                      <CheckCircle2 className="w-4 h-4 shrink-0 text-[#42684D] dark:text-[#BBC4A6]" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
+                    )}
                     <span>{importStatus.message}</span>
                   </div>
                 )}
@@ -230,16 +234,16 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
           </div>
 
           {/* Factory Reset */}
-          <div className="pt-6 mt-6 border-t border-stone-100 dark:border-stone-800">
+          <div className="pt-6 mt-6 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="font-bold text-xs text-rose-700 dark:text-rose-400">Factory Reset</div>
-                <div className="text-[11px] text-stone-500">Restore all collections to official SUST FES default data.</div>
+                <div className="font-semibold text-xs text-[#987453]">Factory Reset</div>
+                <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">Restore all collections to official SUST FES default data.</div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
-                className="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/60 transition-colors"
+                className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-[#987453]/70 text-[#987453] hover:bg-[#987453] hover:text-[#F3F1E8] transition-colors"
               >
                 Reset Database
               </button>
@@ -248,33 +252,36 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
         </div>
 
         {/* 2. ADMIN ACCESS PIN CONFIGURATION */}
-        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-6 shadow-xs flex flex-col justify-between">
+        <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 text-stone-900 dark:text-stone-100 font-bold text-base mb-1">
-              <Key className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+            <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-editorial font-bold text-lg mb-1">
+              <Key className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
               <span>Admin Security & PIN Access Credentials</span>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mb-6">
-              Update the master passcode required to unlock the Admin Management Suite. Default PIN is <code className="font-mono bg-stone-100 dark:bg-stone-800 px-1.5 py-0.5 rounded text-emerald-700 dark:text-emerald-400">sustfes</code>.
+            <p className="text-xs text-[#42684D] dark:text-[#8A9C74] mb-6 leading-relaxed">
+              Update the master passcode required to unlock the Admin Management Suite. Default PIN is{' '}
+              <code className="font-mono bg-[#EAE7DA] dark:bg-[#142D22] px-1.5 py-0.5 rounded-sm text-[#19382B] dark:text-[#BBC4A6] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
+                sustfes
+              </code>.
             </p>
 
             {pinSuccess && (
-              <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
-                <Check className="w-4 h-4 shrink-0" />
+              <div className="mb-4 p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#42684D] rounded-md text-[#19382B] dark:text-[#F3F1E8] text-xs flex items-center gap-2">
+                <Check className="w-4 h-4 shrink-0 text-[#42684D] dark:text-[#BBC4A6]" />
                 <span>{pinSuccess}</span>
               </div>
             )}
 
             {pinError && (
-              <div className="mb-4 p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="mb-4 p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453] rounded-md text-[#987453] dark:text-[#F3F1E8] text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{pinError}</span>
               </div>
             )}
 
             <form onSubmit={handlePinChange} className="space-y-3.5 text-xs">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Current Admin PIN
                 </label>
                 <input
@@ -282,13 +289,13 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
                   value={currentPin}
                   onChange={(e) => setCurrentPin(e.target.value)}
                   placeholder="Enter current PIN (e.g. sustfes)"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   New Admin PIN (Min 4 chars)
                 </label>
                 <input
@@ -296,13 +303,13 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
                   value={newPin}
                   onChange={(e) => setNewPin(e.target.value)}
                   placeholder="Enter new secure PIN"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Confirm New PIN
                 </label>
                 <input
@@ -310,7 +317,7 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
                   value={confirmPin}
                   onChange={(e) => setConfirmPin(e.target.value)}
                   placeholder="Re-enter new PIN"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
@@ -318,7 +325,7 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors"
                 >
                   Update Admin Passcode
                 </button>
@@ -326,7 +333,7 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
             </form>
           </div>
 
-          <div className="text-[11px] text-stone-400 mt-6 pt-4 border-t border-stone-100 dark:border-stone-800">
+          <div className="text-[11px] text-[#8A9C74] mt-6 pt-4 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
             Note: Admin session remains active in your browser until the tab is closed or you click lock session.
           </div>
         </div>
@@ -334,38 +341,38 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
 
       {/* FACTORY RESET CONFIRMATION MODAL */}
       {isResetConfirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white dark:bg-stone-900 border border-rose-300 dark:border-rose-900 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center gap-2 text-rose-600 font-bold text-base">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/80 animate-fade-in">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#987453] rounded-lg p-6 max-w-md w-full shadow-xl space-y-4 text-xs">
+            <div className="flex items-center gap-2 text-[#987453] font-editorial font-bold text-lg">
               <AlertTriangle className="w-5 h-5 shrink-0" />
               <span>Confirm Database Factory Reset</span>
             </div>
 
-            <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-              This action will reset <strong>all collections</strong> (Resources, PYQs, Tree Species, Gallery photos, Theses, Notices, and Links) back to the official departmental dataset. All custom entries added in this browser will be wiped.
+            <p className="text-[#42684D] dark:text-[#BBC4A6] leading-relaxed">
+              This action will reset <strong className="text-[#19382B] dark:text-[#F3F1E8]">all collections</strong> (Resources, PYQs, Tree Species, Gallery photos, Theses, Notices, and Links) back to the official departmental dataset. All custom entries added in this browser will be wiped.
             </p>
 
             <div>
-              <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                To confirm, type <span className="font-mono text-rose-600">RESET SUST FES</span> below:
+              <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
+                To confirm, type <span className="font-mono text-[#987453]">RESET SUST FES</span> below:
               </label>
               <input
                 type="text"
                 value={resetInput}
                 onChange={(e) => setResetInput(e.target.value)}
                 placeholder="RESET SUST FES"
-                className="w-full px-3 py-2 rounded-lg border border-rose-300 dark:border-rose-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono font-bold"
+                className="w-full px-3 py-2 rounded-md border border-[#987453]/70 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-bold"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
               <button
                 type="button"
                 onClick={() => {
                   setIsResetConfirmOpen(false);
                   setResetInput('');
                 }}
-                className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md"
               >
                 Cancel
               </button>
@@ -373,7 +380,7 @@ export const AdminMasterBackupPanel: React.FC<AdminMasterBackupPanelProps> = ({
                 type="button"
                 onClick={handleResetFactory}
                 disabled={resetInput.trim() !== 'RESET SUST FES'}
-                className="px-4 py-2 font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow-xs disabled:opacity-50 transition-colors"
+                className="px-4 py-2 font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-md disabled:opacity-50 transition-colors"
               >
                 Wipe & Factory Reset
               </button>

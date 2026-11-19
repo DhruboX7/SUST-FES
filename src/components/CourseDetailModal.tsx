@@ -60,30 +60,30 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
   if (!course) return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 animate-fade-in"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#11261D]/85 animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="course-detail-title"
     >
-      <div 
+      <div
         ref={modalRef}
-        className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden text-stone-900 dark:text-stone-100 transition-colors"
+        className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden text-[#19382B] dark:text-[#F3F1E8] transition-colors"
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
+        <div className="flex items-start justify-between p-6 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-emerald-800 dark:text-emerald-400 mb-1">
+            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#987453] dark:text-[#8A9C74] mb-1">
               <span>{course.code}</span>
               <span aria-hidden="true">·</span>
               <span className="capitalize">{course.courseType}</span>
             </div>
-            <h2 id="course-detail-title" className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
+            <h2 id="course-detail-title" className="font-editorial text-xl sm:text-2xl font-semibold text-[#19382B] dark:text-[#F3F1E8] tracking-tight">
               {course.title}
             </h2>
-            <div className="flex items-center gap-4 text-xs text-stone-500 dark:text-stone-400 mt-2">
+            <div className="flex items-center gap-4 text-xs text-[#42684D] dark:text-[#BBC4A6] mt-2">
               <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-stone-400" />
+                <Clock className="w-3.5 h-3.5 text-[#8A9C74]" />
                 <span>{course.credits} Credits ({course.hoursTheory}h Theory, {course.hoursLab}h Lab/wk)</span>
               </span>
               <span aria-hidden="true">·</span>
@@ -96,7 +96,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
           <button
             onClick={onClose}
             aria-label="Close course details"
-            className="p-2 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+            className="p-2 rounded-md text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -104,28 +104,28 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
         {/* Scrollable Body */}
         <div className="p-6 overflow-y-auto space-y-6">
-          
+
           {/* Objectives & Outcomes */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#42684D] dark:text-[#8A9C74] mb-2 flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
               <span>Course Rationale & Objectives</span>
             </h3>
-            <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed bg-stone-50 dark:bg-stone-950 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+            <p className="text-sm text-[#19382B] dark:text-[#F3F1E8] leading-relaxed bg-[#F3F1E8] dark:bg-[#142D22] p-4 rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {course.rationale}
             </p>
           </div>
 
           {/* Intended Learning Outcomes */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1.5">
-              <GraduationCap className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#42684D] dark:text-[#8A9C74] mb-2 flex items-center gap-1.5">
+              <GraduationCap className="w-4 h-4 text-[#987453] dark:text-[#8A9C74]" />
               <span>Intended Learning Outcomes (CLOs)</span>
             </h3>
             <div className="space-y-2">
               {(course.learningOutcomes || course.objectives || []).map((clo, i) => (
-                <div key={i} className="flex items-start gap-2 text-xs text-stone-600 dark:text-stone-300">
-                  <span className="font-mono font-bold text-emerald-800 dark:text-emerald-400 shrink-0 mt-0.5">
+                <div key={i} className="flex items-start gap-2 text-xs text-[#42684D] dark:text-[#BBC4A6]">
+                  <span className="font-mono font-bold text-[#987453] dark:text-[#8A9C74] shrink-0 mt-0.5">
                     CLO {i + 1}:
                   </span>
                   <span>{clo}</span>
@@ -136,17 +136,17 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
           {/* Core Syllabus Chapters / Content */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#42684D] dark:text-[#8A9C74] mb-2 flex items-center gap-1.5">
+              <Layers className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
               <span>Official Syllabus Chapters & Topic Modules</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {(course.contents || []).map((topic, i) => (
-                <div 
-                  key={i} 
-                  className="p-2.5 rounded-lg bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs font-medium text-stone-700 dark:text-stone-300 flex items-center gap-2"
+                <div
+                  key={i}
+                  className="p-2.5 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-xs font-medium text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2"
                 >
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-400 flex items-center justify-center font-mono text-[10px] shrink-0">
+                  <span className="w-5 h-5 rounded-sm bg-[#EAE7DA] dark:bg-[#19382B] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#BBC4A6] flex items-center justify-center font-mono text-[10px] font-bold shrink-0">
                     {i + 1}
                   </span>
                   <span className="truncate">{topic}</span>
@@ -157,25 +157,25 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
 
           {/* Assessment Scheme */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#42684D] dark:text-[#8A9C74] mb-2">
               Assessment Scheme (OBE Standard)
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-              <div className="p-3 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-                <div className="font-bold text-base font-mono text-emerald-700 dark:text-emerald-400">10%</div>
-                <div className="text-stone-500 text-[11px]">Class Attendance</div>
+              <div className="p-3 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
+                <div className="font-bold text-base font-mono text-[#42684D] dark:text-[#8A9C74]">10%</div>
+                <div className="text-[#42684D] dark:text-[#BBC4A6] text-[11px]">Class Attendance</div>
               </div>
-              <div className="p-3 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-                <div className="font-bold text-base font-mono text-emerald-700 dark:text-emerald-400">20%</div>
-                <div className="text-stone-500 text-[11px]">Midterm / Term Test</div>
+              <div className="p-3 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
+                <div className="font-bold text-base font-mono text-[#987453] dark:text-[#BBC4A6]">20%</div>
+                <div className="text-[#42684D] dark:text-[#BBC4A6] text-[11px]">Midterm / Term Test</div>
               </div>
-              <div className="p-3 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-                <div className="font-bold text-base font-mono text-teal-600 dark:text-teal-400">10%</div>
-                <div className="text-stone-500 text-[11px]">Quizzes / Performance</div>
+              <div className="p-3 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
+                <div className="font-bold text-base font-mono text-[#8A9C74] dark:text-[#BBC4A6]">10%</div>
+                <div className="text-[#42684D] dark:text-[#BBC4A6] text-[11px]">Quizzes / Performance</div>
               </div>
-              <div className="p-3 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-                <div className="font-bold text-base font-mono text-stone-800 dark:text-stone-200">60%</div>
-                <div className="text-stone-500 text-[11px]">Semester Final Exam</div>
+              <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25">
+                <div className="font-bold text-base font-mono text-[#19382B] dark:text-[#F3F1E8]">60%</div>
+                <div className="text-[#42684D] dark:text-[#BBC4A6] text-[11px]">Semester Final Exam</div>
               </div>
             </div>
           </div>
@@ -183,12 +183,12 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 border-t border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] flex flex-col sm:flex-row items-center justify-between gap-3">
           <a
             href="/assets/aistudio/Final_BSc_Curriculum-2025-2026_9f635d9c.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-emerald-800 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1.5"
+            className="text-xs text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] font-semibold hover:underline flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4" />
             <span>Open Complete OBE Curriculum PDF</span>
@@ -199,7 +199,7 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               onClose();
               onViewResources(course.code);
             }}
-            className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+            className="px-5 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
           >
             <Search className="w-3.5 h-3.5" />
             <span>Search Study Resources for this Course</span>

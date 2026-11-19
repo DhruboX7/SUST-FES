@@ -15,9 +15,11 @@ import {
   fetchStaticJson 
 } from './utils/storage';
 import { parseGoogleDriveUrl, guessFileType } from './utils/driveParser';
+import { getStoredFontPresetId, applyFontPreset } from './utils/fontPresets';
 import { LanguageProvider } from './contexts/LanguageContext';
 
 import { Navbar } from './components/Navbar';
+import { SideTaskbar } from './components/SideTaskbar';
 import { RecentNoticesBar } from './components/RecentNoticesBar';
 import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -63,8 +65,8 @@ const NotFoundView = lazyWithRetry(() => import('./components/NotFoundView').the
 function RouteLoadingFallback() {
   return (
     <div className="py-24 flex flex-col items-center justify-center space-y-3">
-      <div className="w-8 h-8 rounded-full border-2 border-emerald-600 dark:border-emerald-400 border-t-transparent animate-spin" />
-      <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">Loading module...</span>
+      <div className="w-8 h-8 rounded-full border-2 border-[#42684D] dark:border-[#8A9C74] border-t-transparent animate-spin" />
+      <span className="text-xs font-medium tracking-wide text-[#42684D] dark:text-[#BBC4A6]">Loading module...</span>
     </div>
   );
 }
@@ -81,16 +83,17 @@ function AppContent() {
     }
   }, [navigate]);
 
-  // Dark Mode State
+  // Theme State (Warm Paper #F3F1E8 editorial light default, toggleable to Forest Ink dark mode)
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const savedTheme = localStorage.getItem('sust_fes_theme');
-        if (savedTheme) return savedTheme === 'dark';
+        const savedTheme = localStorage.getItem('sust_fes_editorial_theme');
+        if (savedTheme === 'dark') return true;
+        if (savedTheme === 'light') return false;
       } catch {
         // Ignore storage errors
       }
-      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+      return false;
     }
     return false;
   });
@@ -103,11 +106,41 @@ function AppContent() {
       root.classList.remove('dark');
     }
     try {
-      localStorage.setItem('sust_fes_theme', isDarkMode ? 'dark' : 'light');
+      localStorage.setItem('sust_fes_editorial_theme', isDarkMode ? 'dark' : 'light');
     } catch {
       // Ignore storage errors
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    applyFontPreset(getStoredFontPresetId(), false);
+  }, []);
+
+  // Left Taskbar Visibility States (Desktop collapsible sidebar opened by default & mobile slide-in drawer)
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('sust_fes_left_sidebar_open');
+        if (saved === 'false') return false;
+      } catch {
+        // Ignore storage errors
+      }
+    }
+    return true;
+  });
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sust_fes_left_sidebar_open', String(isDesktopSidebarOpen));
+    } catch {
+      // Ignore storage errors
+    }
+  }, [isDesktopSidebarOpen]);
+
+  const handleCloseMobileDrawer = useCallback(() => {
+    setIsMobileDrawerOpen(false);
+  }, []);
 
   // Data States
   const [resources, setResources] = useState<ResourceItem[]>(() => getStoredResources());
@@ -252,28 +285,44 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] transition-colors">
       
       {/* Accessible Skip-to-Content Link for Screen Readers & Keyboard Navigation */}
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-800 focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-hidden focus:ring-2 focus:ring-white text-xs font-bold"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#19382B] focus:text-[#F3F1E8] focus:rounded-md focus:shadow-lg focus:outline-hidden focus:ring-2 focus:ring-[#BBC4A6] text-xs font-semibold"
       >
         Skip to main content
       </a>
 
-      {/* Primary Top Header */}
+      {/* Primary Slim Top Header */}
       <Navbar
         bookmarkCount={bookmarks.length}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+        isDesktopSidebarOpen={isDesktopSidebarOpen}
+        onToggleDesktopSidebar={() => setIsDesktopSidebarOpen((prev) => !prev)}
+        isMobileDrawerOpen={isMobileDrawerOpen}
+        onToggleMobileDrawer={() => setIsMobileDrawerOpen((prev) => !prev)}
       />
 
-      {/* Recent / Latest Notices Title Bar */}
-      <RecentNoticesBar />
+      {/* Workspace Split: Left-Side Taskbar & Options + Main Content Canvas */}
+      <div className="flex-1 flex items-start w-full">
+        {/* Left-Side Collapsible Desktop Taskbar & Mobile Slide-In Drawer */}
+        <SideTaskbar
+          bookmarkCount={bookmarks.length}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          isDesktopOpen={isDesktopSidebarOpen}
+          onToggleDesktop={() => setIsDesktopSidebarOpen((prev) => !prev)}
+          isMobileOpen={isMobileDrawerOpen}
+          onCloseMobile={handleCloseMobileDrawer}
+        />
 
-      {/* Main Content Area with Lazy Loaded Routes */}
-      <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 outline-hidden">
+        <div className="flex-1 min-w-0 flex flex-col">
+          {/* Recent / Latest Notices Title Bar */}
+          <RecentNoticesBar />
+
+          {/* Main Content Area with Lazy Loaded Routes */}
+          <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 outline-hidden">
         <ErrorBoundary resetKey={location.pathname} compact>
           <Suspense fallback={<RouteLoadingFallback />}>
             <Routes>
@@ -398,10 +447,12 @@ function AppContent() {
             </Routes>
           </Suspense>
         </ErrorBoundary>
-      </main>
+          </main>
 
-      {/* Institutional Footer */}
-      <Footer />
+          {/* Institutional Footer */}
+          <Footer />
+        </div>
+      </div>
 
       {/* Embedded Document Previewer Modal */}
       {previewResource && (
@@ -434,9 +485,9 @@ function AppContent() {
         <div 
           role="status"
           aria-live="polite"
-          className="fixed bottom-5 right-5 z-50 bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-stone-800 dark:border-stone-200 animate-slide-up"
+          className="fixed bottom-5 right-5 z-50 bg-[#19382B] text-[#F3F1E8] dark:bg-[#FAF9F4] dark:text-[#19382B] px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold flex items-center gap-2 border border-[#42684D] dark:border-[#BBC4A6]"
         >
-          <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+          <Check className="w-4 h-4 text-[#8A9C74] dark:text-[#42684D]" />
           <span>{toastMessage}</span>
         </div>
       )}

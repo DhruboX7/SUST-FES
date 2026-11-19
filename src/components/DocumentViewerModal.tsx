@@ -90,38 +90,38 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
   const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id)}&entry_resource_title=${encodeURIComponent(resource.title)}`;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/80 backdrop-blur-sm animate-fade-in"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-[#11261D]/92 animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="doc-viewer-title"
     >
       {/* Modal Container */}
-      <div 
+      <div
         ref={modalRef}
-        className={`bg-stone-900 border border-stone-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
-          isFullscreen 
-            ? 'w-full h-full rounded-none' 
-            : 'w-full max-w-5xl h-[88vh]'
+        className={`bg-[#142D22] border border-[#BBC4A6]/30 shadow-2xl flex flex-col overflow-hidden transition-all duration-200 ${
+          isFullscreen
+            ? 'w-full h-full rounded-none'
+            : 'w-full max-w-5xl h-[88vh] rounded-lg'
         }`}
       >
         {/* Top Control Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-stone-950 border-b border-stone-800 text-white shrink-0 gap-3">
-          
+        <div className="flex items-center justify-between px-4 py-3 bg-[#19382B] border-b border-[#BBC4A6]/20 text-[#F3F1E8] shrink-0 gap-3">
+
           {/* Document Title & Course */}
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 text-xs text-stone-400 mb-0.5 truncate">
-              <span className="font-mono text-emerald-400 font-semibold">{resource.courseCode}</span>
+            <div className="flex items-center gap-2 text-xs text-[#BBC4A6] mb-0.5 truncate">
+              <span className="font-mono text-[#8A9C74] font-semibold">{resource.courseCode}</span>
               <span aria-hidden="true">·</span>
               <span className="truncate">{resource.courseTitle}</span>
               {resource.sessionYear && (
                 <>
                   <span aria-hidden="true">·</span>
-                  <span>{resource.sessionYear}</span>
+                  <span className="font-mono">{resource.sessionYear}</span>
                 </>
               )}
             </div>
-            <h2 id="doc-viewer-title" className="text-sm sm:text-base font-bold text-stone-100 truncate">
+            <h2 id="doc-viewer-title" className="font-editorial text-sm sm:text-base font-semibold text-[#F3F1E8] truncate">
               {resource.title}
             </h2>
           </div>
@@ -132,10 +132,10 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             <button
               onClick={handleCopy}
               aria-label="Copy shareable link"
-              className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#42684D]/50 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title="Copy shareable link"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4 text-[#8A9C74]" /> : <Copy className="w-4 h-4" />}
               <span className="hidden sm:inline">{copied ? 'Copied' : 'Share'}</span>
             </button>
 
@@ -146,10 +146,10 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               rel="noopener noreferrer"
               download
               aria-label="Direct download file"
-              className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#42684D]/50 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title="Download file directly"
             >
-              <Download className="w-4 h-4 text-emerald-400" />
+              <Download className="w-4 h-4 text-[#8A9C74]" />
               <span className="hidden sm:inline">Download</span>
             </a>
 
@@ -159,10 +159,10 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open document in Google Drive"
-              className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#42684D]/50 transition-colors flex items-center gap-1.5 text-xs focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title="Open in Google Drive"
             >
-              <ExternalLink className="w-4 h-4 text-sky-400" />
+              <ExternalLink className="w-4 h-4 text-[#BBC4A6]" />
               <span className="hidden md:inline">Open in Drive</span>
             </a>
 
@@ -172,10 +172,10 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Report broken link or issue"
-              className="p-2 rounded-lg text-stone-400 hover:text-amber-400 hover:bg-stone-800 transition-colors flex items-center gap-1 text-xs focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#987453] hover:bg-[#42684D]/40 transition-colors flex items-center gap-1 text-xs focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title="Report broken link"
             >
-              <Flag className="w-4 h-4" />
+              <Flag className="w-4 h-4 text-[#987453]" />
               <span className="hidden lg:inline">Report</span>
             </a>
 
@@ -183,7 +183,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
               aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-              className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#42684D]/50 transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -193,7 +193,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Close document viewer"
-              className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-red-950/50 hover:text-red-400 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#987453]/40 transition-colors focus:outline-hidden focus:ring-2 focus:ring-[#8A9C74]"
               title="Close viewer (Esc)"
             >
               <X className="w-5 h-5" />
@@ -202,20 +202,20 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
         </div>
 
         {/* Embedded Document Frame */}
-        <div className="relative flex-1 bg-stone-950 w-full h-full overflow-hidden flex flex-col">
+        <div className="relative flex-1 bg-[#11261D] w-full h-full overflow-hidden flex flex-col">
           {iframeError ? (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-stone-300">
-              <AlertCircle className="w-12 h-12 text-amber-400 mb-3" />
-              <h3 className="text-lg font-bold text-white mb-2">Google Drive Preview Restriction</h3>
-              <p className="max-w-md text-sm text-stone-400 mb-6 leading-relaxed">
-                This document requires authentication or has third-party cookie restrictions in your current browser. You can still download or open it directly in Google Drive!
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#BBC4A6]">
+              <AlertCircle className="w-12 h-12 text-[#987453] mb-3" />
+              <h3 className="font-editorial text-lg font-semibold text-[#F3F1E8] mb-2">Google Drive Preview Restriction</h3>
+              <p className="max-w-md text-sm text-[#BBC4A6] mb-6 leading-relaxed">
+                This document requires authentication or has third-party cookie restrictions in your current browser. You can still download or open it directly in Google Drive.
               </p>
               <div className="flex items-center gap-3">
                 <a
                   href={resource.driveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
+                  className="px-4 py-2 bg-[#42684D] hover:bg-[#8A9C74] text-[#F3F1E8] hover:text-[#19382B] rounded-md text-sm font-semibold flex items-center gap-2 transition-colors"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Open in Google Drive</span>
@@ -224,7 +224,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                   href={resource.downloadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
+                  className="px-4 py-2 bg-[#19382B] hover:bg-[#42684D] text-[#F3F1E8] border border-[#BBC4A6]/25 rounded-md text-sm font-semibold flex items-center gap-2 transition-colors"
                 >
                   <Download className="w-4 h-4" />
                   <span>Direct Download</span>
@@ -235,32 +235,32 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             <iframe
               src={resource.previewUrl}
               title={resource.title}
-              className="w-full h-full border-0 bg-stone-900"
+              className="w-full h-full border-0 bg-[#142D22]"
               allow="autoplay"
               onError={() => setIframeError(true)}
             />
           )}
 
           {/* Quick Action & Troubleshooting Bar at Bottom */}
-          <div className="px-4 py-2.5 bg-stone-900 border-t border-stone-800 text-xs text-stone-400 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
+          <div className="px-4 py-2.5 bg-[#19382B] border-t border-[#BBC4A6]/20 text-xs text-[#BBC4A6] flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0">
             <span>
               If preview is restricted by Google Drive cookies, use direct download or open in Google Drive.
             </span>
             <div className="flex items-center gap-4 shrink-0 font-medium">
-              <a 
-                href={resource.driveUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-emerald-400 hover:underline flex items-center gap-1"
+              <a
+                href={resource.driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#8A9C74] hover:text-[#F3F1E8] hover:underline flex items-center gap-1"
               >
                 Drive Link <ExternalLink className="w-3.5 h-3.5" />
               </a>
-              <a 
-                href={resource.downloadUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={resource.downloadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 download
-                className="text-emerald-400 hover:underline flex items-center gap-1"
+                className="text-[#8A9C74] hover:text-[#F3F1E8] hover:underline flex items-center gap-1"
               >
                 Download <Download className="w-3.5 h-3.5" />
               </a>
@@ -268,7 +268,7 @@ export const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                 href={reportUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-amber-400 hover:underline flex items-center gap-1"
+                className="text-[#987453] hover:text-[#F3F1E8] hover:underline flex items-center gap-1"
               >
                 Report Issue <Flag className="w-3 h-3" />
               </a>

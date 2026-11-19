@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ResourceItem, AcademicYear } from '../types';
-import { FileCheck, Search, Download, Eye, ExternalLink, Calendar, BookOpen, Layers, ArrowUpRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { FileCheck, Search, Download, Eye, ArrowUpRight, Plus, CheckCircle2 } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -53,49 +53,49 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
 
   return (
     <div className="space-y-6">
-      
+
       {/* Banner Card */}
-      <div className="bg-gradient-to-r from-amber-900/90 to-stone-900 rounded-2xl p-6 sm:p-8 text-white border border-amber-800/40 shadow-sm">
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 shadow-sm">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <FileCheck className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+            <FileCheck className="w-4 h-4 text-[#8A9C74]" />
             <span>{t('examArchiveSub')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
+          <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
             {t('examBankTitle')}
-          </h2>
-          <p className="text-stone-300 text-sm leading-relaxed">
+          </h1>
+          <p className="text-[#BBC4A6] text-sm leading-relaxed">
             {t('examBankDesc')}
           </p>
         </div>
       </div>
 
       {/* Control Bar: Search & Filter */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-4 shadow-xs space-y-3">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-4 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row items-center gap-3">
-          
+
           {/* Search Input */}
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-stone-400" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('searchPyqPlaceholder')}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none"
+              className="w-full pl-9 pr-4 py-2 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74] text-xs focus:ring-2 focus:ring-[#42684D] focus:outline-none"
             />
           </div>
 
           {/* Year selector */}
-          <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto p-1.5 bg-stone-100/90 dark:bg-stone-800/90 border border-stone-200/80 dark:border-stone-700/60 rounded-xl shadow-inner">
+          <div className="flex items-center gap-1 w-full sm:w-auto overflow-x-auto p-1 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-md">
             {(['all', 1, 2, 3, 4] as (AcademicYear | 'all')[]).map((yr) => (
               <button
                 key={String(yr)}
                 onClick={() => setSelectedYear(yr)}
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-semibold rounded-sm whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                   selectedYear === yr
-                    ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-md shadow-amber-950/20 ring-1 ring-amber-500/40 scale-[1.02]'
-                    : 'text-stone-700 dark:text-stone-300 hover:text-amber-800 dark:hover:text-white hover:bg-white dark:hover:bg-stone-700/80'
+                    ? 'bg-[#42684D] text-[#F3F1E8] shadow-xs'
+                    : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B]'
                 }`}
               >
                 {yr === 'all' ? t('allYears') : yr === 1 ? t('firstYear') : yr === 2 ? t('secondYear') : yr === 3 ? t('thirdYear') : t('fourthYear')}
@@ -104,33 +104,33 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
           </div>
 
           {/* Term selector */}
-          <div className="flex items-center gap-1 bg-stone-100/90 dark:bg-stone-800/90 p-1 border border-stone-200 dark:border-stone-700/60 rounded-xl shadow-inner shrink-0">
+          <div className="flex items-center gap-1 bg-[#EAE7DA] dark:bg-[#142D22] p-1 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-md shrink-0">
             <button
               onClick={() => setSelectedTerm('all')}
-              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
-                selectedTerm === 'all' 
-                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
+              className={`px-3 py-1.5 text-xs rounded-sm font-semibold transition-colors cursor-pointer ${
+                selectedTerm === 'all'
+                  ? 'bg-[#987453] text-[#F3F1E8] shadow-xs'
+                  : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
               }`}
             >
               {t('allTerms')}
             </button>
             <button
               onClick={() => setSelectedTerm('final')}
-              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
-                selectedTerm === 'final' 
-                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
+              className={`px-3 py-1.5 text-xs rounded-sm font-semibold transition-colors cursor-pointer ${
+                selectedTerm === 'final'
+                  ? 'bg-[#987453] text-[#F3F1E8] shadow-xs'
+                  : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
               }`}
             >
               {t('finalExam')}
             </button>
             <button
               onClick={() => setSelectedTerm('midterm')}
-              className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
-                selectedTerm === 'midterm' 
-                  ? 'bg-linear-to-r from-amber-800 to-amber-700 text-white font-bold shadow-xs ring-1 ring-amber-500/30' 
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 font-medium'
+              className={`px-3 py-1.5 text-xs rounded-sm font-semibold transition-colors cursor-pointer ${
+                selectedTerm === 'midterm'
+                  ? 'bg-[#987453] text-[#F3F1E8] shadow-xs'
+                  : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
               }`}
             >
               {t('midtermExam')}
@@ -141,10 +141,10 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
 
       {/* Grid of Exam Papers */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-8">
-          <FileCheck className="w-10 h-10 text-stone-400 mx-auto mb-2" />
-          <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">{t('noPyqFound')}</h3>
-          <p className="text-xs text-stone-500 max-w-sm mx-auto mt-1">
+        <div className="text-center py-12 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+          <FileCheck className="w-10 h-10 text-[#8A9C74] mx-auto mb-2" />
+          <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">{t('noPyqFound')}</h3>
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-sm mx-auto mt-1">
             {t('noResourcesMatchDesc')}
           </p>
         </div>
@@ -154,43 +154,43 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
             {filtered.slice(0, visibleCount).map((item) => (
             <div
               key={item.id}
-              className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs hover:border-amber-600/40 transition-all flex flex-col justify-between"
+              className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 shadow-xs hover:border-[#42684D] transition-colors flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 mb-2">
+                <div className="flex items-center justify-between text-xs text-[#8A9C74] mb-2">
                   <div className="flex items-center gap-1.5 font-mono">
-                    <span className="font-bold text-amber-700 dark:text-amber-400">{item.courseCode}</span>
+                    <span className="font-bold text-[#987453] dark:text-[#BBC4A6]">{item.courseCode}</span>
                     <span>·</span>
-                    <span className="capitalize">{item.examTerm || 'Final'} Exam</span>
+                    <span className="capitalize text-[#42684D] dark:text-[#8A9C74]">{item.examTerm || 'Final'} Exam</span>
                   </div>
                   {item.sessionYear && (
-                    <span className="text-[11px] font-medium text-stone-400">{item.sessionYear}</span>
+                    <span className="text-[11px] font-medium font-mono text-[#8A9C74]">{item.sessionYear}</span>
                   )}
                 </div>
 
                 <h3
                   onClick={() => onPreview(item)}
-                  className="text-sm font-bold text-stone-900 dark:text-stone-100 hover:text-amber-600 cursor-pointer transition-colors leading-snug mb-1"
+                  className="text-sm font-bold text-[#19382B] dark:text-[#F3F1E8] hover:text-[#42684D] dark:hover:text-[#BBC4A6] cursor-pointer transition-colors leading-snug mb-1"
                 >
                   {item.title}
                 </h3>
-                <div className="text-xs text-stone-500 dark:text-stone-400 mb-2">{item.courseTitle}</div>
+                <div className="text-xs text-[#42684D] dark:text-[#8A9C74] mb-2">{item.courseTitle}</div>
 
                 {item.description && (
-                  <p className="text-xs text-stone-600 dark:text-stone-400 line-clamp-2 leading-relaxed mb-4">
+                  <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] line-clamp-2 leading-relaxed mb-4">
                     {item.description}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-stone-100 dark:border-stone-800 space-y-2">
+              <div className="pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 space-y-2">
                 <div className="grid grid-cols-2 gap-2">
                   {/* REDIRECT TO DRIVE OPTION */}
                   <a
                     href={item.driveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-amber-800 hover:bg-amber-900 text-white transition-colors flex items-center justify-center gap-1 shadow-xs"
+                    className="py-1.5 px-3 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] transition-colors flex items-center justify-center gap-1 shadow-xs"
                     title="Redirect to Google Drive / Source"
                   >
                     <span>{t('redirectDrive')}</span>
@@ -200,17 +200,17 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                   {/* PREVIEW OPTION */}
                   <button
                     onClick={() => onPreview(item)}
-                    className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 transition-colors flex items-center justify-center gap-1"
+                    className="py-1.5 px-3 rounded-md text-xs font-semibold bg-[#EAE7DA] hover:bg-[#BBC4A6]/40 dark:bg-[#142D22] dark:hover:bg-[#42684D]/30 text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 transition-colors flex items-center justify-center gap-1"
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>{t('readInApp')}</span>
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-[#42684D] dark:text-[#8A9C74] pt-1">
                   <button
                     onClick={() => onCopyLink(item)}
-                    className="hover:text-amber-700 transition-colors"
+                    className="hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors font-medium"
                   >
                     {t('copyLink')}
                   </button>
@@ -219,7 +219,7 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     download
-                    className="hover:text-amber-700 transition-colors flex items-center gap-1"
+                    className="hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors flex items-center gap-1 font-medium"
                   >
                     <Download className="w-3 h-3" />
                     <span>{t('download')}</span>
@@ -231,21 +231,21 @@ export const ExamBankView: React.FC<ExamBankViewProps> = ({
           </div>
 
           {filtered.length > 24 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-xs text-[#42684D] dark:text-[#BBC4A6]">
               <span>
-                Showing <strong className="text-stone-800 dark:text-stone-200">{Math.min(visibleCount, filtered.length)}</strong> of <strong className="text-stone-800 dark:text-stone-200">{filtered.length}</strong> question papers
+                Showing <strong className="text-[#19382B] dark:text-[#F3F1E8]">{Math.min(visibleCount, filtered.length)}</strong> of <strong className="text-[#19382B] dark:text-[#F3F1E8]">{filtered.length}</strong> question papers
               </span>
               {visibleCount < filtered.length ? (
                 <button
                   type="button"
                   onClick={() => setVisibleCount((prev) => Math.min(prev + 24, filtered.length))}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs bg-amber-800 hover:bg-amber-900 text-white shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-md font-semibold text-xs bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <Sparkles className="w-4 h-4" />
+                  <Plus className="w-4 h-4" />
                   <span>Load More Papers (+{Math.min(24, filtered.length - visibleCount)})</span>
                 </button>
               ) : (
-                <span className="text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1.5">
+                <span className="text-[#42684D] dark:text-[#8A9C74] font-semibold flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4" />
                   All {filtered.length} papers displayed
                 </span>

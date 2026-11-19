@@ -8,8 +8,6 @@ import {
   Clock, 
   MapPin, 
   User, 
-  Sparkles,
-  BookOpen,
   CheckCircle2,
   AlertCircle
 } from 'lucide-react';
@@ -228,19 +226,19 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
     <div className="space-y-6">
       
       {/* Calendar Header Card */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 sm:p-5 shadow-xs">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-4 sm:p-5">
         
         {/* Month Navigation & Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 flex items-center justify-center font-bold shadow-xs">
+            <div className="w-9 h-9 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
+              <h3 className="font-editorial text-base sm:text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
                 <span>{lang === 'bn' ? MONTH_NAMES_BN[currentDate.getMonth()] : MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}</span>
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] font-normal">
                 {lang === 'bn' ? `শিক্ষাবর্ষ ${year} · সেমিস্টার ${semester} সময়সূচী` : `Academic Year ${year} · Semester ${semester} Timetable`}
               </p>
             </div>
@@ -250,16 +248,16 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
             <button
               type="button"
               onClick={handleJumpToToday}
-              className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-800 dark:hover:text-emerald-300 border border-stone-200 dark:border-stone-700 transition-colors cursor-pointer"
+              className="px-3 py-1.5 text-xs font-medium rounded-md bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] hover:bg-[#BBC4A6]/40 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 transition-colors cursor-pointer"
             >
               {t('today')}
             </button>
-            <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl border border-stone-200 dark:border-stone-700">
+            <div className="flex items-center gap-1 bg-[#EAE7DA] dark:bg-[#142D22] p-1 rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15">
               <button
                 type="button"
                 onClick={handlePrevMonth}
                 aria-label="Previous month"
-                className="p-1.5 rounded-lg text-stone-600 dark:text-stone-400 hover:bg-white dark:hover:bg-stone-700 hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-sm text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -267,7 +265,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                 type="button"
                 onClick={handleNextMonth}
                 aria-label="Next month"
-                className="p-1.5 rounded-lg text-stone-600 dark:text-stone-400 hover:bg-white dark:hover:bg-stone-700 hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-sm text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -285,8 +283,8 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
               return (
                 <div
                   key={day}
-                  className={`py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider ${
-                    isWeekend ? 'text-stone-400 dark:text-stone-500' : 'text-stone-600 dark:text-stone-300'
+                  className={`py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider ${
+                    isWeekend ? 'text-[#987453] dark:text-[#8A9C74]' : 'text-[#42684D] dark:text-[#BBC4A6]'
                   }`}
                 >
                   <span>{label}</span>
@@ -311,43 +309,43 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                   key={idx}
                   type="button"
                   onClick={() => setSelectedDate(cell.date)}
-                  className={`min-h-[52px] sm:min-h-[64px] p-1.5 sm:p-2 rounded-xl flex flex-col justify-between items-center transition-all cursor-pointer border text-left relative ${
+                  className={`min-h-[52px] sm:min-h-[64px] p-1.5 sm:p-2 rounded-md flex flex-col justify-between items-center transition-colors cursor-pointer border text-left relative ${
                     cellIsSelected
-                      ? 'bg-emerald-800 text-white border-emerald-700 shadow-md ring-2 ring-emerald-500/40 z-10 scale-[1.02]'
+                      ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] border-[#19382B] dark:border-[#8A9C74] z-10'
                       : cellIsToday
-                      ? 'bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200 border-emerald-400 dark:border-emerald-700 font-bold'
+                      ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border-[#42684D] dark:border-[#8A9C74] font-semibold'
                       : !isCurrentMonth
-                      ? 'bg-stone-50/40 dark:bg-stone-900/40 text-stone-300 dark:text-stone-600 border-transparent hover:border-stone-200 dark:hover:border-stone-800'
+                      ? 'bg-[#F3F1E8]/50 dark:bg-[#11261D]/50 text-[#8A9C74]/50 dark:text-[#BBC4A6]/25 border-transparent hover:border-[#BBC4A6]/50'
                       : isWeekend
-                      ? 'bg-stone-50/80 dark:bg-stone-800/40 text-stone-500 dark:text-stone-400 border-stone-200/50 dark:border-stone-800/60 hover:border-emerald-300'
-                      : 'bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 border-stone-200/80 dark:border-stone-800 hover:border-emerald-400 hover:bg-emerald-50/30'
+                      ? 'bg-[#F3F1E8] dark:bg-[#142D22]/70 text-[#987453] dark:text-[#8A9C74] border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15 hover:border-[#42684D]'
+                      : 'bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15 hover:border-[#42684D]'
                   }`}
                 >
                   {/* Date Number & Today Indicator */}
                   <div className="w-full flex items-center justify-between">
                     <span
-                      className={`text-xs sm:text-sm font-semibold rounded-md px-1 ${
+                      className={`text-xs sm:text-sm font-semibold rounded-xs px-1 ${
                         cellIsSelected
-                          ? 'text-white'
+                          ? 'text-[#F3F1E8]'
                           : cellIsToday
-                          ? 'bg-emerald-600 text-white font-bold'
+                          ? 'bg-[#42684D] text-[#F3F1E8]'
                           : isCurrentMonth
-                          ? 'text-stone-800 dark:text-stone-200'
-                          : 'text-stone-400'
+                          ? 'text-[#19382B] dark:text-[#F3F1E8]'
+                          : 'text-[#8A9C74]/60'
                       }`}
                     >
                       {cell.date.getDate()}
                     </span>
 
-                    {/* Class count pill / indicator */}
+                    {/* Class count badge */}
                     {hasClasses && isCurrentMonth && (
                       <span
-                        className={`text-[9px] sm:text-[10px] font-mono font-bold px-1 rounded-sm ${
+                        className={`text-[9px] sm:text-[10px] font-mono font-semibold px-1 rounded-xs ${
                           cellIsSelected
-                            ? 'bg-white/20 text-white'
+                            ? 'bg-[#F3F1E8]/20 text-[#F3F1E8]'
                             : cellIsToday
-                            ? 'bg-emerald-200 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200'
-                            : 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300'
+                            ? 'bg-[#19382B] text-[#F3F1E8] dark:bg-[#8A9C74] dark:text-[#11261D]'
+                            : 'bg-[#EAE7DA] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6]'
                         }`}
                       >
                         {daySlots.length}
@@ -355,17 +353,17 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                     )}
                   </div>
 
-                  {/* Dot status bar on bottom */}
+                  {/* Subtle slot bar indicator on bottom */}
                   <div className="w-full flex justify-center gap-0.5 mt-1">
                     {hasClasses && isCurrentMonth ? (
                       <div className="flex gap-0.5">
                         {daySlots.slice(0, 3).map((_, i) => (
                           <span
                             key={i}
-                            className={`w-1 h-1 rounded-full ${
+                            className={`w-2 h-1 rounded-xs ${
                               cellIsSelected
-                                ? 'bg-white'
-                                : 'bg-emerald-600 dark:bg-emerald-400'
+                                ? 'bg-[#BBC4A6]'
+                                : 'bg-[#42684D] dark:bg-[#8A9C74]'
                             }`}
                           />
                         ))}
@@ -383,39 +381,39 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
       </div>
 
       {/* Selected Day Schedule Deck */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs space-y-4">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 space-y-4">
         
         {/* Selected Day Title Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#987453] dark:text-[#BBC4A6]">
                 {t('selectedDaySchedule')}
               </span>
               {isToday(selectedDate) && (
-                <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded-sm bg-[#42684D] text-[#F3F1E8]">
                   {t('today')}
                 </span>
               )}
             </div>
-            <h4 className="text-lg font-bold text-stone-900 dark:text-stone-100">
+            <h4 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8]">
               {lang === 'bn' ? WEEKDAYS_BN[selectedDate.getDay()] : selectedDayName}, {lang === 'bn' ? MONTH_NAMES_BN[selectedDate.getMonth()] : MONTH_NAMES[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
             </h4>
           </div>
 
-          <div className="text-xs font-mono font-medium text-stone-500 dark:text-stone-400">
+          <div className="text-xs font-mono font-medium text-[#42684D] dark:text-[#BBC4A6]">
             {selectedDaySlots.length} {t('classesScheduled')}
           </div>
         </div>
 
         {/* Schedule Slots or Off-Day Empty State */}
         {selectedDaySlots.length === 0 ? (
-          <div className="text-center py-10 px-4 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-dashed border-stone-200 dark:border-stone-800">
-            <CheckCircle2 className="w-9 h-9 text-emerald-600/70 mx-auto mb-2" />
-            <h5 className="text-sm font-bold text-stone-800 dark:text-stone-200">
+          <div className="text-center py-10 px-4 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/25">
+            <CheckCircle2 className="w-8 h-8 text-[#42684D] dark:text-[#8A9C74] mx-auto mb-2" />
+            <h5 className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8]">
               {t('noClassesScheduled')} ({lang === 'bn' ? WEEKDAYS_BN[selectedDate.getDay()] : selectedDayName})
             </h5>
-            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto mt-1">
+            <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-md mx-auto mt-1">
               {t('noClassesScheduledDesc')}
             </p>
           </div>
@@ -427,32 +425,32 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
               return (
                 <div
                   key={slot.id || idx}
-                  className={`p-4 rounded-xl border transition-all flex flex-col justify-between ${
+                  className={`p-4 rounded-md border transition-colors flex flex-col justify-between ${
                     status === 'now'
-                      ? 'bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-500 ring-2 ring-emerald-500/20 shadow-sm'
-                      : 'bg-stone-50/60 dark:bg-stone-800/40 border-stone-200 dark:border-stone-800/80 shadow-2xs'
+                      ? 'bg-[#EAE7DA] dark:bg-[#42684D]/30 border-[#19382B] dark:border-[#8A9C74]'
+                      : 'bg-[#F3F1E8] dark:bg-[#142D22] border-[#BBC4A6]/65 dark:border-[#BBC4A6]/15'
                   }`}
                 >
                   <div>
                     {/* Time & Live Status */}
-                    <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 mb-1.5">
-                      <span className="font-mono font-bold flex items-center gap-1.5 text-stone-800 dark:text-stone-200">
-                        <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <div className="flex items-center justify-between text-xs text-[#42684D] dark:text-[#BBC4A6] mb-1.5">
+                      <span className="font-mono font-semibold flex items-center gap-1.5 text-[#19382B] dark:text-[#F3F1E8]">
+                        <Clock className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                         <span>{slot.time}</span>
                       </span>
 
                       {status === 'now' && (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white animate-pulse">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#42684D] text-[#F3F1E8]">
                           {t('happeningNow')}
                         </span>
                       )}
                       {status === 'upcoming' && (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#EAE7DA] text-[#19382B] border border-[#BBC4A6] dark:bg-[#19382B] dark:text-[#F3F1E8]">
                           {t('upcomingToday')}
                         </span>
                       )}
                       {status === 'past' && (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-stone-200 text-stone-600 dark:bg-stone-700 dark:text-stone-300">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-medium bg-[#EAE7DA]/70 text-[#8A9C74] dark:bg-[#19382B]/70 dark:text-[#BBC4A6]/70">
                           {t('completed')}
                         </span>
                       )}
@@ -460,29 +458,21 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
 
                     {/* Course Code, Type Badge & Title */}
                     <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                      <span className="font-mono text-xs font-bold text-emerald-800 dark:text-emerald-400">
+                      <span className="font-mono text-xs font-semibold text-[#42684D] dark:text-[#8A9C74]">
                         {slot.courseCode}
                       </span>
                       {slot.type && slot.type !== 'class' && (
-                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                          slot.type === 'viva' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' :
-                          slot.type === 'quiz' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
-                          slot.type === 'term_test' ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' :
-                          slot.type === 'presentation' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300' :
-                          slot.type === 'assignment' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300' :
-                          slot.type === 'final_exam' ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300' :
-                          'bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-300'
-                        }`}>
+                        <span className="px-1.5 py-0.5 rounded-xs text-[10px] font-semibold uppercase tracking-wider bg-[#987453]/15 text-[#987453] border border-[#987453]/35 dark:bg-[#987453]/25 dark:text-[#F3F1E8]">
                           {slot.typeLabel || slot.type}
                         </span>
                       )}
                       {slot.isLab && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                        <span className="px-1.5 py-0.5 rounded-xs text-[10px] font-semibold bg-[#8A9C74]/20 text-[#19382B] border border-[#8A9C74]/40 dark:text-[#BBC4A6]">
                           Lab / Field
                         </span>
                       )}
                     </div>
-                    <h5 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug mb-2">
+                    <h5 className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-2">
                       {slot.courseTitle}
                     </h5>
 
@@ -490,7 +480,7 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                     {slot.warnings && slot.warnings.length > 0 && (
                       <div className="mb-2 space-y-0.5">
                         {slot.warnings.map((w, wIdx) => (
-                          <div key={wIdx} className="text-[10px] text-amber-700 dark:text-amber-400 flex items-center gap-1 font-medium">
+                          <div key={wIdx} className="text-[10px] text-[#987453] dark:text-[#BBC4A6] flex items-center gap-1 font-medium">
                             <AlertCircle className="w-3 h-3 shrink-0" />
                             <span>{w}</span>
                           </div>
@@ -500,13 +490,13 @@ export const DatedRoutineCalendar: React.FC<DatedRoutineCalendarProps> = ({
                   </div>
 
                   {/* Room & Teacher Metadata */}
-                  <div className="pt-2.5 border-t border-stone-200/80 dark:border-stone-700/80 text-xs text-stone-600 dark:text-stone-300 space-y-1">
+                  <div className="pt-2.5 border-t border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15 text-xs text-[#42684D] dark:text-[#BBC4A6] space-y-1">
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 text-[#987453] shrink-0" />
                       <span className="font-medium truncate">{slot.room}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-500 shrink-0" />
+                      <User className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74] shrink-0" />
                       <span className="font-medium truncate">{slot.teacher}</span>
                     </div>
                   </div>

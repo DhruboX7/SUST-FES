@@ -51,7 +51,7 @@ import {
   Bell, 
   Database,
   Calendar,
-  Sparkles,
+  Loader2,
   ArrowRight,
   LogOut,
   AlertCircle
@@ -197,39 +197,39 @@ export const AdminView: React.FC<AdminViewProps> = ({
   if (!isAuthenticated) {
     return (
       <div className="py-12 sm:py-20 flex items-center justify-center animate-fade-in">
-        <div className="max-w-md w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-6">
+        <div className="max-w-md w-full bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-lg p-6 sm:p-8 shadow-sm text-center space-y-6">
           <div className="relative w-16 h-16 mx-auto">
             <SustLogo size="xl" />
-            <div className="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shadow-sm ring-2 ring-white dark:ring-stone-900 absolute -bottom-1 -right-1">
+            <div className="w-6 h-6 rounded-sm bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] flex items-center justify-center shadow-xs ring-2 ring-[#FAF9F4] dark:ring-[#19382B] absolute -bottom-1 -right-1">
               <Lock className="w-3 h-3" />
             </div>
           </div>
 
           <div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
+            <h2 className="font-editorial text-xl sm:text-2xl font-semibold text-[#19382B] dark:text-[#F3F1E8] tracking-tight">
               FES Master Admin Suite
             </h2>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 leading-relaxed">
+            <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-1.5 leading-relaxed">
               Enter the administrative passcode to manage study resources, past exam questions, tree species, gallery albums, theses, and notices.
             </p>
           </div>
 
           {pinError && (
-            <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-xl text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2 text-left">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 rounded-md text-[#987453] dark:text-[#F3F1E8] text-xs flex items-center gap-2 text-left">
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
               <span>{pinError}</span>
             </div>
           )}
 
           <form onSubmit={handleUnlock} className="space-y-4">
             <div className="relative">
-              <Key className="w-4 h-4 absolute left-3.5 top-3 text-stone-400" />
+              <Key className="w-4 h-4 absolute left-3.5 top-3 text-[#8A9C74]" />
               <input
                 type="password"
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 placeholder="Enter Admin PIN..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono text-center tracking-widest text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                className="w-full pl-10 pr-4 py-2.5 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] font-mono text-center tracking-widest text-sm focus:outline-hidden focus:ring-1 focus:ring-[#42684D]"
                 autoFocus
                 required
               />
@@ -237,15 +237,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-xl transition-colors shadow-xs flex items-center justify-center gap-2 text-sm"
+              className="w-full py-2.5 bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] font-semibold rounded-md transition-colors shadow-xs flex items-center justify-center gap-2 text-sm cursor-pointer"
             >
               <span>Unlock Admin Console</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
-          <div className="pt-2 border-t border-stone-100 dark:border-stone-800 text-[11px] text-stone-400">
-            Default passcode: <code className="font-mono text-emerald-700 dark:text-emerald-400 bg-stone-100 dark:bg-stone-800 px-1 py-0.5 rounded">sustfes</code>
+          <div className="pt-2 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 text-[11px] text-[#8A9C74]">
+            Default passcode: <code className="font-mono text-[#19382B] dark:text-[#BBC4A6] bg-[#EAE7DA] dark:bg-[#142D22] px-1.5 py-0.5 rounded-sm">sustfes</code>
           </div>
         </div>
       </div>
@@ -256,19 +256,20 @@ export const AdminView: React.FC<AdminViewProps> = ({
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Top Console Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-5 rounded-2xl shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 rounded-lg shadow-xs">
         <div className="flex items-center gap-3">
-          <SustLogo size="md" className="w-10 h-10 rounded-xl" />
+          <SustLogo size="md" className="w-10 h-10 rounded-md" />
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
+              <h2 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] tracking-tight">
                 Department Administrative Suite
               </h2>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                Unlocked
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-sm bg-[#EAE7DA] text-[#42684D] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
+                <ShieldCheck className="w-3 h-3" />
+                <span>Unlocked</span>
               </span>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400">
+            <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]">
               Department of Forestry and Environmental Science · Shahjalal University of Science and Technology
             </p>
           </div>
@@ -277,29 +278,29 @@ export const AdminView: React.FC<AdminViewProps> = ({
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleLockSession}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 text-xs font-semibold rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Lock current session"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-3.5 h-3.5 text-[#987453]" />
             <span>Lock Session</span>
           </button>
         </div>
       </div>
 
       {/* Navigation Tabs with Live Badges */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-1.5 shadow-xs flex items-center gap-1.5 overflow-x-auto text-xs font-medium">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-1.5 shadow-xs flex items-center gap-1.5 overflow-x-auto text-xs font-medium">
         {/* 1. Exam Questions (PYQ) */}
         <button
           onClick={() => setActiveTab('pyq')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'pyq'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
           <span>Exam Bank (PYQs)</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'pyq' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {pyqCount}
           </span>
         </button>
@@ -307,15 +308,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 2. Links & Resources */}
         <button
           onClick={() => setActiveTab('links')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'links'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Link2 className="w-3.5 h-3.5" />
           <span>Link Management</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'links' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {quickLinks.length}
           </span>
         </button>
@@ -323,15 +324,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 3. Tree Species & Photo Management */}
         <button
           onClick={() => setActiveTab('species')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'species'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Trees className="w-3.5 h-3.5" />
           <span>Tree Species & Photos</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'species' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {species.length} ({totalTreePhotos} photos)
           </span>
         </button>
@@ -339,15 +340,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 4. Gallery */}
         <button
           onClick={() => setActiveTab('gallery')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'gallery'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <ImageIcon className="w-3.5 h-3.5" />
           <span>Field Gallery</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'gallery' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {gallery.length}
           </span>
         </button>
@@ -355,19 +356,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 4.5 Student Photos Option */}
         <button
           onClick={() => setActiveTab('studentPhotos')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'studentPhotos'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Camera className="w-3.5 h-3.5" />
           <span>Student Photos</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'studentPhotos' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {studentPhotos.length}
           </span>
           {pendingPhotoCount > 0 && (
-            <span className="px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-amber-500 text-stone-950 animate-pulse">
+            <span className="px-1.5 py-0.5 text-[9px] font-semibold rounded-sm bg-[#987453] text-[#F3F1E8]">
               {pendingPhotoCount} new
             </span>
           )}
@@ -376,15 +377,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 5. Theses */}
         <button
           onClick={() => setActiveTab('theses')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'theses'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <BookMarked className="w-3.5 h-3.5" />
           <span>Thesis Archive</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'theses' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {theses.length}
           </span>
         </button>
@@ -392,43 +393,39 @@ export const AdminView: React.FC<AdminViewProps> = ({
         {/* 6. Notice Board */}
         <button
           onClick={() => setActiveTab('notices')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'notices'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Bell className="w-3.5 h-3.5" />
           <span>Notice Board</span>
-          <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-black/20 dark:bg-white/20">
+          <span className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm ${activeTab === 'notices' ? 'bg-[#42684D] dark:bg-[#19382B]/70 text-[#F3F1E8]' : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'}`}>
             {notices.length}
           </span>
         </button>
 
-        {/* 6.5. Class Routine (AI Automation) */}
+        {/* 6.5. Class Routine */}
         <button
           onClick={() => setActiveTab('routine')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'routine'
-              ? 'bg-emerald-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
           <span>Class Routine</span>
-          <span className="flex items-center gap-0.5 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
-            <Sparkles className="w-2.5 h-2.5" />
-            <span>AI</span>
-          </span>
         </button>
 
         {/* 7. Master Backup & System */}
         <button
           onClick={() => setActiveTab('backup')}
-          className={`px-3 py-2 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1.5 ml-auto ${
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 ml-auto cursor-pointer ${
             activeTab === 'backup'
-              ? 'bg-stone-800 text-white font-bold shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+              ? 'bg-[#987453] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
           }`}
         >
           <Database className="w-3.5 h-3.5" />
@@ -440,9 +437,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
       <ErrorBoundary resetKey={activeTab} compact>
         <Suspense
           fallback={
-            <div className="py-16 flex flex-col items-center justify-center space-y-3 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800">
-              <div className="w-7 h-7 rounded-full border-2 border-emerald-600 dark:border-emerald-400 border-t-transparent animate-spin" />
-              <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
+            <div className="py-16 flex flex-col items-center justify-center space-y-3 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
+              <Loader2 className="w-6 h-6 text-[#42684D] dark:text-[#BBC4A6] animate-spin" />
+              <span className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6]">
                 Loading management panel...
               </span>
             </div>

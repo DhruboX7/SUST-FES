@@ -16,7 +16,6 @@ import {
   Hash, 
   X, 
   Clock,
-  Sparkles,
   CheckCircle2
 } from 'lucide-react';
 import { StudentPhotoItem, TreeSpecies } from '../../types';
@@ -215,21 +214,21 @@ export const AdminStudentPhotosPanel: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-900 to-stone-900 text-white shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-lg bg-[#19382B] border border-[#BBC4A6]/25 text-[#F3F1E8]">
         <div>
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <Camera className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-1">
+            <Camera className="w-4 h-4 text-[#8A9C74]" />
             <span>Field Tour & Dendrology Observation Curation</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black">Student Photos Management</h2>
-          <p className="text-xs text-stone-300 mt-1 max-w-xl">
+          <h2 className="font-editorial text-xl sm:text-2xl font-bold text-[#F3F1E8]">Student Photos Management</h2>
+          <p className="text-xs text-[#BBC4A6] mt-1 max-w-xl leading-relaxed">
             Review student field submissions, verify morphological accuracy, approve photos for the public gallery, and associate captures with Bangladesh tree species.
           </p>
         </div>
 
         <button
           onClick={handleOpenAddModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 shadow-sm transition-colors shrink-0"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#8A9C74] text-[#F3F1E8] transition-colors shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add Student Photo</span>
@@ -238,67 +237,74 @@ export const AdminStudentPhotosPanel: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
-          <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">Total Photos</div>
-          <div className="text-2xl font-black text-stone-900 dark:text-stone-100 mt-0.5">{photos.length}</div>
+        <div
+          onClick={() => setStatusFilter('all')}
+          className={`p-3.5 rounded-lg border cursor-pointer transition-colors ${
+            statusFilter === 'all'
+              ? 'border-[#19382B] dark:border-[#BBC4A6] bg-[#EAE7DA] dark:bg-[#142D22] ring-1 ring-[#42684D]'
+              : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B]'
+          }`}
+        >
+          <div className="text-[11px] font-semibold text-[#8A9C74] uppercase tracking-wider">Total Photos</div>
+          <div className="font-editorial text-2xl font-bold text-[#19382B] dark:text-[#F3F1E8] mt-0.5">{photos.length}</div>
         </div>
 
         <div 
           onClick={() => setStatusFilter('pending')}
-          className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+          className={`p-3.5 rounded-lg border cursor-pointer transition-colors ${
             statusFilter === 'pending'
-              ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40 ring-1 ring-amber-500'
-              : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-amber-300'
+              ? 'border-[#987453] bg-[#EAE7DA] dark:bg-[#142D22] ring-1 ring-[#987453]'
+              : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] hover:border-[#987453]'
           }`}
         >
-          <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center justify-between">
+          <div className="text-[11px] font-semibold text-[#987453] uppercase tracking-wider flex items-center justify-between">
             <span>Pending Review</span>
             <Clock className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-black text-amber-700 dark:text-amber-400 mt-0.5">{pendingCount}</div>
+          <div className="font-editorial text-2xl font-bold text-[#987453] mt-0.5">{pendingCount}</div>
         </div>
 
         <div 
           onClick={() => setStatusFilter('approved')}
-          className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+          className={`p-3.5 rounded-lg border cursor-pointer transition-colors ${
             statusFilter === 'approved'
-              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 ring-1 ring-emerald-500'
-              : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-emerald-300'
+              ? 'border-[#42684D] bg-[#EAE7DA] dark:bg-[#142D22] ring-1 ring-[#42684D]'
+              : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] hover:border-[#42684D]'
           }`}
         >
-          <div className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider flex items-center justify-between">
+          <div className="text-[11px] font-semibold text-[#42684D] dark:text-[#BBC4A6] uppercase tracking-wider flex items-center justify-between">
             <span>Approved</span>
             <CheckCircle2 className="w-3.5 h-3.5" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 dark:text-emerald-400 mt-0.5">{approvedCount}</div>
+          <div className="font-editorial text-2xl font-bold text-[#42684D] dark:text-[#F3F1E8] mt-0.5">{approvedCount}</div>
         </div>
 
         <div 
           onClick={() => setStatusFilter('featured')}
-          className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+          className={`p-3.5 rounded-lg border cursor-pointer transition-colors ${
             statusFilter === 'featured'
-              ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/40 ring-1 ring-purple-500'
-              : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-purple-300'
+              ? 'border-[#19382B] dark:border-[#BBC4A6] bg-[#EAE7DA] dark:bg-[#142D22] ring-1 ring-[#19382B] dark:ring-[#BBC4A6]'
+              : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B] hover:border-[#42684D]'
           }`}
         >
-          <div className="text-[11px] font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider flex items-center justify-between">
+          <div className="text-[11px] font-semibold text-[#19382B] dark:text-[#BBC4A6] uppercase tracking-wider flex items-center justify-between">
             <span>Featured</span>
-            <Star className="w-3.5 h-3.5" />
+            <Star className="w-3.5 h-3.5 text-[#987453]" />
           </div>
-          <div className="text-2xl font-black text-purple-700 dark:text-purple-400 mt-0.5">{featuredCount}</div>
+          <div className="font-editorial text-2xl font-bold text-[#19382B] dark:text-[#F3F1E8] mt-0.5">{featuredCount}</div>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#FAF9F4] dark:bg-[#19382B]">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by student, reg no, title, location, or tree species..."
-            className="w-full pl-9 pr-4 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+            className="w-full pl-9 pr-4 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74]"
           />
         </div>
 
@@ -307,15 +313,15 @@ export const AdminStudentPhotosPanel: React.FC = () => {
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 text-xs font-bold rounded-lg capitalize transition-colors ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md capitalize transition-colors ${
                 statusFilter === st
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+                  ? 'bg-[#42684D] text-[#F3F1E8]'
+                  : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
               }`}
             >
               {st}
               {st === 'pending' && pendingCount > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500 text-stone-950 font-bold">
+                <span className="ml-1.5 px-1.5 py-0.2 rounded-sm text-[10px] bg-[#987453] text-[#F3F1E8] font-bold">
                   {pendingCount}
                 </span>
               )}
@@ -326,10 +332,10 @@ export const AdminStudentPhotosPanel: React.FC = () => {
 
       {/* Photo Cards Grid */}
       {filteredPhotos.length === 0 ? (
-        <div className="p-8 text-center rounded-2xl border border-dashed border-stone-300 dark:border-stone-800 text-stone-500 space-y-2">
-          <Camera className="w-8 h-8 mx-auto text-stone-400 opacity-60" />
-          <p className="text-sm font-semibold">No student photos matching current filter.</p>
-          <p className="text-xs text-stone-400">Try adjusting your search criteria or add a new entry.</p>
+        <div className="p-8 text-center rounded-lg border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/30 text-[#42684D] dark:text-[#8A9C74] space-y-2 bg-[#FAF9F4] dark:bg-[#19382B]">
+          <Camera className="w-8 h-8 mx-auto text-[#8A9C74] opacity-70" />
+          <p className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8]">No student photos matching current filter.</p>
+          <p className="text-xs text-[#8A9C74]">Try adjusting your search criteria or add a new entry.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -340,15 +346,15 @@ export const AdminStudentPhotosPanel: React.FC = () => {
             return (
               <div
                 key={photo.id}
-                className={`flex flex-col rounded-xl border overflow-hidden transition-all bg-white dark:bg-stone-900 shadow-xs ${
+                className={`flex flex-col rounded-lg border overflow-hidden transition-colors bg-[#FAF9F4] dark:bg-[#19382B] ${
                   isPending
-                    ? 'border-amber-300 dark:border-amber-800 ring-1 ring-amber-300/60'
-                    : 'border-stone-200 dark:border-stone-800 hover:border-emerald-500'
+                    ? 'border-[#987453] ring-1 ring-[#987453]/40'
+                    : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 hover:border-[#42684D]'
                 }`}
               >
                 {/* Photo Thumbnail */}
                 <div 
-                  className="relative h-44 bg-stone-950 overflow-hidden cursor-pointer group"
+                  className="relative aspect-[4/3] bg-[#142D22] overflow-hidden cursor-pointer group"
                   onClick={() => setPreviewImage({ url: photo.imageUrl, title: photo.title })}
                 >
                   <img
@@ -357,26 +363,26 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     loading="lazy"
                     decoding="async"
                     onError={handleImageError}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+                  <div className="absolute inset-x-0 bottom-0 h-16 bg-[#11261D]/70" />
 
                   {/* Top Badges */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
                     {isPending && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-stone-950 flex items-center gap-1 shadow-xs">
+                      <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#987453] text-[#F3F1E8] flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         <span>Pending Review</span>
                       </span>
                     )}
                     {isFeatured && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-600 text-white flex items-center gap-1 shadow-xs">
-                        <Star className="w-3 h-3 fill-current" />
+                      <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#19382B] text-[#F3F1E8] border border-[#987453] flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-[#987453] text-[#987453]" />
                         <span>Featured</span>
                       </span>
                     )}
                     {!isPending && !isFeatured && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-700 text-white shadow-xs">
+                      <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#42684D] text-[#F3F1E8]">
                         Approved
                       </span>
                     )}
@@ -385,8 +391,8 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   {/* Species Tag if linked */}
                   {photo.speciesScientificName && (
                     <div className="absolute bottom-2 left-2 right-2 truncate">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-stone-900/95 text-emerald-300">
-                        <TreePine className="w-3 h-3 shrink-0" />
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs font-scientific italic font-semibold bg-[#19382B]/95 text-[#F3F1E8] border border-[#BBC4A6]/30">
+                        <TreePine className="w-3 h-3 shrink-0 text-[#BBC4A6]" />
                         <span className="truncate">{photo.speciesScientificName}</span>
                       </span>
                     </div>
@@ -396,30 +402,30 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                 {/* Body Details */}
                 <div className="p-3.5 flex-1 flex flex-col justify-between space-y-3">
                   <div>
-                    <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 leading-snug line-clamp-1">
+                    <h3 className="text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug line-clamp-1">
                       {photo.title}
                     </h3>
 
-                    <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-1 line-clamp-2 leading-relaxed">
                       {photo.caption}
                     </p>
 
                     {/* Metadata Strip */}
-                    <div className="mt-2.5 pt-2 border-t border-stone-100 dark:border-stone-800 space-y-1 text-[11px] text-stone-500 dark:text-stone-400">
+                    <div className="mt-2.5 pt-2 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15 space-y-1 text-[11px] text-[#42684D] dark:text-[#8A9C74]">
                       <div className="flex items-center gap-1.5">
-                        <User className="w-3 h-3 text-stone-400 shrink-0" />
-                        <span className="font-semibold text-stone-700 dark:text-stone-300">{photo.studentName}</span>
+                        <User className="w-3 h-3 text-[#8A9C74] shrink-0" />
+                        <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">{photo.studentName}</span>
                         {photo.studentBatch && <span>({photo.studentBatch})</span>}
-                        {photo.studentRegNo && <span className="font-mono text-stone-400">#{photo.studentRegNo}</span>}
+                        {photo.studentRegNo && <span className="font-mono text-[#987453] dark:text-[#BBC4A6]">#{photo.studentRegNo}</span>}
                       </div>
 
                       <div className="flex items-center justify-between">
                         <span className="flex items-center gap-1 truncate max-w-[65%]">
-                          <MapPin className="w-3 h-3 text-stone-400 shrink-0" />
+                          <MapPin className="w-3 h-3 text-[#987453] shrink-0" />
                           <span className="truncate">{photo.location}</span>
                         </span>
                         <span className="flex items-center gap-1 font-mono text-[10px]">
-                          <Calendar className="w-3 h-3 text-stone-400 shrink-0" />
+                          <Calendar className="w-3 h-3 text-[#8A9C74] shrink-0" />
                           <span>{photo.date}</span>
                         </span>
                       </div>
@@ -427,13 +433,13 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   </div>
 
                   {/* Admin Action Buttons */}
-                  <div className="flex items-center justify-between pt-2 border-t border-stone-100 dark:border-stone-800 gap-1.5">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15 gap-1.5">
                     {/* Primary Status Toggle */}
                     <div className="flex items-center gap-1">
                       {isPending ? (
                         <button
                           onClick={() => handleApprove(photo.id)}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-700 hover:bg-emerald-600 text-white flex items-center gap-1 shadow-xs"
+                          className="px-2.5 py-1 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] flex items-center gap-1 transition-colors"
                           title="Approve for public gallery"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -442,14 +448,14 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                       ) : (
                         <button
                           onClick={() => handleToggleFeature(photo)}
-                          className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors ${
+                          className={`px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 transition-colors border ${
                             isFeatured
-                              ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-300'
-                              : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:text-purple-600'
+                              ? 'bg-[#19382B] text-[#F3F1E8] border-[#987453]'
+                              : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 hover:border-[#987453] hover:text-[#987453]'
                           }`}
                           title={isFeatured ? 'Remove featured status' : 'Feature in gallery highlight'}
                         >
-                          <Star className={`w-3 h-3 ${isFeatured ? 'fill-current' : ''}`} />
+                          <Star className={`w-3 h-3 ${isFeatured ? 'fill-[#987453] text-[#987453]' : ''}`} />
                           <span>{isFeatured ? 'Featured' : 'Feature'}</span>
                         </button>
                       )}
@@ -459,7 +465,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleOpenEditModal(photo)}
-                        className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                        className="p-1.5 rounded-sm text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors"
                         title="Edit photo details"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -473,7 +479,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                               e.stopPropagation();
                               handleDelete(photo.id);
                             }}
-                            className="px-2 py-1 text-[10px] font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-2xs"
+                            className="px-2 py-1 text-[10px] font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm transition-colors"
                           >
                             Confirm
                           </button>
@@ -483,7 +489,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                               e.stopPropagation();
                               setDeleteConfirmId(null);
                             }}
-                            className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                            className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
                             title="Cancel"
                           >
                             <X className="w-3 h-3" />
@@ -496,7 +502,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                             e.stopPropagation();
                             setDeleteConfirmId(photo.id);
                           }}
-                          className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
+                          className="p-1.5 rounded-sm text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors"
                           title="Delete photo permanently"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -514,21 +520,21 @@ export const AdminStudentPhotosPanel: React.FC = () => {
       {/* Add / Edit Modal */}
       {isModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-xs animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#11261D]/80 animate-fade-in"
           onClick={() => setIsModalOpen(false)}
         >
           <div 
-            className="relative max-w-xl w-full max-h-[92vh] flex flex-col bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl overflow-hidden"
+            className="relative max-w-xl w-full max-h-[92vh] flex flex-col bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-4 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
-              <h3 className="font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                <Camera className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center justify-between p-4 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
+              <h3 className="font-editorial font-bold text-base sm:text-lg text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+                <Camera className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                 <span>{editingItem ? 'Edit Student Photo' : 'Add New Student Photo'}</span>
               </h3>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -538,7 +544,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               {/* Student Info */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-1">
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Student Name *
                   </label>
                   <input
@@ -547,12 +553,12 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={studentName}
                     onChange={(e) => setStudentName(e.target.value)}
                     placeholder="e.g. Tanvir Ahmed"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Batch / Session
                   </label>
                   <input
@@ -560,12 +566,12 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={studentBatch}
                     onChange={(e) => setStudentBatch(e.target.value)}
                     placeholder="2021-22"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Reg. Number
                   </label>
                   <input
@@ -573,7 +579,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={studentRegNo}
                     onChange={(e) => setStudentRegNo(e.target.value)}
                     placeholder="2021134018"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   />
                 </div>
               </div>
@@ -581,7 +587,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               {/* Title & Tree Species */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Photo Title *
                   </label>
                   <input
@@ -590,18 +596,18 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Lawachara Dipterocarpus Canopy"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Linked Tree Species
                   </label>
                   <select
                     value={selectedSpeciesId}
                     onChange={(e) => setSelectedSpeciesId(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="">General Forest / Campus Observation</option>
                     {speciesList.map((sp) => (
@@ -616,7 +622,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               {/* Location & Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Location *
                   </label>
                   <input
@@ -625,19 +631,19 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="Lawachara National Park / SUST Campus"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Date
                   </label>
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
               </div>
@@ -645,7 +651,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               {/* Image URL & Status */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Image URL *
                   </label>
                   <input
@@ -654,18 +660,18 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
                     placeholder="https://... or Google Drive link"
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                     Publication Status
                   </label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-semibold"
+                    className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-semibold"
                   >
                     <option value="approved">Approved</option>
                     <option value="featured">Featured</option>
@@ -675,15 +681,15 @@ export const AdminStudentPhotosPanel: React.FC = () => {
               </div>
 
               {imageUrl && (
-                <div className="p-2 border border-stone-200 dark:border-stone-800 rounded-lg bg-stone-50 dark:bg-stone-950 flex items-center gap-3">
+                <div className="p-2 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] flex items-center gap-3">
                   <img
                     src={imageUrl}
                     alt="Preview"
                     decoding="async"
                     onError={handleImageError}
-                    className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
+                    className="w-16 h-14 object-cover rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/30 shrink-0"
                   />
-                  <div className="text-[11px] text-stone-500 dark:text-stone-400">
+                  <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">
                     Image preview loaded. Will display with student credits and linked tree profile.
                   </div>
                 </div>
@@ -691,7 +697,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
 
               {/* Caption */}
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block text-xs font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                   Morphological / Field Notes
                 </label>
                 <textarea
@@ -699,11 +705,11 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Notes on stand composition, phenological stage, or canopy position..."
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
-              <div className="flex items-center justify-between gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-between gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <div>
                   {editingItem && (
                     deleteConfirmId === editingItem.id ? (
@@ -711,14 +717,14 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleDelete(editingItem.id)}
-                          className="px-3 py-1.5 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors shadow-xs"
+                          className="px-3 py-1.5 text-xs font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-md transition-colors"
                         >
                           Confirm Delete
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteConfirmId(null)}
-                          className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                          className="p-1.5 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
                           title="Cancel"
                         >
                           <X className="w-4 h-4" />
@@ -728,7 +734,7 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setDeleteConfirmId(editingItem.id)}
-                        className="px-3 py-1.5 text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg flex items-center gap-1.5 transition-colors"
+                        className="px-3 py-1.5 text-xs font-semibold text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md flex items-center gap-1.5 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Delete Photo</span>
@@ -744,13 +750,13 @@ export const AdminStudentPhotosPanel: React.FC = () => {
                       setIsModalOpen(false);
                       setDeleteConfirmId(null);
                     }}
-                    className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                    className="px-4 py-2 text-xs font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                    className="px-5 py-2 text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors"
                   >
                     {editingItem ? 'Save Changes' : 'Create Photo Record'}
                   </button>
@@ -764,29 +770,29 @@ export const AdminStudentPhotosPanel: React.FC = () => {
       {/* Lightbox Modal */}
       {previewImage && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/90 animate-fade-in"
           onClick={() => setPreviewImage(null)}
         >
           <div 
-            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-stone-900 border border-stone-700 rounded-2xl overflow-hidden shadow-2xl"
+            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col bg-[#19382B] border border-[#BBC4A6]/30 rounded-lg overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-3.5 bg-stone-950 border-b border-stone-800 text-white">
-              <span className="font-bold text-xs sm:text-sm truncate pr-4">{previewImage.title}</span>
+            <div className="flex items-center justify-between p-3.5 bg-[#142D22] border-b border-[#BBC4A6]/20 text-[#F3F1E8]">
+              <span className="font-editorial font-bold text-sm sm:text-base truncate pr-4">{previewImage.title}</span>
               <button 
                 onClick={() => setPreviewImage(null)}
-                className="p-1 rounded-lg hover:bg-stone-800 text-stone-400 hover:text-white"
+                className="p-1 rounded-md hover:bg-[#19382B] text-[#BBC4A6] hover:text-[#F3F1E8]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-black/60">
+            <div className="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-[#11261D]">
               <img
                 src={previewImage.url}
                 alt={previewImage.title}
                 decoding="async"
                 onError={handleImageError}
-                className="max-w-full max-h-[78vh] object-contain rounded-lg"
+                className="max-w-full max-h-[78vh] object-contain rounded-md"
               />
             </div>
           </div>

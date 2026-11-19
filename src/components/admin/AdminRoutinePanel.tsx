@@ -4,21 +4,16 @@ import { getStoredRoutines, saveStoredRoutines, resetStoredRoutines } from '../.
 import { parseScheduleWithAI, ParseScheduleResult } from '../../utils/aiScheduleParser';
 import { 
   Calendar, 
-  Sparkles, 
   Plus, 
   Trash2, 
-  Edit2, 
-  Save, 
   RotateCcw, 
-  Clock, 
-  MapPin, 
-  User, 
   CheckCircle2, 
   AlertCircle,
   FileText,
   Copy,
   Loader2,
-  Table
+  Table,
+  X
 } from 'lucide-react';
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -106,7 +101,8 @@ export const AdminRoutinePanel: React.FC = () => {
     teacher: '',
   });
 
-  // Feedback message
+  // Feedback message & inline reset confirm
+  const [confirmReset, setConfirmReset] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const timersRef = useRef<number[]>([]);
 
@@ -290,13 +286,12 @@ export const AdminRoutinePanel: React.FC = () => {
     showStatus(`Successfully ${mode === 'replace' ? 'replaced' : 'appended'} ${finalSchedule.length} slots for Year ${aiTargetYear} Sem ${aiTargetSemester}!`);
   };
 
-  // Reset to factory defaults
+  // Reset to factory defaults (inline confirm, no window.confirm)
   const handleResetToDefaults = async () => {
-    if (window.confirm('Reset all class routines to the official departmental defaults? Any custom added routines will be reset.')) {
-      const def = await resetStoredRoutines();
-      setRoutines(def);
-      showStatus('Reset class routines to official defaults.');
-    }
+    const def = await resetStoredRoutines();
+    setRoutines(def);
+    setConfirmReset(false);
+    showStatus('Reset class routines to official defaults.');
   };
 
   return (
@@ -306,17 +301,17 @@ export const AdminRoutinePanel: React.FC = () => {
       {statusMessage && (
         <div
           role="status"
-          className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between border shadow-sm animate-fade-in ${
+          className={`p-3 rounded-lg text-xs font-semibold flex items-center justify-between border animate-fade-in ${
             statusMessage.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-200 dark:border-emerald-800'
-              : 'bg-red-50 text-red-900 border-red-300 dark:bg-red-950/80 dark:text-red-200 dark:border-red-800'
+              ? 'bg-[#FAF9F4] text-[#19382B] border-[#42684D] dark:bg-[#19382B] dark:text-[#F3F1E8] dark:border-[#8A9C74]'
+              : 'bg-[#EAE7DA] text-[#987453] border-[#987453] dark:bg-[#142D22] dark:text-[#F3F1E8] dark:border-[#987453]'
           }`}
         >
           <div className="flex items-center gap-2">
             {statusMessage.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+              <AlertCircle className="w-4 h-4 text-[#987453]" />
             )}
             <span>{statusMessage.text}</span>
           </div>
@@ -324,22 +319,22 @@ export const AdminRoutinePanel: React.FC = () => {
       )}
 
       {/* Hero Action Header */}
-      <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-950 rounded-2xl p-5 sm:p-6 text-white border border-emerald-900/50 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#19382B] rounded-lg p-5 sm:p-6 text-[#F3F1E8] border border-[#42684D]/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#8A9C74] text-xs font-semibold uppercase tracking-wider mb-1">
             <Calendar className="w-4 h-4" />
             <span>Class Routine & Timetable Manager</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-            Weekly Schedule & AI Automation
+          <h2 className="font-editorial text-xl sm:text-2xl font-semibold tracking-tight text-[#F3F1E8]">
+            Weekly Schedule & Routine Manager
           </h2>
-          <p className="text-xs text-stone-300 mt-1 max-w-xl">
-            Manage semester timetable slots, paste announcements for automated AI extraction, or review classes by year and semester.
+          <p className="text-xs text-[#BBC4A6] mt-1 max-w-xl">
+            Manage semester timetable slots, paste announcements for structured extraction, or review classes by year and semester.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* AI Schedule Parser Trigger Button */}
+          {/* Schedule Parser Trigger Button */}
           <button
             type="button"
             onClick={() => {
@@ -347,44 +342,64 @@ export const AdminRoutinePanel: React.FC = () => {
               setAiTargetSemester(selectedSemester);
               setIsAiModalOpen(true);
             }}
-            className="px-4 py-2 text-xs font-bold rounded-xl bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-md shadow-emerald-950/30 flex items-center gap-2 transition-all cursor-pointer scale-[1.02]"
+            className="px-4 py-2 text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#8A9C74] text-[#FAF9F4] hover:text-[#19382B] border border-[#BBC4A6]/30 flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-emerald-200" />
-            <span>AI Schedule Parser</span>
+            <FileText className="w-4 h-4" />
+            <span>Schedule Parser</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowManualForm((prev) => !prev)}
-            className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-3.5 py-2 text-xs font-semibold rounded-md bg-[#142D22] hover:bg-[#42684D] text-[#F3F1E8] border border-[#BBC4A6]/25 transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>{showManualForm ? 'Close Form' : 'Add Slot'}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={handleResetToDefaults}
-            title="Reset to factory routine"
-            className="p-2 rounded-xl text-stone-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
+          {confirmReset ? (
+            <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#142D22] border border-[#987453]/70">
+              <button
+                type="button"
+                onClick={handleResetToDefaults}
+                className="px-2.5 py-1 text-[11px] font-semibold bg-[#987453] hover:bg-[#42684D] text-[#FAF9F4] rounded-sm transition-colors cursor-pointer"
+              >
+                Confirm Reset
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmReset(false)}
+                className="p-1 text-[#BBC4A6] hover:text-[#F3F1E8] cursor-pointer"
+                title="Cancel reset"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmReset(true)}
+              title="Reset to factory routine"
+              className="p-2 rounded-md text-[#BBC4A6] hover:text-[#F3F1E8] hover:bg-[#142D22] border border-transparent hover:border-[#BBC4A6]/25 transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
       {/* Manual Slot Form */}
       {showManualForm && (
-        <form onSubmit={handleAddManualSlot} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs space-y-4 animate-in fade-in duration-150">
-          <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-2">
-            <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-              <Plus className="w-4 h-4 text-emerald-600" />
+        <form onSubmit={handleAddManualSlot} className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 space-y-4 animate-fade-in">
+          <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 pb-2">
+            <h4 className="font-editorial text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+              <Plus className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
               <span>Add Single Class Slot (Year {selectedYear}, Sem {selectedSemester})</span>
             </h4>
             <button
               type="button"
               onClick={() => setShowManualForm(false)}
-              className="text-xs text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+              className="text-xs text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
             >
               Cancel
             </button>
@@ -392,11 +407,11 @@ export const AdminRoutinePanel: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
             <div>
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Weekday</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Weekday</label>
               <select
                 value={manualSlot.day}
                 onChange={(e) => setManualSlot({ ...manualSlot, day: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-semibold focus:outline-none focus:border-[#42684D]"
               >
                 {WEEKDAYS.map((d) => (
                   <option key={d} value={d}>{d}</option>
@@ -405,59 +420,59 @@ export const AdminRoutinePanel: React.FC = () => {
             </div>
 
             <div>
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Time Slot</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Time Slot</label>
               <input
                 type="text"
                 value={manualSlot.time}
                 onChange={(e) => setManualSlot({ ...manualSlot, time: e.target.value })}
                 placeholder="e.g. 09:00 - 10:30"
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-mono"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono focus:outline-none focus:border-[#42684D]"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Course Code</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Course Code</label>
               <input
                 type="text"
                 value={manualSlot.courseCode}
                 onChange={(e) => setManualSlot({ ...manualSlot, courseCode: e.target.value })}
                 placeholder="e.g. FES 08211121"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-mono font-bold"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold focus:outline-none focus:border-[#42684D]"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Course Title</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Course Title</label>
               <input
                 type="text"
                 value={manualSlot.courseTitle}
                 onChange={(e) => setManualSlot({ ...manualSlot, courseTitle: e.target.value })}
                 placeholder="e.g. Introduction to Forestry"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-medium"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-medium focus:outline-none focus:border-[#42684D]"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Room / Venue</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Room / Venue</label>
               <input
                 type="text"
                 value={manualSlot.room}
                 onChange={(e) => setManualSlot({ ...manualSlot, room: e.target.value })}
                 placeholder="e.g. Room 301, Academic Building E"
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
               />
             </div>
 
             <div className="sm:col-span-3">
-              <label className="block font-bold text-stone-700 dark:text-stone-300 mb-1">Assigned Teacher / Instructor</label>
+              <label className="block font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">Assigned Teacher / Instructor</label>
               <input
                 type="text"
                 value={manualSlot.teacher}
                 onChange={(e) => setManualSlot({ ...manualSlot, teacher: e.target.value })}
                 placeholder="e.g. Prof. Dr. A. Z. M. Manzoor Rashid"
-                className="w-full px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-800 dark:text-stone-200"
+                className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] focus:outline-none focus:border-[#42684D]"
               />
             </div>
           </div>
@@ -466,13 +481,13 @@ export const AdminRoutinePanel: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowManualForm(false)}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200"
+              className="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-1.5 rounded-xl text-xs font-bold bg-emerald-800 text-white hover:bg-emerald-700 shadow-xs flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-1.5 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] flex items-center gap-1.5 cursor-pointer transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Save Class Slot</span>
@@ -482,24 +497,24 @@ export const AdminRoutinePanel: React.FC = () => {
       )}
 
       {/* Routine Viewer Table */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-5 shadow-xs space-y-4">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 space-y-4">
         
         {/* Year and Semester Segmented Filters */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100 dark:border-stone-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
           <div className="flex flex-wrap items-center gap-3">
             {/* Year Selector */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-stone-600 dark:text-stone-400">Year:</span>
-              <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+              <span className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6]">Year:</span>
+              <div className="flex gap-1 p-1 bg-[#EAE7DA] dark:bg-[#142D22] rounded-md border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
                 {[1, 2, 3, 4].map((y) => (
                   <button
                     key={y}
                     type="button"
                     onClick={() => setSelectedYear(y)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                       selectedYear === y
-                        ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                        ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                        : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                     }`}
                   >
                     Year {y}
@@ -510,17 +525,17 @@ export const AdminRoutinePanel: React.FC = () => {
 
             {/* Semester Selector */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-stone-600 dark:text-stone-400">Semester:</span>
-              <div className="flex gap-1 p-1 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+              <span className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6]">Semester:</span>
+              <div className="flex gap-1 p-1 bg-[#EAE7DA] dark:bg-[#142D22] rounded-md border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
                 {[1, 2].map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => setSelectedSemester(s)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                       selectedSemester === s
-                        ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                        ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                        : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                     }`}
                   >
                     Sem {s}
@@ -530,20 +545,20 @@ export const AdminRoutinePanel: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-xs font-mono font-medium text-stone-500 dark:text-stone-400">
+          <div className="text-xs font-mono font-medium text-[#8A9C74]">
             {currentSlots.length} {currentSlots.length === 1 ? 'class slot' : 'class slots'} configured
           </div>
         </div>
 
         {/* Slots Table */}
         {currentSlots.length === 0 ? (
-          <div className="text-center py-12 px-4 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-dashed border-stone-200 dark:border-stone-800">
-            <Calendar className="w-10 h-10 text-stone-300 dark:text-stone-700 mx-auto mb-2" />
-            <h4 className="text-sm font-bold text-stone-800 dark:text-stone-200">
+          <div className="text-center py-12 px-4 rounded-lg bg-[#F3F1E8] dark:bg-[#142D22] border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/25">
+            <Calendar className="w-10 h-10 text-[#8A9C74] mx-auto mb-2" />
+            <h4 className="font-editorial text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8]">
               No Routine Entries Configured
             </h4>
-            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto mt-1 mb-3">
-              Year {selectedYear} Semester {selectedSemester} has no timetable entries. Click "AI Schedule Parser" to paste a schedule or add slots manually.
+            <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]/80 max-w-sm mx-auto mt-1 mb-3">
+              Year {selectedYear} Semester {selectedSemester} has no timetable entries. Click "Schedule Parser" to paste a schedule or add slots manually.
             </p>
             <button
               type="button"
@@ -552,16 +567,16 @@ export const AdminRoutinePanel: React.FC = () => {
                 setAiTargetSemester(selectedSemester);
                 setIsAiModalOpen(true);
               }}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-800 text-white hover:bg-emerald-700 shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-md text-xs font-semibold bg-[#42684D] text-[#FAF9F4] hover:bg-[#19382B] inline-flex items-center gap-1.5 cursor-pointer transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Launch AI Schedule Parser</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span>Launch Schedule Parser</span>
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-stone-200 dark:border-stone-800">
+          <div className="overflow-x-auto rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
             <table className="w-full text-left text-xs">
-              <thead className="bg-stone-50 dark:bg-stone-800/80 text-stone-600 dark:text-stone-300 font-bold uppercase tracking-wider border-b border-stone-200 dark:border-stone-800">
+              <thead className="bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] font-semibold uppercase tracking-wider border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                 <tr>
                   <th className="py-2.5 px-3">Day</th>
                   <th className="py-2.5 px-3">Time</th>
@@ -571,30 +586,30 @@ export const AdminRoutinePanel: React.FC = () => {
                   <th className="py-2.5 px-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+              <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
                 {currentSlots.map((slot, idx) => (
-                  <tr key={slot.id || idx} className="hover:bg-stone-50/60 dark:hover:bg-stone-800/40 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-emerald-800 dark:text-emerald-400 whitespace-nowrap">
+                  <tr key={slot.id || idx} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60 transition-colors">
+                    <td className="py-2.5 px-3 font-semibold text-[#42684D] dark:text-[#8A9C74] whitespace-nowrap">
                       {slot.day}
                     </td>
-                    <td className="py-2.5 px-3 font-mono font-medium text-stone-700 dark:text-stone-300 whitespace-nowrap">
+                    <td className="py-2.5 px-3 font-mono font-medium text-[#987453] dark:text-[#BBC4A6] whitespace-nowrap">
                       {slot.time}
                     </td>
                     <td className="py-2.5 px-3">
-                      <div className="font-mono font-bold text-stone-900 dark:text-stone-100">{slot.courseCode}</div>
-                      <div className="text-stone-500 dark:text-stone-400 font-medium truncate max-w-xs">{slot.courseTitle}</div>
+                      <div className="font-mono font-semibold text-[#19382B] dark:text-[#F3F1E8]">{slot.courseCode}</div>
+                      <div className="text-[#42684D] dark:text-[#BBC4A6]/80 font-medium truncate max-w-xs">{slot.courseTitle}</div>
                     </td>
-                    <td className="py-2.5 px-3 font-medium text-stone-700 dark:text-stone-300 whitespace-nowrap">
+                    <td className="py-2.5 px-3 font-medium text-[#19382B] dark:text-[#F3F1E8] whitespace-nowrap">
                       {slot.room}
                     </td>
-                    <td className="py-2.5 px-3 text-stone-600 dark:text-stone-400 truncate max-w-xs">
+                    <td className="py-2.5 px-3 text-[#42684D] dark:text-[#BBC4A6] truncate max-w-xs">
                       {slot.teacher}
                     </td>
                     <td className="py-2.5 px-3 text-right whitespace-nowrap">
                       <button
                         type="button"
                         onClick={() => handleDeleteSlot(idx)}
-                        className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-sm text-[#8A9C74] hover:text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] transition-colors cursor-pointer"
                         title="Delete slot"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -608,26 +623,26 @@ export const AdminRoutinePanel: React.FC = () => {
         )}
       </div>
 
-      {/* AI SCHEDULE PARSER MODAL */}
+      {/* SCHEDULE PARSER MODAL */}
       {isAiModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#19382B]/80 animate-fade-in"
           role="dialog"
           aria-modal="true"
         >
-          <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden">
             
             {/* Modal Header */}
-            <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50 dark:bg-stone-950">
+            <div className="p-4 sm:p-5 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 flex items-center justify-between bg-[#EAE7DA] dark:bg-[#142D22]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
-                  <Sparkles className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-md bg-[#42684D] text-[#FAF9F4] flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
-                    AI Schedule Parser & Automation
+                  <h3 className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
+                    Schedule Parser & Automation
                   </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                  <p className="text-xs text-[#42684D] dark:text-[#BBC4A6]/80">
                     Paste raw timetable text, notice announcements, or syllabus lines to extract classes automatically.
                   </p>
                 </div>
@@ -640,9 +655,10 @@ export const AdminRoutinePanel: React.FC = () => {
                   setParseResult(null);
                   setEditableSlots([]);
                 }}
-                className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
+                className="p-1.5 rounded-md text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] transition-colors cursor-pointer"
+                aria-label="Close modal"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -650,24 +666,24 @@ export const AdminRoutinePanel: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
               
               {/* Target Academic Year & Semester */}
-              <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-stone-100 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700/60">
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-[#EAE7DA]/70 dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Target Year:</span>
+                  <span className="text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8]">Target Year:</span>
                   <select
                     value={aiTargetYear}
                     onChange={(e) => setAiTargetYear(Number(e.target.value))}
-                    className="px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-xs font-bold"
+                    className="px-2.5 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] text-xs font-semibold focus:outline-none focus:border-[#42684D]"
                   >
                     {[1, 2, 3, 4].map((y) => (
                       <option key={y} value={y}>Year {y}</option>
                     ))}
                   </select>
 
-                  <span className="text-xs font-bold text-stone-700 dark:text-stone-300">Semester:</span>
+                  <span className="text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8]">Semester:</span>
                   <select
                     value={aiTargetSemester}
                     onChange={(e) => setAiTargetSemester(Number(e.target.value))}
-                    className="px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-900 text-xs font-bold"
+                    className="px-2.5 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] text-xs font-semibold focus:outline-none focus:border-[#42684D]"
                   >
                     <option value={1}>Semester 1</option>
                     <option value={2}>Semester 2</option>
@@ -676,11 +692,11 @@ export const AdminRoutinePanel: React.FC = () => {
 
                 {/* Multiple Format Sample Presets */}
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400">Quick Test Samples:</span>
+                  <span className="text-[11px] font-semibold text-[#8A9C74]">Quick Test Samples:</span>
                   <button
                     type="button"
                     onClick={() => handleLoadSample(SAMPLE_SCHEDULE_TEXT)}
-                    className="px-2 py-1 rounded-lg text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2 py-1 rounded-sm text-[11px] font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <Copy className="w-2.5 h-2.5" />
                     <span>Official Notice</span>
@@ -688,7 +704,7 @@ export const AdminRoutinePanel: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleLoadSample(SAMPLE_WHATSAPP_NOTICE)}
-                    className="px-2 py-1 rounded-lg text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2 py-1 rounded-sm text-[11px] font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <Copy className="w-2.5 h-2.5" />
                     <span>WhatsApp / Chat</span>
@@ -696,7 +712,7 @@ export const AdminRoutinePanel: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleLoadSample(SAMPLE_EXCEL_TABLE)}
-                    className="px-2 py-1 rounded-lg text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2 py-1 rounded-sm text-[11px] font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <Copy className="w-2.5 h-2.5" />
                     <span>Excel / Table</span>
@@ -704,7 +720,7 @@ export const AdminRoutinePanel: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleLoadSample(SAMPLE_KEYVALUE_BLOCKS)}
-                    className="px-2 py-1 rounded-lg text-[11px] font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer flex items-center gap-1"
+                    className="px-2 py-1 rounded-sm text-[11px] font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors cursor-pointer flex items-center gap-1"
                   >
                     <Copy className="w-2.5 h-2.5" />
                     <span>Key-Value Block</span>
@@ -715,12 +731,12 @@ export const AdminRoutinePanel: React.FC = () => {
               {/* Raw Text Input with onPaste Auto-Generation */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-stone-700 dark:text-stone-300">
+                  <label className="block text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                     Paste Schedule Text (Any Format)
                   </label>
-                  <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    <span>Auto-generates immediately when pasted!</span>
+                  <span className="text-[11px] text-[#42684D] dark:text-[#8A9C74] font-semibold flex items-center gap-1">
+                    <FileText className="w-3 h-3" />
+                    <span>Auto-generates immediately when pasted</span>
                   </span>
                 </div>
                 <textarea
@@ -738,20 +754,20 @@ export const AdminRoutinePanel: React.FC = () => {
                   }}
                   onPaste={handlePasteSchedule}
                   placeholder="Paste ANY class schedule here (WhatsApp notices, circulars, spreadsheet rows, syllabus listings, or key-value format). Classes are automatically parsed and generated instantly upon paste."
-                  className="w-full p-3 rounded-xl border border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-mono focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all"
+                  className="w-full p-3 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs font-mono focus:outline-none focus:border-[#42684D] transition-all"
                 />
               </div>
 
               {/* Run Parser Action Bar */}
               <div className="flex items-center justify-between gap-3">
-                <span className="text-[11px] text-stone-500 dark:text-stone-400">
+                <span className="text-[11px] text-[#8A9C74]">
                   Universal Multi-Pass Parser • Automatically normalizes days, times, courses, and venues.
                 </span>
                 <button
                   type="button"
                   onClick={handleRunAiParser}
                   disabled={isParsing || !rawInputText.trim()}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white disabled:opacity-50 flex items-center gap-2 shadow-xs cursor-pointer"
+                  className="px-4 py-2 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] disabled:opacity-50 flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   {isParsing ? (
                     <>
@@ -760,7 +776,7 @@ export const AdminRoutinePanel: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 text-emerald-200" />
+                      <FileText className="w-4 h-4" />
                       <span>Re-Parse / Generate Entries</span>
                     </>
                   )}
@@ -769,21 +785,21 @@ export const AdminRoutinePanel: React.FC = () => {
 
               {/* Editable Verification Grid & JSON Viewer */}
               {editableSlots.length > 0 && (
-                <div className="space-y-3 pt-3 border-t border-stone-200 dark:border-stone-800 animate-in fade-in duration-200">
+                <div className="space-y-3 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 animate-fade-in">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <Table className="w-4 h-4 text-emerald-600" />
-                      <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">
+                      <Table className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
+                      <h4 className="font-editorial text-sm font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                         Extracted Classes ({editableSlots.length})
                       </h4>
-                      <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-0.5 rounded-lg border border-stone-200 dark:border-stone-700">
+                      <div className="flex items-center gap-1 bg-[#EAE7DA] dark:bg-[#142D22] p-0.5 rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                         <button
                           type="button"
                           onClick={() => setModalViewTab('boxes')}
-                          className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-sm transition-colors cursor-pointer ${
                             modalViewTab === 'boxes'
-                              ? 'bg-emerald-800 text-white shadow-xs'
-                              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                              : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                           }`}
                         >
                           Routine Boxes
@@ -791,10 +807,10 @@ export const AdminRoutinePanel: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setModalViewTab('json')}
-                          className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 text-xs font-semibold rounded-sm transition-colors cursor-pointer ${
                             modalViewTab === 'json'
-                              ? 'bg-emerald-800 text-white shadow-xs'
-                              : 'text-stone-600 dark:text-stone-400 hover:text-stone-900'
+                              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                              : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                           }`}
                         >
                           Structured JSON
@@ -820,7 +836,7 @@ export const AdminRoutinePanel: React.FC = () => {
                               },
                             ]);
                           }}
-                          className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+                          className="text-xs font-semibold text-[#42684D] dark:text-[#8A9C74] hover:underline flex items-center gap-1 self-start sm:self-auto cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>Add Extra Row</span>
@@ -839,7 +855,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                 .catch(() => {});
                             }
                           }}
-                          className="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 hover:bg-emerald-200 transition-colors flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 text-xs font-semibold rounded-sm bg-[#EAE7DA] text-[#19382B] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 hover:border-[#42684D] transition-colors flex items-center gap-1 cursor-pointer"
                         >
                           <Copy className="w-3 h-3" />
                           <span>{jsonCopied ? 'Copied JSON!' : 'Copy JSON'}</span>
@@ -850,9 +866,9 @@ export const AdminRoutinePanel: React.FC = () => {
 
                   {/* Tab 1: Routine Boxes / Table View */}
                   {modalViewTab === 'boxes' ? (
-                    <div className="overflow-x-auto rounded-xl border border-stone-200 dark:border-stone-700 max-h-72">
+                    <div className="overflow-x-auto rounded-md border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 max-h-72">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold uppercase sticky top-0 z-10 border-b border-stone-200 dark:border-stone-700">
+                        <thead className="bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] font-semibold uppercase sticky top-0 z-10 border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
                           <tr>
                             <th className="py-2 px-2.5">Type & Flags</th>
                             <th className="py-2 px-2.5">Day</th>
@@ -864,23 +880,23 @@ export const AdminRoutinePanel: React.FC = () => {
                             <th className="py-2 px-2 text-center">Del</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+                        <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
                           {editableSlots.map((slot, sIdx) => (
-                            <tr key={slot.id || sIdx} className="hover:bg-stone-50 dark:hover:bg-stone-800/50">
+                            <tr key={slot.id || sIdx} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60">
                               <td className="p-1.5 whitespace-nowrap">
                                 <div className="flex flex-col gap-1 items-start">
-                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                                    slot.type === 'viva' ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' :
-                                    slot.type === 'quiz' ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
-                                    slot.type === 'term_test' ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' :
-                                    slot.type === 'presentation' ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300' :
-                                    slot.isLab ? 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300' :
-                                    'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                                  <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider border ${
+                                    slot.type === 'viva' ? 'bg-[#19382B] text-[#F3F1E8] border-[#19382B]' :
+                                    slot.type === 'quiz' ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] dark:text-[#BBC4A6] border-[#987453]/60' :
+                                    slot.type === 'term_test' ? 'bg-[#987453] text-[#FAF9F4] border-[#987453]' :
+                                    slot.type === 'presentation' ? 'bg-[#42684D] text-[#FAF9F4] border-[#42684D]' :
+                                    slot.isLab ? 'bg-[#8A9C74]/20 text-[#19382B] dark:text-[#BBC4A6] border-[#8A9C74]/50' :
+                                    'bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#BBC4A6] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25'
                                   }`}>
                                     {slot.typeLabel || slot.type || 'Class'}
                                   </span>
                                   {slot.weekdayConflict && (
-                                    <span className="text-[9px] font-bold text-amber-600 flex items-center gap-0.5" title="Weekday mismatch flagged">
+                                    <span className="text-[9px] font-semibold text-[#987453] flex items-center gap-0.5" title="Weekday mismatch flagged">
                                       <AlertCircle className="w-2.5 h-2.5" />
                                       <span>Date conflict</span>
                                     </span>
@@ -895,7 +911,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].day = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-24 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 font-bold text-emerald-800 dark:text-emerald-400"
+                                className="w-24 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] font-semibold text-[#42684D] dark:text-[#8A9C74]"
                               >
                                 {WEEKDAYS.map((d) => (
                                   <option key={d} value={d}>{d}</option>
@@ -911,7 +927,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].time = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-28 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 font-mono font-medium"
+                                className="w-28 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-medium"
                               />
                             </td>
                             <td className="p-1.5">
@@ -923,7 +939,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].courseCode = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-28 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 font-mono font-bold"
+                                className="w-28 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono font-semibold"
                               />
                             </td>
                             <td className="p-1.5">
@@ -935,7 +951,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].courseTitle = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-44 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900 font-medium"
+                                className="w-44 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-medium"
                               />
                             </td>
                             <td className="p-1.5">
@@ -947,7 +963,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].room = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-28 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900"
+                                className="w-28 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                               />
                             </td>
                             <td className="p-1.5">
@@ -959,7 +975,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                   updated[sIdx].teacher = e.target.value;
                                   setEditableSlots(updated);
                                 }}
-                                className="w-36 px-1.5 py-1 text-xs rounded border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900"
+                                className="w-36 px-1.5 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                               />
                             </td>
                             <td className="p-1.5 text-center">
@@ -968,7 +984,7 @@ export const AdminRoutinePanel: React.FC = () => {
                                 onClick={() => {
                                   setEditableSlots(editableSlots.filter((_, i) => i !== sIdx));
                                 }}
-                                className="p-1 rounded text-stone-400 hover:text-red-600 hover:bg-red-50"
+                                className="p-1 rounded-sm text-[#8A9C74] hover:text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] cursor-pointer"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
@@ -981,10 +997,10 @@ export const AdminRoutinePanel: React.FC = () => {
                   ) : (
                     /* Tab 2: Structured JSON Viewer */
                     <div className="space-y-2">
-                      <div className="p-3 bg-stone-900 text-stone-100 rounded-xl overflow-x-auto max-h-72 font-mono text-[11px] leading-relaxed border border-stone-800 shadow-inner">
+                      <div className="p-3 bg-[#142D22] text-[#F3F1E8] rounded-lg overflow-x-auto max-h-72 font-mono text-[11px] leading-relaxed border border-[#BBC4A6]/25">
                         <pre>{parseResult?.rawJsonString || 'No JSON generated'}</pre>
                       </div>
-                      <div className="flex items-center justify-between text-[11px] text-stone-500">
+                      <div className="flex items-center justify-between text-[11px] text-[#8A9C74]">
                         <span>Schema compliant: <code>academic_context</code>, <code>timezone</code>, <code>events</code> array</span>
                         <span>{editableSlots.length} events parsed</span>
                       </div>
@@ -993,7 +1009,7 @@ export const AdminRoutinePanel: React.FC = () => {
 
                   {/* Commit Actions */}
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
-                    <span className="text-xs text-stone-500">
+                    <span className="text-xs text-[#42684D] dark:text-[#BBC4A6]">
                       Target: <strong>Year {aiTargetYear}, Semester {aiTargetSemester}</strong>
                     </span>
 
@@ -1001,7 +1017,7 @@ export const AdminRoutinePanel: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleCommitParsedSlots('append')}
-                        className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 border border-stone-300 dark:border-stone-700 cursor-pointer"
+                        className="px-3.5 py-2 rounded-md text-xs font-semibold bg-[#EAE7DA] hover:bg-[#BBC4A6]/40 dark:bg-[#142D22] dark:hover:bg-[#42684D]/40 text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 cursor-pointer transition-colors"
                       >
                         Append to Existing
                       </button>
@@ -1009,9 +1025,9 @@ export const AdminRoutinePanel: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleCommitParsedSlots('replace')}
-                        className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-800 hover:bg-emerald-700 text-white shadow-xs flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 rounded-md text-xs font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#FAF9F4] flex items-center gap-1.5 cursor-pointer transition-colors"
                       >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-200" />
+                        <CheckCircle2 className="w-4 h-4" />
                         <span>Save & Replace Routine</span>
                       </button>
                     </div>
@@ -1022,7 +1038,7 @@ export const AdminRoutinePanel: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-3 bg-stone-100 dark:bg-stone-950 border-t border-stone-200 dark:border-stone-800 flex justify-end">
+            <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 flex justify-end">
               <button
                 type="button"
                 onClick={() => {
@@ -1030,7 +1046,7 @@ export const AdminRoutinePanel: React.FC = () => {
                   setParseResult(null);
                   setEditableSlots([]);
                 }}
-                className="px-4 py-1.5 text-xs font-semibold rounded-xl bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 cursor-pointer"
+                className="px-4 py-1.5 text-xs font-semibold rounded-md bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8] hover:border-[#42684D] cursor-pointer transition-colors"
               >
                 Close
               </button>

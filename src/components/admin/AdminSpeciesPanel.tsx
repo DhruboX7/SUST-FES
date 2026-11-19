@@ -10,7 +10,6 @@ import {
   Plus, 
   Edit3, 
   Trash2, 
-  Sparkles, 
   Check, 
   X, 
   AlertCircle, 
@@ -378,35 +377,35 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-            <Trees className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2 flex-wrap">
+            <Trees className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
             <span>Tree Species & Dendrology Management</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-sm bg-[#EAE7DA] text-[#42684D] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {species.length} species
             </span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-            Manage Bangladesh & SUST campus flora with automated Gemini AI taxonomy crosschecking and ICBN binomial validation.
+          <p className="text-xs text-[#42684D] dark:text-[#8A9C74] mt-0.5">
+            Manage Bangladesh & SUST campus flora with taxonomic crosschecking and ICBN binomial validation.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {selectedIds.length > 0 && (
             deleteConfirmId === 'batch' ? (
-              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+              <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60">
                 <button
                   type="button"
                   onClick={handleBatchDelete}
-                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                  className="px-3 py-1 text-xs font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm transition-colors"
                 >
                   Confirm Delete ({selectedIds.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(null)}
-                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -416,7 +415,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId('batch')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Selected ({selectedIds.length})</span>
@@ -427,7 +426,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
           <button
             onClick={handleSyncFloraOfBangladesh}
             disabled={isSyncingFlora}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-emerald-600/50 bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+            className="px-3 py-1.5 text-xs font-semibold rounded-md border border-[#42684D]/50 bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6] hover:bg-[#BBC4A6]/40 dark:hover:bg-[#42684D]/30 flex items-center gap-1.5 transition-colors disabled:opacity-50"
             title="Update tree photos directly from floraofbangladesh.com"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isSyncingFlora ? 'animate-spin' : ''}`} />
@@ -436,16 +435,16 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
 
           <button
             onClick={handlePurgeAllUnmatched}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60 flex items-center gap-1.5 transition-colors"
-            title="Purge all leaked, sidebar, or unmatched images across all 56 species"
+            className="px-3 py-1.5 text-xs font-semibold rounded-md border border-[#987453]/60 bg-[#FAF9F4] dark:bg-[#142D22] text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#987453]/20 flex items-center gap-1.5 transition-colors"
+            title="Purge all leaked, sidebar, or unmatched images across all species"
           >
-            <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+            <Trash2 className="w-3.5 h-3.5 text-[#987453]" />
             <span>Clean Unmatched</span>
           </button>
 
           <button
             onClick={handleOpenAdd}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Tree Species</span>
@@ -454,8 +453,8 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
       </div>
 
       {floraSyncNotice && (
-        <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs flex items-center gap-2 animate-fade-in font-medium">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 rounded-lg bg-[#EAE7DA] dark:bg-[#19382B] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] text-xs flex items-center gap-2 animate-fade-in font-medium">
+          <CheckCircle2 className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6] shrink-0" />
           <span>{floraSyncNotice}</span>
         </div>
       )}
@@ -463,13 +462,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
       {/* Filter Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="relative sm:col-span-2">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             placeholder="Search scientific name, common name, or family..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74]"
           />
         </div>
 
@@ -477,7 +476,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
           <select
             value={filterFamily}
             onChange={(e) => setFilterFamily(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Botanical Families ({families.length})</option>
             {families.map((fam) => (
@@ -490,7 +489,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
           <select
             value={photoFilter}
             onChange={(e) => setPhotoFilter(e.target.value as any)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-medium"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-medium"
           >
             <option value="all">All Photos ({species.length})</option>
             <option value="multi">Multi-Photo Plates ({multiPhotoCount})</option>
@@ -501,10 +500,10 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
       </div>
 
       {/* Species Data Table */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 text-stone-500 font-medium uppercase tracking-wider">
+            <thead className="bg-[#EAE7DA] dark:bg-[#142D22] border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[#42684D] dark:text-[#BBC4A6] font-semibold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4 w-10">
                   <button
@@ -515,10 +514,10 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                         setSelectedIds(filteredSpecies.map((s) => s.id));
                       }
                     }}
-                    className="text-stone-500"
+                    className="text-[#42684D] dark:text-[#BBC4A6]"
                   >
                     {selectedIds.length === filteredSpecies.length && filteredSpecies.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-600" />
+                      <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                     ) : (
                       <Square className="w-4 h-4" />
                     )}
@@ -532,10 +531,10 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
               {filteredSpecies.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-stone-400">
+                  <td colSpan={7} className="py-8 text-center text-[#8A9C74]">
                     No tree species match your search criteria.
                   </td>
                 </tr>
@@ -545,7 +544,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                   const totalPhotos = (item.imageUrl ? 1 : 0) + plateCount;
 
                   return (
-                    <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40">
+                    <tr key={item.id} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60 transition-colors">
                       <td className="py-3 px-4">
                         <button
                           onClick={() =>
@@ -553,10 +552,10 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                               prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
                             )
                           }
-                          className="text-stone-400 hover:text-emerald-600"
+                          className="text-[#8A9C74] hover:text-[#42684D]"
                         >
                           {selectedIds.includes(item.id) ? (
-                            <CheckSquare className="w-4 h-4 text-emerald-600" />
+                            <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                           ) : (
                             <Square className="w-4 h-4" />
                           )}
@@ -576,29 +575,29 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                               loading="lazy"
                               decoding="async"
                               onError={handleImageError}
-                              className="w-10 h-10 object-cover rounded-lg border border-stone-200 dark:border-stone-800 group-hover:border-emerald-500 transition-colors"
+                              className="w-10 h-10 object-cover rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 group-hover:border-[#42684D] transition-colors"
                             />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center text-white">
+                            <div className="absolute inset-0 bg-[#19382B]/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center text-[#F3F1E8]">
                               <Camera className="w-3 h-3" />
                             </div>
                           </button>
                           <div>
-                            <div className="font-bold italic text-stone-900 dark:text-stone-100">
+                            <div className="font-scientific text-base font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                               {item.scientificName}
                             </div>
-                            <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
+                            <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74] flex items-center gap-1.5">
                               <span>{item.commonName}</span>
                               {item.banglaName && (
                                 <>
                                   <span aria-hidden="true">·</span>
-                                  <span className="font-medium text-emerald-800 dark:text-emerald-400">{item.banglaName}</span>
+                                  <span className="font-medium text-[#19382B] dark:text-[#BBC4A6]">{item.banglaName}</span>
                                 </>
                               )}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 px-4 font-mono text-emerald-700 dark:text-emerald-400">
+                      <td className="py-3 px-4 font-mono text-[#42684D] dark:text-[#BBC4A6]">
                         {item.family}
                       </td>
                       <td className="py-3 px-4">
@@ -606,32 +605,32 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                           <button
                             type="button"
                             onClick={() => setManagingPhotosSpecies(item)}
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-colors shadow-2xs ${
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold border transition-colors ${
                               plateCount > 0
-                                ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900'
+                                ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6] border-[#42684D]/50 hover:bg-[#BBC4A6]/30'
                                 : item.imageUrl
-                                ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900'
-                                : 'bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800 hover:bg-rose-100'
+                                ? 'bg-[#F3F1E8] dark:bg-[#142D22] text-[#987453] border-[#987453]/50 hover:bg-[#EAE7DA]'
+                                : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] border-[#987453] hover:bg-[#987453] hover:text-[#F3F1E8]'
                             }`}
                             title="Manage primary habit and botanical multi-photo plates"
                           >
-                            <Camera className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <Camera className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
                             <span>{totalPhotos} Photos</span>
                           </button>
                           {plateCount > 0 && (
-                            <span className="text-[10px] font-mono text-stone-400 hidden lg:inline">
+                            <span className="text-[10px] font-mono text-[#8A9C74] hidden lg:inline">
                               +{plateCount} plates
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-[11px] text-stone-700 dark:text-stone-300">
+                        <span className="text-[11px] text-[#42684D] dark:text-[#BBC4A6]">
                           {item.conservationStatus}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="text-[11px] text-stone-600 dark:text-stone-400 max-w-xs truncate">
+                        <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74] max-w-xs truncate">
                           {(item.uses || []).slice(0, 3).join(', ')}
                         </div>
                       </td>
@@ -639,14 +638,14 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => setManagingPhotosSpecies(item)}
-                            className="p-1.5 text-stone-400 hover:text-emerald-600 rounded transition-colors"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm transition-colors"
                             title="Manage Botanical Photos & Plates"
                           >
                             <Camera className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleOpenEdit(item)}
-                            className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm transition-colors"
                             title="Edit Species"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -655,18 +654,21 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => handleDelete(item.id)}
-                                className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded-md"
+                                className="px-2 py-1 text-[10px] font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm"
                               >
                                 Confirm
                               </button>
-                              <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
+                              <button
+                                onClick={() => setDeleteConfirmId(null)}
+                                className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+                              >
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
                           ) : (
                             <button
                               onClick={() => setDeleteConfirmId(item.id)}
-                              className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
+                              className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-sm transition-colors"
                               title="Delete Species"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -683,56 +685,59 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         </div>
       </div>
 
-      {/* Add / Edit Species Modal with AI Assistant */}
+      {/* Add / Edit Species Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in overflow-y-auto">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-4 my-8 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/80 animate-fade-in overflow-y-auto">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-2xl w-full shadow-xl space-y-4 my-8 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
               <div>
-                <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-                  <Trees className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+                <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+                  <Trees className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                   <span>{editingItem ? 'Edit Tree Species' : 'Add New Tree Species'}</span>
                 </h3>
-                <span className="text-[11px] text-stone-500">Taxonomic verification & silvicultural catalog</span>
+                <span className="text-[11px] text-[#8A9C74]">Taxonomic verification & silvicultural catalog</span>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* AI Assistant Banner */}
-            <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold">
-                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>AI Botanical Overview & Taxonomy Crosschecker</span>
+            {/* Taxonomy Verification Banner */}
+            <div className="p-3.5 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-md space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold">
+                  <ShieldCheck className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
+                  <span>Botanical Overview & Taxonomy Crosschecker</span>
                 </div>
                 <button
                   type="button"
                   onClick={handleRunAiCrosscheck}
                   disabled={isAiLoading}
-                  className="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg font-bold flex items-center gap-1.5 shadow-xs transition-colors disabled:opacity-50"
+                  className="px-3 py-1 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
                 >
                   {isAiLoading ? (
                     <span>Verifying...</span>
                   ) : (
                     <>
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>AI Crosscheck & Auto-Fill</span>
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Crosscheck & Auto-Fill</span>
                     </>
                   )}
                 </button>
               </div>
-              <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
-                Type the binomial name (e.g. <em>Swietenia macrophylla</em>) or vernacular name, then click to crosscheck ICBN rules, family classification, IUCN status, and generate silvicultural notes.
+              <p className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">
+                Type the binomial name (e.g. <span className="font-scientific text-xs">Swietenia macrophylla</span>) or vernacular name, then click to crosscheck ICBN rules, family classification, IUCN status, and silvicultural notes.
               </p>
 
               {aiReport && (
-                <div className="mt-2 pt-2 border-t border-emerald-200/60 dark:border-emerald-800 text-[11px] space-y-1">
-                  <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-semibold">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <div className="mt-2 pt-2 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 text-[11px] space-y-1">
+                  <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold flex-wrap">
+                    <CheckCircle2 className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                     <span>Crosscheck Status: {aiReport.taxonomyNotes}</span>
-                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-200 dark:bg-emerald-900">
+                    <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-sm bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                       {Math.round(aiReport.confidence * 100)}% Confidence
                     </span>
                   </div>
@@ -741,8 +746,8 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             </div>
 
             {formError && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453] rounded-md text-[#987453] dark:text-[#F3F1E8] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{formError}</span>
               </div>
             )}
@@ -750,7 +755,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
             <form onSubmit={handleSaveSpecies} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Scientific Binomial Name *
                   </label>
                   <input
@@ -758,13 +763,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={scientificName}
                     onChange={(e) => setScientificName(e.target.value)}
                     placeholder="e.g. Tectona grandis"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono italic"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-scientific text-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Botanical Family
                   </label>
                   <input
@@ -772,14 +777,14 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={family}
                     onChange={(e) => setFamily(e.target.value)}
                     placeholder="e.g. Lamiaceae"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Common English Name
                   </label>
                   <input
@@ -787,12 +792,12 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={commonName}
                     onChange={(e) => setCommonName(e.target.value)}
                     placeholder="e.g. Teak"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Bangla Name (বাংলা নাম)
                   </label>
                   <input
@@ -800,14 +805,14 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={banglaName}
                     onChange={(e) => setBanglaName(e.target.value)}
                     placeholder="e.g. সেগুন"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-medium"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-medium"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     IUCN Conservation Status
                   </label>
                   <input
@@ -815,12 +820,12 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={conservationStatus}
                     onChange={(e) => setConservationStatus(e.target.value)}
                     placeholder="e.g. Least Concern (IUCN Red List)"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Geographic Distribution
                   </label>
                   <input
@@ -828,13 +833,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                     value={distribution}
                     onChange={(e) => setDistribution(e.target.value)}
                     placeholder="e.g. Sylhet, Chittagong, CHT"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Timber & Silvicultural Uses (Comma-separated)
                 </label>
                 <input
@@ -842,12 +847,12 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                   value={usesInput}
                   onChange={(e) => setUsesInput(e.target.value)}
                   placeholder="e.g. Luxury Furniture, Shipbuilding, Veneer, Soil Conservation"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Ecological Habitat
                 </label>
                 <input
@@ -855,12 +860,12 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                   value={habitat}
                   onChange={(e) => setHabitat(e.target.value)}
                   placeholder="e.g. Tropical moist deciduous hill tracts with well-drained soils"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Silvicultural & Dendrological Notes
                 </label>
                 <textarea
@@ -868,13 +873,13 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                   onChange={(e) => setSilviculturalNotes(e.target.value)}
                   placeholder="Regeneration characteristics, light requirement, growth rate..."
                   rows={3}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
-                  <label className="font-semibold text-stone-700 dark:text-stone-300">
+                  <label className="font-semibold text-[#19382B] dark:text-[#BBC4A6]">
                     Herbarium / Specimen Photo URL (Optional)
                   </label>
                   <div className="flex items-center gap-2">
@@ -885,7 +890,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                           setIsModalOpen(false);
                           setManagingPhotosSpecies(editingItem);
                         }}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900/60 px-2 py-0.5 rounded border border-blue-300 dark:border-blue-800 transition-colors"
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#EAE7DA] dark:bg-[#142D22] hover:bg-[#BBC4A6]/40 px-2 py-0.5 rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/30 transition-colors"
                       >
                         <Camera className="w-3 h-3" />
                         <span>Manage Plates ({(editingItem.morePhotos?.length || 0) + (editingItem.imageUrl ? 1 : 0)})</span>
@@ -916,7 +921,7 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                           console.warn('Could not load Flora of Bangladesh data:', err);
                         }
                       }}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 dark:text-emerald-400 hover:text-emerald-700 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-300 dark:border-emerald-800 transition-colors"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] bg-[#EAE7DA] dark:bg-[#142D22] px-2 py-0.5 rounded-sm border border-[#42684D]/50 transition-colors"
                     >
                       <Globe className="w-3 h-3" />
                       <span>Fetch from Flora of Bangladesh</span>
@@ -928,35 +933,35 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://... or /assets/..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                 />
                 {imageUrl && (
-                  <div className="mt-2 p-2 border border-stone-200 dark:border-stone-800 rounded-lg bg-stone-50 dark:bg-stone-900 flex items-center gap-3">
+                  <div className="mt-2 p-2 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] flex items-center gap-3">
                     <img
                       src={imageUrl}
                       alt="Tree preview"
                       decoding="async"
                       onError={handleImageError}
-                      className="w-16 h-14 object-cover rounded-md border border-stone-300 dark:border-stone-700 shrink-0"
+                      className="w-16 h-14 object-cover rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/30 shrink-0"
                     />
-                    <div className="text-[11px] text-stone-500">
+                    <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">
                       Live specimen photo preview. Renders on public tree database and herbarium views.
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors"
                 >
                   {editingItem ? 'Save Species Changes' : 'Add to Herbarium Database'}
                 </button>

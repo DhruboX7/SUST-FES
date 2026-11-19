@@ -146,16 +146,16 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-            <BookMarked className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2 flex-wrap">
+            <BookMarked className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
             <span>Undergraduate & Graduate Thesis Archive Management</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-sm bg-[#EAE7DA] text-[#42684D] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {theses.length} monographs
             </span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs text-[#42684D] dark:text-[#8A9C74] mt-0.5">
             Administer completed B.Sc. (Honours) dissertations and M.Sc. postgraduate research projects.
           </p>
         </div>
@@ -163,18 +163,18 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
         <div className="flex items-center gap-2">
           {selectedIds.length > 0 && (
             deleteConfirmId === 'batch' ? (
-              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+              <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60">
                 <button
                   type="button"
                   onClick={handleBatchDelete}
-                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                  className="px-3 py-1 text-xs font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm transition-colors"
                 >
                   Confirm Delete ({selectedIds.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(null)}
-                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -184,7 +184,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId('batch')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Selected ({selectedIds.length})</span>
@@ -194,7 +194,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
 
           <button
             onClick={handleOpenAdd}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Thesis Entry</span>
@@ -205,13 +205,13 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
       {/* Filter Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="relative sm:col-span-2">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             placeholder="Search thesis title, author, supervisor, or area..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74]"
           />
         </div>
 
@@ -219,7 +219,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
           <select
             value={filterDegree}
             onChange={(e) => setFilterDegree(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Degrees (B.Sc. & M.Sc.)</option>
             <option value="B.Sc. (Honours)">B.Sc. (Honours)</option>
@@ -229,10 +229,10 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
       </div>
 
       {/* Theses Data Table */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden shadow-xs">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 text-stone-500 font-medium uppercase tracking-wider">
+            <thead className="bg-[#EAE7DA] dark:bg-[#142D22] border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-[#42684D] dark:text-[#BBC4A6] font-semibold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4 w-10">
                   <button
@@ -243,10 +243,10 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                         setSelectedIds(filteredTheses.map((t) => t.id));
                       }
                     }}
-                    className="text-stone-500"
+                    className="text-[#42684D] dark:text-[#BBC4A6]"
                   >
                     {selectedIds.length === filteredTheses.length && filteredTheses.length > 0 ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-600" />
+                      <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                     ) : (
                       <Square className="w-4 h-4" />
                     )}
@@ -259,16 +259,16 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+            <tbody className="divide-y divide-[#BBC4A6]/40 dark:divide-[#BBC4A6]/15">
               {filteredTheses.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-stone-400">
+                  <td colSpan={6} className="py-8 text-center text-[#8A9C74]">
                     No theses match your search filters.
                   </td>
                 </tr>
               ) : (
                 filteredTheses.map((item) => (
-                  <tr key={item.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-800/40">
+                  <tr key={item.id} className="hover:bg-[#EAE7DA]/50 dark:hover:bg-[#142D22]/60 transition-colors">
                     <td className="py-3 px-4">
                       <button
                         onClick={() =>
@@ -276,31 +276,33 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                             prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
                           )
                         }
-                        className="text-stone-400 hover:text-emerald-600"
+                        className="text-[#8A9C74] hover:text-[#42684D]"
                       >
                         {selectedIds.includes(item.id) ? (
-                          <CheckSquare className="w-4 h-4 text-emerald-600" />
+                          <CheckSquare className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                         ) : (
                           <Square className="w-4 h-4" />
                         )}
                       </button>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-stone-900 dark:text-stone-100 max-w-md line-clamp-2">
+                      <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8] max-w-md line-clamp-2">
                         {item.title}
                       </div>
-                      <div className="text-[11px] text-emerald-700 dark:text-emerald-400">
+                      <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74] mt-0.5">
                         {item.researchArea}
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-medium text-stone-900 dark:text-stone-100">{item.author}</div>
-                      <div className="text-[10px] uppercase font-bold text-stone-400">{item.degree}</div>
+                      <div className="font-medium text-[#19382B] dark:text-[#F3F1E8]">{item.author}</div>
+                      <div className="text-[10px] uppercase font-semibold tracking-wider text-[#987453] dark:text-[#BBC4A6]">
+                        {item.degree}
+                      </div>
                     </td>
-                    <td className="py-3 px-4 text-stone-600 dark:text-stone-300">
+                    <td className="py-3 px-4 text-[#42684D] dark:text-[#BBC4A6]">
                       {item.supervisor}
                     </td>
-                    <td className="py-3 px-4 font-mono">
+                    <td className="py-3 px-4 font-mono text-[#987453] dark:text-[#BBC4A6]">
                       {item.year}
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -310,7 +312,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                             href={item.driveUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 text-stone-400 hover:text-emerald-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm"
                             title="Open Document"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -318,7 +320,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                         )}
                         <button
                           onClick={() => handleOpenEdit(item)}
-                          className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                          className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm"
                           title="Edit Thesis"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
@@ -327,18 +329,21 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => handleDelete(item.id)}
-                              className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded"
+                              className="px-2 py-1 text-[10px] font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm"
                             >
                               Confirm
                             </button>
-                            <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
+                            <button
+                              onClick={() => setDeleteConfirmId(null)}
+                              className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+                            >
                               <X className="w-3 h-3" />
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => setDeleteConfirmId(item.id)}
-                            className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
+                            className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-sm"
                             title="Delete Thesis"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -356,27 +361,30 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 animate-fade-in overflow-y-auto">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/80 animate-fade-in overflow-y-auto">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-lg w-full shadow-xl space-y-4 my-8 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8]">
                 {editingItem ? 'Edit Thesis Entry' : 'Add New Thesis / Dissertation'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453] rounded-md text-[#987453] dark:text-[#F3F1E8] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{formError}</span>
               </div>
             )}
 
             <form onSubmit={handleSave} className="space-y-3">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Dissertation Title *
                 </label>
                 <input
@@ -384,14 +392,14 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Assessment of Above-Ground Biomass and Carbon Stocks..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Author / Student Name *
                   </label>
                   <input
@@ -399,19 +407,19 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
                     placeholder="e.g. Md. Tanvir Hasan"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Degree Level
                   </label>
                   <select
                     value={degree}
                     onChange={(e) => setDegree(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="B.Sc. (Honours)">B.Sc. (Honours)</option>
                     <option value="M.Sc.">M.Sc. Postgraduate</option>
@@ -421,13 +429,13 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Faculty Supervisor
                   </label>
                   <select
                     value={supervisor}
                     onChange={(e) => setSupervisor(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     {SUST_FES_FACULTY.map((fac) => (
                       <option key={fac.id} value={fac.name}>
@@ -439,7 +447,7 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                     Graduation Year
                   </label>
                   <input
@@ -447,13 +455,13 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     placeholder="2024"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Research Area / Field of Specialization
                 </label>
                 <input
@@ -461,12 +469,12 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                   value={researchArea}
                   onChange={(e) => setResearchArea(e.target.value)}
                   placeholder="e.g. Forest Mensuration & Carbon Sequestration"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Google Drive / Document Link
                 </label>
                 <input
@@ -474,12 +482,12 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                   value={driveUrl}
                   onChange={(e) => setDriveUrl(e.target.value)}
                   placeholder="https://drive.google.com/..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">
                   Thesis Abstract / Executive Summary
                 </label>
                 <textarea
@@ -487,21 +495,21 @@ export const AdminThesesPanel: React.FC<AdminThesesPanelProps> = ({
                   onChange={(e) => setAbstract(e.target.value)}
                   placeholder="Brief synopsis of methodology, findings, and ecological implications..."
                   rows={3}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors"
                 >
                   {editingItem ? 'Save Changes' : 'Archive Thesis'}
                 </button>

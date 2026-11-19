@@ -6,7 +6,6 @@ import {
   Trash2, 
   Star, 
   ExternalLink, 
-  Sparkles, 
   CheckCircle2, 
   AlertCircle, 
   Globe, 
@@ -474,31 +473,32 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-xs animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-[#11261D]/85 animate-fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="relative max-w-4xl w-full max-h-[94vh] flex flex-col bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative max-w-4xl w-full max-h-[94vh] flex flex-col bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
           <div>
-            <div className="flex items-center gap-2">
-              <Camera className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
-              <h3 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100">
-                Species Photo Management: <span className="italic">{species.scientificName}</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Camera className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
+              <h3 className="font-editorial text-base sm:text-lg font-bold text-[#19382B] dark:text-[#F3F1E8]">
+                Species Photo Management:{' '}
+                <span className="font-scientific font-semibold">{species.scientificName}</span>
               </h3>
-              <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold">
+              <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-[#FAF9F4] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 font-semibold">
                 {totalPhotosCount} photos
               </span>
             </div>
-            <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 flex items-center gap-2">
+            <div className="text-xs text-[#42684D] dark:text-[#8A9C74] mt-0.5 flex items-center gap-2 flex-wrap">
               <span>{species.commonName}</span>
               <span>·</span>
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">{species.banglaName}</span>
+              <span className="font-medium text-[#19382B] dark:text-[#BBC4A6]">{species.banglaName}</span>
               <span>·</span>
               <span className="font-mono">{species.family}</span>
             </div>
@@ -506,7 +506,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
+            className="p-1.5 rounded-md text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -515,9 +515,9 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 text-xs">
           {/* Quick Toolbar: Multi-Source Botanical Sync */}
-          <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 font-semibold">
-              <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3.5 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-md flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-[#19382B] dark:text-[#F3F1E8] font-semibold">
+              <Camera className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6] shrink-0" />
               <span>Multi-Source Authentic Botanical Photo Curation</span>
             </div>
 
@@ -526,7 +526,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 type="button"
                 onClick={handleCheckAndImportFlora}
                 disabled={isSyncingFlora}
-                className="px-2.5 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 shadow-xs transition-colors disabled:opacity-50 text-[11px]"
+                className="px-2.5 py-1.5 rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 text-[11px]"
                 title="Fetch photos from floraofbangladesh.com"
               >
                 <Globe className={`w-3.5 h-3.5 ${isSyncingFlora ? 'animate-spin' : ''}`} />
@@ -537,7 +537,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 type="button"
                 onClick={handleCheckWikimedia}
                 disabled={isSyncingFlora}
-                className="px-2.5 py-1.5 rounded-lg bg-sky-800 hover:bg-sky-700 text-white font-bold flex items-center gap-1.5 shadow-xs transition-colors disabled:opacity-50 text-[11px]"
+                className="px-2.5 py-1.5 rounded-md bg-[#19382B] hover:bg-[#42684D] text-[#F3F1E8] border border-[#BBC4A6]/30 font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 text-[11px]"
                 title="Query open Wikimedia Commons media API"
               >
                 <Camera className="w-3.5 h-3.5" />
@@ -548,27 +548,27 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 type="button"
                 onClick={handleCheckBfis}
                 disabled={isSyncingFlora}
-                className="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-white font-bold flex items-center gap-1.5 shadow-xs transition-colors disabled:opacity-50 text-[11px]"
+                className="px-2.5 py-1.5 rounded-md bg-[#8A9C74] hover:bg-[#42684D] text-[#F3F1E8] font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50 text-[11px]"
                 title="Check Bangladesh Forest Department (BFIS) upload"
               >
-                <TreePine className="w-3.5 h-3.5 text-emerald-400" />
+                <TreePine className="w-3.5 h-3.5" />
                 <span>Forest Dept (BFIS)</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleRemoveUnmatched}
-                className="px-2.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 font-bold flex items-center gap-1.5 transition-colors text-[11px]"
+                className="px-2.5 py-1.5 rounded-md bg-[#FAF9F4] dark:bg-[#19382B] hover:bg-[#987453] hover:text-[#F3F1E8] text-[#987453] border border-[#987453]/60 font-semibold flex items-center gap-1.5 transition-colors text-[11px]"
                 title="Purge any unmatched photos from this species gallery"
               >
-                <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                <Trash2 className="w-3.5 h-3.5" />
                 <span>Clean Unmatched</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsBulkOpen(!isBulkOpen)}
-                className="px-2.5 py-1.5 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200 font-semibold hover:border-emerald-500 transition-colors flex items-center gap-1.5 text-[11px]"
+                className="px-2.5 py-1.5 rounded-md bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/30 text-[#19382B] dark:text-[#F3F1E8] font-semibold hover:border-[#42684D] transition-colors flex items-center gap-1.5 text-[11px]"
               >
                 <Layers className="w-3.5 h-3.5" />
                 <span>{isBulkOpen ? 'Close Paste' : 'Batch Paste'}</span>
@@ -578,27 +578,27 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
           {/* Messages */}
           {successMsg && (
-            <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-200 font-semibold flex items-center gap-2 animate-fade-in">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+            <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#42684D] text-[#19382B] dark:text-[#F3F1E8] font-semibold flex items-center gap-2 animate-fade-in">
+              <CheckCircle2 className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6] shrink-0" />
               <span>{successMsg}</span>
             </div>
           )}
 
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-900 dark:text-rose-200 font-semibold flex items-center gap-2 animate-fade-in">
-              <AlertCircle className="w-4 h-4 text-rose-700 shrink-0" />
+            <div className="p-3 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453] text-[#987453] dark:text-[#F3F1E8] font-semibold flex items-center gap-2 animate-fade-in">
+              <AlertCircle className="w-4 h-4 text-[#987453] shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {/* Bulk Paste Section */}
           {isBulkOpen && (
-            <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/70 space-y-3 animate-fade-in">
+            <div className="p-4 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#EAE7DA]/70 dark:bg-[#142D22] space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-stone-900 dark:text-stone-100">
+                <span className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                   Batch Add Multiple Photo Links
                 </span>
-                <span className="text-stone-400 text-[11px]">
+                <span className="text-[#8A9C74] text-[11px]">
                   Paste multiple image URLs (one per line)
                 </span>
               </div>
@@ -607,15 +607,15 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 onChange={(e) => setBulkUrls(e.target.value)}
                 placeholder="https://blogger.googleusercontent.com/.../photo1.jpg&#10;https://blogger.googleusercontent.com/.../photo2.jpg"
                 rows={4}
-                className="w-full p-2.5 font-mono text-[11px] rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                className="w-full p-2.5 font-mono text-[11px] rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
               />
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-stone-600 dark:text-stone-300">Default Botanical Tag:</span>
+                  <span className="font-semibold text-[#42684D] dark:text-[#BBC4A6]">Default Botanical Tag:</span>
                   <select
                     value={bulkTag}
                     onChange={(e) => setBulkTag(e.target.value as any)}
-                    className="px-2 py-1 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-medium"
+                    className="px-2 py-1 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-medium"
                   >
                     <option value="habit">Tree Habit / Canopy</option>
                     <option value="leaf">Leaves / Foliage</option>
@@ -628,7 +628,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 <button
                   type="button"
                   onClick={handleAddBulkPhotos}
-                  className="px-4 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] font-semibold rounded-md transition-colors"
                 >
                   Import All URLs to Gallery
                 </button>
@@ -637,13 +637,13 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
           )}
 
           {/* 1. PRIMARY SPECIMEN HABIT PHOTO SECTION */}
-          <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/40 space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 font-bold text-stone-900 dark:text-stone-100">
-                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+          <div className="p-4 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#EAE7DA]/60 dark:bg-[#142D22] space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 font-semibold text-[#19382B] dark:text-[#F3F1E8]">
+                <Star className="w-4 h-4 text-[#987453] fill-[#987453]" />
                 <span>Primary Specimen Habit Photo (Cover Photo)</span>
               </div>
-              <span className="text-[11px] text-stone-400">
+              <span className="text-[11px] text-[#8A9C74]">
                 Featured on public species catalog cards
               </span>
             </div>
@@ -652,7 +652,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               {/* Preview Thumbnail */}
               <div className="md:col-span-1">
                 <div
-                  className="relative aspect-video sm:aspect-square rounded-xl overflow-hidden bg-stone-950 border border-stone-300 dark:border-stone-700 cursor-pointer group shadow-xs"
+                  className="relative aspect-[4/3] sm:aspect-square rounded-md overflow-hidden bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/30 cursor-pointer group"
                   onClick={() => primaryUrl && setPreviewZoomUrl(primaryUrl)}
                 >
                   <img
@@ -660,13 +660,13 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                     alt="Primary Specimen"
                     decoding="async"
                     onError={handleImageError}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform"
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white gap-1 font-semibold text-[11px]">
+                  <div className="absolute inset-0 bg-[#11261D]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#F3F1E8] gap-1 font-semibold text-[11px]">
                     <ZoomIn className="w-3.5 h-3.5" />
                     <span>Zoom</span>
                   </div>
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/75 text-amber-300 font-mono text-[9px] font-bold">
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-sm bg-[#19382B]/90 text-[#F3F1E8] border border-[#987453] font-mono text-[9px] font-bold">
                     PRIMARY
                   </div>
                 </div>
@@ -676,7 +676,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               <div className="md:col-span-3 space-y-2.5">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="block font-semibold text-stone-700 dark:text-stone-300">
+                    <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6]">
                       Primary Image URL *
                     </label>
                     {primaryUrl && (
@@ -686,7 +686,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                           setPrimaryUrl('');
                           showSuccess('Primary photo cleared. Click "Save Photo Changes" below to apply.', 4000);
                         }}
-                        className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 flex items-center gap-1 hover:underline"
+                        className="text-[11px] font-semibold text-[#987453] hover:underline flex items-center gap-1"
                       >
                         <Trash2 className="w-3 h-3" />
                         <span>Clear Primary Photo</span>
@@ -698,13 +698,13 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                     value={primaryUrl}
                     onChange={(e) => setPrimaryUrl(sanitizeUrl(e.target.value))}
                     placeholder="https://... or Google Drive image link"
-                    className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-mono"
+                    className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
-                    <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                       Photo Attribution / Credit
                     </label>
                     <input
@@ -712,12 +712,12 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                       value={photoCredit}
                       onChange={(e) => setPhotoCredit(e.target.value)}
                       placeholder="e.g. Flora of Bangladesh / SUST Herbarium"
-                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                      className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                       Flora of Bangladesh Article URL
                     </label>
                     <input
@@ -725,7 +725,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                       value={floraUrl}
                       onChange={(e) => setFloraUrl(e.target.value)}
                       placeholder="http://www.floraofbangladesh.com/2016/..."
-                      className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-mono"
+                      className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                     />
                   </div>
                 </div>
@@ -735,24 +735,24 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
           {/* 2. BOTANICAL PLATES (morePhotos) GALLERY LIST */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 font-bold text-stone-900 dark:text-stone-100">
-                <Layers className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2 font-semibold text-[#19382B] dark:text-[#F3F1E8]">
+                <Layers className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
                 <span>Botanical Multi-Photo Plates ({morePhotos.length} plates)</span>
               </div>
-              <span className="text-[11px] text-stone-400">
+              <span className="text-[11px] text-[#8A9C74]">
                 Morphological views: Habit, Leaves, Bark, Inflorescence, Fruits
               </span>
             </div>
 
             {morePhotos.length === 0 ? (
-              <div className="text-center py-8 border-2 border-dashed border-stone-200 dark:border-stone-800 rounded-xl p-6 bg-stone-50/50 dark:bg-stone-950/30">
-                <Camera className="w-8 h-8 text-stone-400 mx-auto mb-2" />
-                <p className="font-semibold text-stone-700 dark:text-stone-300">
+              <div className="text-center py-8 border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/30 rounded-md p-6 bg-[#EAE7DA]/40 dark:bg-[#142D22]/60">
+                <Camera className="w-8 h-8 text-[#8A9C74] mx-auto mb-2" />
+                <p className="font-semibold text-[#19382B] dark:text-[#F3F1E8]">
                   No additional botanical plates configured yet
                 </p>
-                <p className="text-[11px] text-stone-500 mt-1">
-                  Click "Fetch All from Flora of BD" above or add photos below to create a multi-photo plate gallery.
+                <p className="text-[11px] text-[#42684D] dark:text-[#8A9C74] mt-1">
+                  Click "Flora of BD" above or add photos below to create a multi-photo plate gallery.
                 </p>
               </div>
             ) : (
@@ -760,12 +760,12 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                 {morePhotos.map((plate, index) => (
                   <div
                     key={index}
-                    className="p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-emerald-500/40 transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs"
+                    className="p-3 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 bg-[#F3F1E8] dark:bg-[#142D22] hover:border-[#42684D] transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
                   >
                     {/* Left: Thumbnail & Tag */}
                     <div className="flex items-center gap-3 shrink-0">
                       <div
-                        className="relative w-16 h-14 rounded-lg overflow-hidden bg-stone-950 border border-stone-200 dark:border-stone-800 cursor-pointer shrink-0 group"
+                        className="relative w-16 h-14 rounded-sm overflow-hidden bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 cursor-pointer shrink-0 group"
                         onClick={() => setPreviewZoomUrl(plate.url)}
                       >
                         <img
@@ -774,9 +774,9 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                           loading="lazy"
                           decoding="async"
                           onError={handleImageError}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform"
                         />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                        <div className="absolute inset-0 bg-[#11261D]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#F3F1E8]">
                           <ZoomIn className="w-3.5 h-3.5" />
                         </div>
                       </div>
@@ -786,7 +786,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                           <select
                             value={plate.tag || 'general'}
                             onChange={(e) => handleUpdatePlateTag(index, e.target.value as any)}
-                            className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
+                            className="px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider bg-[#EAE7DA] dark:bg-[#19382B] text-[#42684D] dark:text-[#BBC4A6] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25"
                           >
                             <option value="habit">Habit / Canopy</option>
                             <option value="leaf">Leaf / Foliage</option>
@@ -796,7 +796,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                             <option value="seed">Seed</option>
                             <option value="general">General</option>
                           </select>
-                          <span className="font-mono text-[10px] text-stone-400">
+                          <span className="font-mono text-[10px] text-[#8A9C74]">
                             Plate #{index + 1}
                           </span>
                         </div>
@@ -805,7 +805,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                           value={plate.caption || ''}
                           onChange={(e) => handleUpdatePlateCaption(index, e.target.value)}
                           placeholder="Caption / morphological feature..."
-                          className="w-full sm:w-80 px-2 py-1 text-xs rounded border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                          className="w-full sm:w-80 px-2 py-1 text-xs rounded-sm border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
                         />
                       </div>
                     </div>
@@ -815,19 +815,19 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                       <button
                         type="button"
                         onClick={() => handleMakePrimary(index)}
-                        className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-amber-100 dark:hover:bg-amber-950/80 text-stone-700 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-300 font-semibold text-[11px] flex items-center gap-1 transition-colors"
+                        className="px-2.5 py-1 rounded-md bg-[#EAE7DA] dark:bg-[#19382B] hover:bg-[#987453] hover:text-[#F3F1E8] text-[#19382B] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 font-semibold text-[11px] flex items-center gap-1 transition-colors"
                         title="Set this photo as the Primary Cover specimen"
                       >
                         <Star className="w-3 h-3" />
                         <span>Make Primary</span>
                       </button>
 
-                      <div className="flex items-center border border-stone-200 dark:border-stone-800 rounded-lg overflow-hidden">
+                      <div className="flex items-center border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-md overflow-hidden">
                         <button
                           type="button"
                           onClick={() => handleMovePlate(index, 'up')}
                           disabled={index === 0}
-                          className="p-1 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 text-stone-500"
+                          className="p-1 hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] disabled:opacity-30 text-[#42684D] dark:text-[#BBC4A6]"
                           title="Move Up"
                         >
                           <ArrowUp className="w-3 h-3" />
@@ -836,7 +836,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                           type="button"
                           onClick={() => handleMovePlate(index, 'down')}
                           disabled={index === morePhotos.length - 1}
-                          className="p-1 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 text-stone-500 border-l border-stone-200 dark:border-stone-800"
+                          className="p-1 hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] disabled:opacity-30 text-[#42684D] dark:text-[#BBC4A6] border-l border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25"
                           title="Move Down"
                         >
                           <ArrowDown className="w-3 h-3" />
@@ -846,7 +846,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                       <button
                         type="button"
                         onClick={() => handleDeletePlate(index)}
-                        className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/60 transition-colors"
+                        className="p-1.5 rounded-sm text-[#987453] hover:bg-[#EAE7DA] dark:hover:bg-[#19382B] transition-colors"
                         title="Delete Plate"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -861,16 +861,16 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
           {/* 3. ADD SINGLE PHOTO FORM */}
           <form
             onSubmit={handleAddSinglePhoto}
-            className="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-3"
+            className="p-4 rounded-md border border-[#42684D]/50 bg-[#EAE7DA]/70 dark:bg-[#142D22] space-y-3"
           >
-            <div className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-              <Plus className="w-4 h-4 text-emerald-700" />
+            <div className="font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-1.5">
+              <Plus className="w-4 h-4 text-[#42684D] dark:text-[#BBC4A6]" />
               <span>Add Another Botanical Plate</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2">
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                   Photo URL *
                 </label>
                 <input
@@ -879,18 +879,18 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                   value={newUrl}
                   onChange={(e) => setNewUrl(e.target.value)}
                   placeholder="https://... or Google Drive link"
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                   Botanical Tag
                 </label>
                 <select
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value as any)}
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 font-medium"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] font-medium"
                 >
                   <option value="habit">Tree Habit / Canopy</option>
                   <option value="leaf">Leaves / Foliage</option>
@@ -905,7 +905,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                   Caption / Morphological Description
                 </label>
                 <input
@@ -913,12 +913,12 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                   value={newCaption}
                   onChange={(e) => setNewCaption(e.target.value)}
                   placeholder="e.g. Fissured bark showing lenticels"
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block font-semibold text-[#19382B] dark:text-[#BBC4A6] mb-1">
                   Photo Credit
                 </label>
                 <input
@@ -926,7 +926,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
                   value={newCredit}
                   onChange={(e) => setNewCredit(e.target.value)}
                   placeholder="e.g. FES SUST Herbarium / Lawachara Excursion"
-                  className="w-full px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-1.5 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
             </div>
@@ -934,7 +934,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
             <div className="flex items-center justify-end pt-1">
               <button
                 type="submit"
-                className="px-4 py-1.5 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs flex items-center gap-1.5"
+                className="px-4 py-1.5 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md flex items-center gap-1.5 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Plate to Gallery</span>
@@ -944,23 +944,23 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
         </div>
 
         {/* Modal Footer with Save / Cancel */}
-        <div className="flex items-center justify-between p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 shrink-0">
-          <div className="text-[11px] text-stone-500">
-            Total Photos: <span className="font-bold text-stone-800 dark:text-stone-200">{totalPhotosCount}</span> (1 Primary + {morePhotos.length} Plates)
+        <div className="flex items-center justify-between p-4 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 bg-[#EAE7DA] dark:bg-[#142D22] shrink-0">
+          <div className="text-[11px] text-[#42684D] dark:text-[#8A9C74]">
+            Total Photos: <span className="font-bold text-[#19382B] dark:text-[#F3F1E8]">{totalPhotosCount}</span> (1 Primary + {morePhotos.length} Plates)
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-lg transition-colors"
+              className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] rounded-md transition-colors"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleSaveModal}
-              className="px-5 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs transition-colors flex items-center gap-1.5"
+              className="px-5 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors flex items-center gap-1.5"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>Save Photo Changes</span>
@@ -972,16 +972,16 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
       {/* Lightbox Preview */}
       {previewZoomUrl && (
         <div
-          className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in"
+          className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#11261D]/90 animate-fade-in"
           onClick={() => setPreviewZoomUrl(null)}
         >
           <div
-            className="relative max-w-4xl max-h-[90vh] bg-stone-950 rounded-2xl overflow-hidden shadow-2xl border border-stone-800 p-2"
+            className="relative max-w-4xl max-h-[90vh] bg-[#19382B] rounded-lg overflow-hidden shadow-2xl border border-[#BBC4A6]/30 p-2"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setPreviewZoomUrl(null)}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-black/75 text-white hover:bg-black transition-colors z-10"
+              className="absolute top-3 right-3 p-1.5 rounded-md bg-[#11261D]/90 text-[#F3F1E8] hover:bg-[#19382B] border border-[#BBC4A6]/30 transition-colors z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -990,7 +990,7 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               alt="Zoomed Plate"
               decoding="async"
               onError={handleImageError}
-              className="max-w-full max-h-[82vh] object-contain rounded-lg"
+              className="max-w-full max-h-[82vh] object-contain rounded-md"
             />
           </div>
         </div>

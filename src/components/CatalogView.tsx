@@ -11,14 +11,15 @@ import { CONTRIBUTE_FORM_URL } from '../config';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
 import { 
-  Sparkles, 
+  Search, 
   AlertCircle, 
   Upload, 
   ExternalLink, 
   RefreshCw, 
   Calendar,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+  Plus
 } from 'lucide-react';
 
 interface CatalogViewProps {
@@ -233,18 +234,18 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       {/* Interactive Class Routine Calendar Section (Shown when no search query is active) */}
       {!searchQuery.trim() && (
         <section aria-labelledby="catalog-routine-calendar-heading" className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
             <div>
               <h2
                 id="catalog-routine-calendar-heading"
-                className="text-sm font-bold uppercase tracking-wider text-stone-900 dark:text-stone-100 flex items-center gap-2"
+                className="font-editorial text-base font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2.5"
               >
-                <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                <span className="w-7 h-7 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center shrink-0">
                   <Calendar className="w-4 h-4" />
-                </div>
+                </span>
                 <span>{t('routineCalendarHeading')}</span>
               </h2>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-0.5">
                 {t('routineCalendarSubtitle')}
               </p>
             </div>
@@ -252,17 +253,17 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             <div className="flex flex-wrap items-center gap-3">
               {/* Year Selector */}
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">{t('yearLabel')}</span>
-                <div className="flex gap-1 p-0.5 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                <span className="text-[11px] font-semibold text-[#987453] dark:text-[#BBC4A6] uppercase tracking-wider">{t('yearLabel')}</span>
+                <div className="flex gap-1 p-0.5 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 rounded-md">
                   {([1, 2, 3, 4] as AcademicYear[]).map((yr) => (
                     <button
                       key={yr}
                       type="button"
                       onClick={() => setCalendarYear(yr)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                         calendarYear === yr
-                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                          ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                          : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                       }`}
                     >
                       Y{yr}
@@ -273,17 +274,17 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
               {/* Semester Selector */}
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">{t('semLabel')}</span>
-                <div className="flex gap-1 p-0.5 bg-stone-100 dark:bg-stone-800/80 rounded-xl">
+                <span className="text-[11px] font-semibold text-[#987453] dark:text-[#BBC4A6] uppercase tracking-wider">{t('semLabel')}</span>
+                <div className="flex gap-1 p-0.5 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 rounded-md">
                   {[1, 2].map((sem) => (
                     <button
                       key={sem}
                       type="button"
                       onClick={() => setCalendarSemester(sem as 1 | 2)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
                         calendarSemester === sem
-                          ? 'bg-linear-to-r from-emerald-800 to-emerald-700 text-white shadow-xs'
-                          : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
+                          ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8]'
+                          : 'text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                       }`}
                     >
                       S{sem}
@@ -296,7 +297,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               <button
                 type="button"
                 onClick={() => navigate('/notices?tab=routine')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] bg-[#EAE7DA] dark:bg-[#42684D] border border-[#BBC4A6] dark:border-[#8A9C74]/40 hover:bg-[#BBC4A6]/40 dark:hover:bg-[#42684D]/80 transition-colors cursor-pointer"
                 title="Open full routine view with timetable matrix"
               >
                 <span>{t('fullTimetable')}</span>
@@ -329,30 +330,30 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
       {/* Search Notification Banner */}
       {searchQuery.trim() && (
-        <div className="p-4 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs animate-fade-in">
+        <div className="p-4 rounded-lg bg-[#FAF9F4] dark:bg-[#19382B] border border-[#42684D]/50 dark:border-[#BBC4A6]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 flex items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] text-[#42684D] dark:text-[#8A9C74] flex items-center justify-center shrink-0">
+              <Search className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-emerald-950 dark:text-emerald-100 flex items-center gap-1.5 flex-wrap">
+              <div className="text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-1.5 flex-wrap">
                 <span>{t('searchResultsFor')}</span>
-                <span className="px-1.5 py-0.5 rounded bg-emerald-200/80 dark:bg-emerald-800/80 text-emerald-900 dark:text-emerald-100 font-mono text-[11px]">
-                  "{searchQuery}"
+                <span className="px-1.5 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/60 font-mono text-[11px]">
+                  &ldquo;{searchQuery}&rdquo;
                 </span>
-                <span className="text-stone-400 font-normal">
+                <span className="text-[#987453] dark:text-[#BBC4A6] font-normal">
                   ({filteredResources.length} {filteredResources.length === 1 ? t('resourceWord') : t('resourcesWord')})
                 </span>
               </div>
-              <p className="text-[11px] text-emerald-800 dark:text-emerald-400 mt-0.5">
-                Showing matching course materials. Click <strong>"{t('redirectDrive')}"</strong> to open cloud file or <strong>"{t('readInApp')}"</strong> for instant preview.
+              <p className="text-[11px] text-[#42684D] dark:text-[#BBC4A6] mt-0.5">
+                Showing matching course materials. Click <strong>&ldquo;{t('redirectDrive')}&rdquo;</strong> to open cloud file or <strong>&ldquo;{t('readInApp')}&rdquo;</strong> for instant preview.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={() => handleSearchChange('')}
-            className="px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-emerald-300 dark:border-emerald-700 text-xs font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100/50 transition-colors whitespace-nowrap self-end sm:self-auto shadow-xs"
+            className="px-3 py-1.5 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6] dark:border-[#BBC4A6]/25 text-xs font-semibold text-[#19382B] dark:text-[#F3F1E8] hover:bg-[#BBC4A6]/40 transition-colors whitespace-nowrap self-end sm:self-auto cursor-pointer"
           >
             {t('clearSearch')}
           </button>
@@ -363,12 +364,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       {isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="animate-pulse bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-5 space-y-3">
-              <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-1/3" />
-              <div className="h-6 bg-stone-200 dark:bg-stone-800 rounded w-3/4" />
-              <div className="h-4 bg-stone-200 dark:bg-stone-800 rounded w-1/2" />
-              <div className="h-16 bg-stone-100 dark:bg-stone-800/50 rounded" />
-              <div className="h-9 bg-stone-200 dark:bg-stone-800 rounded" />
+            <div key={i} className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15 p-5 space-y-3">
+              <div className="h-4 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-1/3" />
+              <div className="h-6 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-3/4" />
+              <div className="h-4 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm w-1/2" />
+              <div className="h-16 bg-[#F3F1E8] dark:bg-[#11261D] rounded-sm" />
+              <div className="h-9 bg-[#EAE7DA] dark:bg-[#142D22] rounded-sm" />
             </div>
           ))}
         </div>
@@ -376,17 +377,18 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
       {/* Error State */}
       {!isLoading && loadError && (
-        <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-2xl border border-red-200 dark:border-red-900/40 p-8 shadow-xs">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-stone-800 dark:text-stone-200 mb-1">
+        <div className="text-center py-12 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#987453]/50 p-8">
+          <AlertCircle className="w-10 h-10 text-[#987453] mx-auto mb-3" />
+          <h3 className="text-base font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
             Error Loading Archive
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto mb-6">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-md mx-auto mb-6">
             {loadError}
           </p>
           <button
+            type="button"
             onClick={onRefresh}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Retry Connection</span>
@@ -399,12 +401,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         <>
           {resources.length === 0 ? (
             /* Archive Empty State */
-            <div className="text-center py-16 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
-              <Upload className="w-12 h-12 text-emerald-600 dark:text-emerald-400 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-stone-800 dark:text-stone-200 mb-2">
+            <div className="text-center py-16 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+              <Upload className="w-10 h-10 text-[#42684D] dark:text-[#8A9C74] mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-2">
                 {t('noMaterialsYet')}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto mb-6 leading-relaxed">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-md mx-auto mb-6 leading-relaxed">
                 {t('noMaterialsDesc')}
               </p>
               <div className="flex items-center justify-center gap-3">
@@ -412,14 +414,15 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                   href={CONTRIBUTE_FORM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-semibold transition-colors shadow-xs"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>{t('contributeResource')}</span>
                 </a>
                 <button
+                  type="button"
                   onClick={() => navigate('/manage')}
-                  className="px-4 py-2.5 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 rounded-lg text-xs font-semibold transition-colors"
+                  className="px-4 py-2.5 bg-[#EAE7DA] dark:bg-[#142D22] hover:bg-[#BBC4A6]/40 text-[#19382B] dark:text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors cursor-pointer"
                 >
                   {t('manageArchive')}
                 </button>
@@ -427,18 +430,19 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             </div>
           ) : filteredResources.length === 0 ? (
             /* Filter Match Empty State */
-            <div className="text-center py-16 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-xs">
-              <AlertCircle className="w-12 h-12 text-stone-300 dark:text-stone-700 mx-auto mb-3" />
-              <h3 className="text-base font-bold text-stone-800 dark:text-stone-200 mb-1">
+            <div className="text-center py-16 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+              <AlertCircle className="w-10 h-10 text-[#987453] mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
                 {t('noResourcesMatch')}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto mb-6 leading-relaxed">
+              <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-md mx-auto mb-6 leading-relaxed">
                 {t('noResourcesMatchDesc')}
               </p>
               <div className="flex items-center justify-center gap-3">
                 <button
+                  type="button"
                   onClick={() => setSearchParams(new URLSearchParams(), { replace: true })}
-                  className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-700 dark:text-stone-300 rounded-lg text-xs font-semibold transition-colors"
+                  className="px-4 py-2 bg-[#EAE7DA] dark:bg-[#142D22] hover:bg-[#BBC4A6]/40 text-[#19382B] dark:text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors cursor-pointer"
                 >
                   {t('resetAllFilters')}
                 </button>
@@ -446,7 +450,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                   href={CONTRIBUTE_FORM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-1 px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>{t('contributeResource')}</span>
@@ -471,21 +475,21 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               </div>
 
               {filteredResources.length > 24 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15 text-xs text-[#42684D] dark:text-[#BBC4A6]">
                   <span>
-                    Showing <strong className="text-stone-800 dark:text-stone-200">{Math.min(visibleCount, filteredResources.length)}</strong> of <strong className="text-stone-800 dark:text-stone-200">{filteredResources.length}</strong> materials
+                    Showing <strong className="text-[#19382B] dark:text-[#F3F1E8]">{Math.min(visibleCount, filteredResources.length)}</strong> of <strong className="text-[#19382B] dark:text-[#F3F1E8]">{filteredResources.length}</strong> materials
                   </span>
                   {visibleCount < filteredResources.length ? (
                     <button
                       type="button"
                       onClick={() => setVisibleCount((prev) => Math.min(prev + 24, filteredResources.length))}
-                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-md font-semibold text-xs bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      <Sparkles className="w-4 h-4" />
+                      <Plus className="w-4 h-4" />
                       <span>Load More Materials (+{Math.min(24, filteredResources.length - visibleCount)})</span>
                     </button>
                   ) : (
-                    <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                    <span className="text-[#42684D] dark:text-[#8A9C74] font-semibold flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4" />
                       All {filteredResources.length} materials displayed
                     </span>

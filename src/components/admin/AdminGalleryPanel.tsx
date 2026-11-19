@@ -132,16 +132,16 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-4 rounded-xl border border-stone-200 dark:border-stone-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FAF9F4] dark:bg-[#19382B] p-4 rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20">
         <div>
-          <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-            <ImageIcon className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+          <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2 flex-wrap">
+            <ImageIcon className="w-5 h-5 text-[#42684D] dark:text-[#BBC4A6]" />
             <span>Field & Practical Gallery Management</span>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-sm bg-[#EAE7DA] text-[#42684D] dark:bg-[#142D22] dark:text-[#BBC4A6] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20">
               {gallery.length} photos
             </span>
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs text-[#42684D] dark:text-[#8A9C74] mt-0.5">
             Administer field tour albums, silvicultural practical photos, and forestry research expeditions.
           </p>
         </div>
@@ -149,18 +149,18 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
         <div className="flex items-center gap-2">
           {selectedIds.length > 0 && (
             deleteConfirmId === 'batch' ? (
-              <div className="flex items-center gap-1.5 p-1 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-800 animate-in fade-in">
+              <div className="flex items-center gap-1.5 p-1 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60">
                 <button
                   type="button"
                   onClick={handleBatchDelete}
-                  className="px-3 py-1 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-md transition-colors shadow-xs"
+                  className="px-3 py-1 text-xs font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm transition-colors"
                 >
                   Confirm Delete ({selectedIds.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setDeleteConfirmId(null)}
-                  className="p-1 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+                  className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
                   title="Cancel"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -170,7 +170,7 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId('batch')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Selected ({selectedIds.length})</span>
@@ -180,7 +180,7 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
 
           <button
             onClick={handleOpenAdd}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] flex items-center gap-1.5 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Photo</span>
@@ -191,13 +191,13 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
       {/* Filter Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="relative sm:col-span-2">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-stone-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#8A9C74]" />
           <input
             type="text"
             placeholder="Search by title, location, or tour caption..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74]"
           />
         </div>
 
@@ -205,7 +205,7 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100"
+            className="w-full px-3 py-2 text-xs rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
           >
             <option value="all">All Photo Categories</option>
             <option value="field-tour">Field Tours & Excursions</option>
@@ -221,13 +221,13 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
         {filteredItems.map((item) => (
           <div
             key={item.id}
-            className={`bg-white dark:bg-stone-900 rounded-xl border overflow-hidden flex flex-col justify-between transition-colors shadow-xs ${
+            className={`bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border overflow-hidden flex flex-col justify-between transition-colors ${
               selectedIds.includes(item.id)
-                ? 'border-emerald-600 ring-2 ring-emerald-500/20'
-                : 'border-stone-200 dark:border-stone-800'
+                ? 'border-[#42684D] ring-1 ring-[#42684D]'
+                : 'border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20'
             }`}
           >
-            <div className="relative aspect-video bg-stone-100 dark:bg-stone-800 overflow-hidden">
+            <div className="relative aspect-[4/3] bg-[#EAE7DA] dark:bg-[#142D22] overflow-hidden">
               <img
                 src={getOptimizedImageUrl(item.imageUrl, 480)}
                 alt={item.title}
@@ -242,42 +242,42 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
                     prev.includes(item.id) ? prev.filter((i) => i !== item.id) : [...prev, item.id]
                   )
                 }
-                className="absolute top-2 left-2 p-1 bg-black/60 rounded text-white"
+                className="absolute top-2.5 left-2.5 p-1 bg-[#19382B]/85 rounded-sm text-[#F3F1E8] border border-[#BBC4A6]/30"
               >
                 {selectedIds.includes(item.id) ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400" />
+                  <CheckSquare className="w-4 h-4 text-[#BBC4A6]" />
                 ) : (
                   <Square className="w-4 h-4" />
                 )}
               </button>
-              <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-black/70 text-white">
+              <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider bg-[#19382B]/90 text-[#F3F1E8] border border-[#BBC4A6]/30">
                 {item.category}
               </span>
             </div>
 
             <div className="p-4 flex-1 flex flex-col justify-between">
               <div>
-                <h4 className="font-bold text-sm text-stone-900 dark:text-stone-100 leading-snug mb-1">
+                <h4 className="font-semibold text-sm text-[#19382B] dark:text-[#F3F1E8] leading-snug mb-1">
                   {item.title}
                 </h4>
-                <p className="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 mb-3">
+                <p className="text-xs text-[#42684D] dark:text-[#8A9C74] line-clamp-2 mb-3">
                   {item.caption}
                 </p>
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-2 border-t border-stone-100 dark:border-stone-800">
-                  <span className="flex items-center gap-1 truncate max-w-[150px]">
-                    <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                <div className="flex items-center justify-between text-[11px] text-[#42684D] dark:text-[#8A9C74] pt-2 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15">
+                  <span className="flex items-center gap-1 truncate max-w-[160px]">
+                    <MapPin className="w-3 h-3 text-[#987453] shrink-0" />
                     <span className="truncate">{item.location}</span>
                   </span>
-                  <span className="font-mono">{item.year}</span>
+                  <span className="font-mono text-[#987453] dark:text-[#BBC4A6]">{item.year}</span>
                 </div>
 
-                <div className="flex items-center justify-end gap-1.5 mt-3 pt-2 border-t border-stone-100 dark:border-stone-800">
+                <div className="flex items-center justify-end gap-1.5 mt-3 pt-2 border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15">
                   <button
                     onClick={() => handleOpenEdit(item)}
-                    className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                    className="p-1.5 text-[#8A9C74] hover:text-[#42684D] dark:hover:text-[#F3F1E8] rounded-sm transition-colors"
                     title="Edit Photo Details"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
@@ -286,18 +286,21 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="px-2 py-1 text-[10px] font-bold bg-rose-600 text-white rounded"
+                        className="px-2 py-1 text-[10px] font-semibold bg-[#987453] hover:bg-[#826143] text-[#F3F1E8] rounded-sm"
                       >
                         Confirm
                       </button>
-                      <button onClick={() => setDeleteConfirmId(null)} className="p-1 text-stone-400">
+                      <button
+                        onClick={() => setDeleteConfirmId(null)}
+                        className="p-1 text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+                      >
                         <X className="w-3 h-3" />
                       </button>
                     </div>
                   ) : (
                     <button
                       onClick={() => setDeleteConfirmId(item.id)}
-                      className="p-1.5 text-stone-400 hover:text-rose-600 rounded"
+                      className="p-1.5 text-[#8A9C74] hover:text-[#987453] rounded-sm transition-colors"
                       title="Delete Photo"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -312,44 +315,47 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
 
       {/* Add / Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#11261D]/80 animate-fade-in">
+          <div className="bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 rounded-lg p-6 max-w-lg w-full shadow-xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 pb-3">
+              <h3 className="font-editorial text-lg font-bold text-[#19382B] dark:text-[#F3F1E8]">
                 {editingItem ? 'Edit Gallery Photo' : 'Add New Field Photo'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-stone-400 hover:text-stone-600">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8]"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 rounded-lg text-rose-700 dark:text-rose-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453] rounded-md text-[#987453] dark:text-[#F3F1E8] flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
                 <span>{formError}</span>
               </div>
             )}
 
             <form onSubmit={handleSave} className="space-y-3">
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Photo Title *</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Photo Title *</label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Silviculture Field Tour - Lawachara"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Category</label>
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   >
                     <option value="field-tour">Field Tour</option>
                     <option value="lab">Laboratory Practical</option>
@@ -359,62 +365,62 @@ export const AdminGalleryPanel: React.FC<AdminGalleryPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Year / Batch</label>
+                  <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Year / Batch</label>
                   <input
                     type="text"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     placeholder="2024"
-                    className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                    className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Location</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Location</label>
                 <input
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. Sreemangal, Moulvibazar"
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Image URL *</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Image URL *</label>
                 <input
                   type="text"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://... or /assets/..."
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 font-mono"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] font-mono"
                   required
                 />
               </div>
 
               <div>
-                <label className="block font-semibold mb-1 text-stone-700 dark:text-stone-300">Caption / Tour Summary</label>
+                <label className="block font-semibold mb-1 text-[#19382B] dark:text-[#BBC4A6]">Caption / Tour Summary</label>
                 <textarea
                   value={caption}
                   onChange={(e) => setCaption(e.target.value)}
                   placeholder="Students conducting tree height mensuration using Haga altimeters..."
                   rows={2}
-                  className="w-full px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100"
+                  className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 font-medium text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg"
+                  className="px-4 py-2 font-medium text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] rounded-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold bg-emerald-800 hover:bg-emerald-700 text-white rounded-lg shadow-xs"
+                  className="px-4 py-2 font-semibold bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md transition-colors"
                 >
                   {editingItem ? 'Save Changes' : 'Upload to Gallery'}
                 </button>

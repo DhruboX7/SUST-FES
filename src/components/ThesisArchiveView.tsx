@@ -90,35 +90,35 @@ export const ThesisArchiveView: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      
+
       {/* Banner */}
-      <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-950 rounded-2xl p-6 sm:p-8 text-white border border-emerald-900/40 shadow-sm">
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 shadow-sm">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-2">
-            <GraduationCap className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
+            <GraduationCap className="w-4 h-4 text-[#8A9C74]" />
             <span>Academic Research Repository</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+          <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
             Theses & Graduate Project Archive
           </h1>
-          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#BBC4A6] leading-relaxed">
             Archive of peer-reviewed B.Sc. capstone research dissertations and M.Sc. theses across tropical forestry, conservation biology, and environmental modeling.
           </p>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#8A9C74] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by research topic, author, supervisor (e.g. Dr. Redowan), or year..."
             aria-label="Search theses"
-            className="w-full pl-10 pr-4 py-2 rounded-xl text-xs sm:text-sm bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-10 pr-4 py-2 rounded-md text-xs sm:text-sm bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8] placeholder:text-[#8A9C74] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
           />
         </div>
 
@@ -128,7 +128,7 @@ export const ThesisArchiveView: React.FC = () => {
             value={selectedDegree}
             onChange={(e) => setSelectedDegree(e.target.value)}
             aria-label="Filter by degree program"
-            className="px-3 py-2 rounded-xl text-xs font-semibold bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200"
+            className="px-3 py-2 rounded-md text-xs font-semibold bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 text-[#19382B] dark:text-[#F3F1E8] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
           >
             <option value="all">All Degrees</option>
             <option value="bsc">B.Sc. (Honours)</option>
@@ -141,7 +141,7 @@ export const ThesisArchiveView: React.FC = () => {
                 setSearch('');
                 setSelectedDegree('all');
               }}
-              className="px-3 py-2 rounded-xl text-xs font-semibold text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 bg-stone-100 dark:bg-stone-800 transition-colors shrink-0"
+              className="px-3 py-2 rounded-md text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 transition-colors shrink-0"
             >
               Reset
             </button>
@@ -150,13 +150,19 @@ export const ThesisArchiveView: React.FC = () => {
       </div>
 
       {/* Results List */}
-      {filteredTheses.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8">
-          <GraduationCap className="w-12 h-12 text-stone-300 dark:text-stone-700 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-stone-800 dark:text-stone-200 mb-1">
+      {isLoading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-32 bg-[#EAE7DA] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15" />
+          ))}
+        </div>
+      ) : filteredTheses.length === 0 ? (
+        <div className="text-center py-16 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-8">
+          <GraduationCap className="w-12 h-12 text-[#8A9C74] mx-auto mb-3" />
+          <h3 className="font-editorial text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] mb-1">
             No Dissertations Found
           </h3>
-          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto">
+          <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] max-w-sm mx-auto">
             Try searching a broader research area or clearing the degree filter.
           </p>
         </div>
@@ -168,25 +174,25 @@ export const ThesisArchiveView: React.FC = () => {
             return (
               <div
                 key={th.id}
-                className="p-6 bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs hover:border-emerald-500/50 transition-all space-y-3"
+                className="p-6 bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs hover:border-[#42684D] transition-colors space-y-3"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap text-xs text-stone-400">
-                      <span className="font-mono font-bold text-emerald-800 dark:text-emerald-400">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2 flex-wrap text-xs text-[#8A9C74]">
+                      <span className="font-mono font-bold text-[#42684D] dark:text-[#BBC4A6]">
                         {th.degree}
                       </span>
                       <span aria-hidden="true">·</span>
-                      <span className="font-mono font-semibold text-stone-500 dark:text-stone-400">
+                      <span className="font-mono font-semibold text-[#987453] dark:text-[#8A9C74]">
                         Class of {th.year}
                       </span>
                       <span aria-hidden="true">·</span>
-                      <span className="px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-[10px] font-semibold text-stone-600 dark:text-stone-300">
+                      <span className="px-2 py-0.5 rounded-sm bg-[#EAE7DA] dark:bg-[#142D22] border border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 text-[10px] font-semibold text-[#19382B] dark:text-[#BBC4A6]">
                         {th.researchArea}
                       </span>
                     </div>
 
-                    <h2 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 leading-snug">
+                    <h2 className="font-editorial text-base sm:text-lg font-semibold text-[#19382B] dark:text-[#F3F1E8] leading-snug">
                       {th.title}
                     </h2>
                   </div>
@@ -196,7 +202,7 @@ export const ThesisArchiveView: React.FC = () => {
                       href={th.driveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-semibold shrink-0 shadow-xs transition-colors self-start"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] text-xs font-semibold shrink-0 shadow-xs transition-colors self-start"
                     >
                       <span>Full Dissertation</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -205,15 +211,15 @@ export const ThesisArchiveView: React.FC = () => {
                 </div>
 
                 {/* Author and Supervisor Info */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-stone-600 dark:text-stone-400 pt-2 border-t border-stone-100 dark:border-stone-800">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-[#42684D] dark:text-[#BBC4A6] pt-2 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
                   <div className="flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-stone-400" />
-                    <span><strong className="text-stone-800 dark:text-stone-200">Author:</strong> {th.author}</span>
+                    <User className="w-3.5 h-3.5 text-[#8A9C74]" />
+                    <span><strong className="text-[#19382B] dark:text-[#F3F1E8]">Author:</strong> {th.author}</span>
                   </div>
-                  <span aria-hidden="true">·</span>
+                  <span className="text-[#8A9C74]" aria-hidden="true">·</span>
                   <div className="flex items-center gap-1.5">
-                    <Award className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-                    <span><strong className="text-stone-800 dark:text-stone-200">Supervisor:</strong> {th.supervisor}</span>
+                    <Award className="w-3.5 h-3.5 text-[#987453] dark:text-[#8A9C74]" />
+                    <span><strong className="text-[#19382B] dark:text-[#F3F1E8]">Supervisor:</strong> {th.supervisor}</span>
                   </div>
                 </div>
 
@@ -221,16 +227,16 @@ export const ThesisArchiveView: React.FC = () => {
                 <div>
                   <button
                     onClick={() => toggleExpand(th.id)}
-                    className="text-xs font-semibold text-emerald-800 dark:text-emerald-400 hover:underline flex items-center gap-1 pt-1"
+                    className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:underline flex items-center gap-1 pt-1"
                   >
                     <span>{isExpanded ? 'Hide Abstract' : 'Read Abstract & Findings'}</span>
                     {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                   </button>
 
                   {isExpanded && (
-                    <div className="mt-3 p-4 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs text-stone-700 dark:text-stone-300 leading-relaxed animate-fade-in">
-                      <span className="font-bold text-stone-900 dark:text-stone-100 block mb-1">
-                        Executive Abstract:
+                    <div className="mt-3 p-4 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-xs text-[#19382B] dark:text-[#F3F1E8] leading-relaxed animate-fade-in">
+                      <span className="font-bold text-[#987453] dark:text-[#8A9C74] block mb-1 uppercase tracking-wider text-[10px]">
+                        Executive Abstract
                       </span>
                       {th.abstract}
                     </div>
