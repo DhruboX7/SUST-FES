@@ -106,12 +106,12 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   const reportUrl = `${REPORT_FORM_URL}?usp=pp_url&entry_resource_id=${encodeURIComponent(resource.id || '')}&entry_resource_title=${encodeURIComponent(resource.title || '')}`;
 
   return (
-    <div className="group relative bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-5 hover:border-[#42684D] dark:hover:border-[#8A9C74] transition-colors flex flex-col justify-between">
+    <div className="group relative bg-[#FAF9F4] dark:bg-[#19382B] rounded-xl sm:rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-4 sm:p-5 hover:border-[#42684D] dark:hover:border-[#8A9C74] transition-colors flex flex-col justify-between">
       
       {/* Top Header Zone: Metadata with · separator */}
       <div>
-        <div className="flex items-center justify-between gap-2 mb-2 text-xs text-[#42684D] dark:text-[#BBC4A6]">
-          <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-start justify-between gap-2 mb-1.5 text-xs text-[#42684D] dark:text-[#BBC4A6]">
+          <div className="flex items-center gap-1.5 flex-wrap pt-1">
             <span className="font-mono font-semibold text-[#19382B] dark:text-[#F3F1E8]">
               {resource.courseCode}
             </span>
@@ -129,15 +129,15 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             )}
           </div>
 
-          {/* Bookmark Button */}
+          {/* Bookmark Button (>=44px touch target) */}
           <button
             type="button"
             onClick={() => onToggleBookmark(resource.id)}
             aria-label={isBookmarked ? `Remove bookmark for ${resource.title}` : `Bookmark ${resource.title}`}
-            className={`p-1 rounded-md transition-colors cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#42684D] ${
+            className={`min-w-[44px] min-h-[44px] -mr-2 -mt-2 flex items-center justify-center rounded-lg transition-colors cursor-pointer active:scale-95 focus:outline-hidden focus:ring-2 focus:ring-[#42684D] ${
               isBookmarked
                 ? 'text-[#987453] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
-                : 'text-[#BBC4A6] dark:text-[#8A9C74]/50 hover:text-[#42684D] dark:hover:text-[#BBC4A6]'
+                : 'text-[#BBC4A6] dark:text-[#8A9C74]/65 hover:text-[#42684D] dark:hover:text-[#BBC4A6]'
             }`}
           >
             <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-[#987453]' : ''}`} />
@@ -194,11 +194,11 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open ${resource.title} in Google Drive`}
-              className="py-2 px-3 rounded-md text-xs font-medium bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] dark:hover:text-[#11261D] text-[#F3F1E8] transition-colors flex items-center justify-center gap-1.5 focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
+              className="min-h-[44px] py-2 px-3 rounded-lg sm:rounded-md text-xs font-semibold bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] dark:hover:text-[#11261D] text-[#F3F1E8] transition-colors flex items-center justify-center gap-1.5 active:scale-[0.98] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
               title="Redirect and open document in Google Drive / Cloud"
             >
               <span>{t('redirectDrive')}</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
             </a>
 
             {/* In-App Preview Button */}
@@ -206,24 +206,24 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               type="button"
               onClick={() => onPreview(resource)}
               aria-label={`Read ${resource.title} in app`}
-              className="py-2 px-3 rounded-md text-xs font-medium bg-[#EAE7DA] hover:bg-[#BBC4A6]/45 dark:bg-[#142D22] dark:hover:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
+              className="min-h-[44px] py-2 px-3 rounded-lg sm:rounded-md text-xs font-semibold bg-[#EAE7DA] hover:bg-[#BBC4A6]/45 dark:bg-[#142D22] dark:hover:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] focus:outline-hidden focus:ring-2 focus:ring-[#42684D]"
               title="Read document embedded in app"
             >
-              <Eye className="w-3.5 h-3.5" />
+              <Eye className="w-3.5 h-3.5 shrink-0" />
               <span>{t('readInApp')}</span>
             </button>
           </div>
 
           {/* Secondary Actions: Download, Copy Drive Link & Report */}
-          <div className="flex items-center justify-between text-[11px] pt-1 text-[#42684D] dark:text-[#BBC4A6] border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15">
+          <div className="grid grid-cols-3 gap-1 text-[11px] pt-1 text-[#42684D] dark:text-[#BBC4A6] border-t border-[#BBC4A6]/40 dark:border-[#BBC4A6]/15">
             <button
               type="button"
               onClick={() => onCopyLink(resource)}
               aria-label={`Copy shareable link for ${resource.title}`}
-              className="hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors flex items-center gap-1 py-1 cursor-pointer"
+              className="min-h-[40px] px-2 rounded-md hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors flex items-center justify-center gap-1.5 cursor-pointer font-medium active:scale-95"
               title="Copy shareable link"
             >
-              <Copy className="w-3 h-3" />
+              <Copy className="w-3.5 h-3.5 shrink-0" />
               <span>{t('copyLink')}</span>
             </button>
 
@@ -233,10 +233,10 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               rel="noopener noreferrer"
               download
               aria-label={`Direct download ${resource.title}`}
-              className="hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors flex items-center gap-1 py-1"
+              className="min-h-[40px] px-2 rounded-md hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors flex items-center justify-center gap-1.5 font-medium active:scale-95"
               title="Download file directly"
             >
-              <Download className="w-3 h-3" />
+              <Download className="w-3.5 h-3.5 shrink-0" />
               <span>{t('download')}</span>
             </a>
 
@@ -245,10 +245,10 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Report broken link for ${resource.title}`}
-              className="hover:text-[#987453] dark:hover:text-[#BBC4A6] transition-colors flex items-center gap-1 py-1"
+              className="min-h-[40px] px-2 rounded-md hover:bg-[#EAE7DA] dark:hover:bg-[#142D22] hover:text-[#987453] dark:hover:text-[#BBC4A6] transition-colors flex items-center justify-center gap-1.5 font-medium active:scale-95"
               title="Report broken or inaccessible link"
             >
-              <Flag className="w-3 h-3" />
+              <Flag className="w-3.5 h-3.5 shrink-0" />
               <span>{t('report')}</span>
             </a>
           </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Globe, Users, Award, ShieldCheck, PlusCircle, Camera } from 'lucide-react';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { CONTRIBUTE_FORM_URL } from '../config';
 import { SustLogo } from './SustLogo';
 import heroImg from '../assets/images/hero_forestry_sust.webp';
 
@@ -98,15 +97,13 @@ export const AboutView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15">
-            <a
-              href={CONTRIBUTE_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/contribute"
               className="text-xs font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:text-[#19382B] dark:hover:text-[#F3F1E8] hover:underline flex items-center gap-1.5"
             >
               <PlusCircle className="w-3.5 h-3.5 text-[#987453] dark:text-[#8A9C74]" />
               <span>Submit Resource</span>
-            </a>
+            </Link>
             <span className="text-[#8A9C74]" aria-hidden="true">·</span>
             <Link
               to="/manage"

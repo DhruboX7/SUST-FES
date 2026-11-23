@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   ResourceItem, 
   TreeSpecies, 
@@ -10,6 +11,7 @@ import {
 } from '../types';
 import { 
   verifyAdminPin, 
+  getStoredContributionRequests,
   getStoredSpecies, 
   saveStoredSpecies, 
   getStoredGallery, 
@@ -27,7 +29,8 @@ import { usePageMeta } from '../hooks/usePageMeta';
 import { ErrorBoundary } from './ErrorBoundary';
 import { SustLogo } from './SustLogo';
 
-// Lazy Sub-panels to avoid loading all 9 admin modules & datasets upfront
+// Lazy Sub-panels to avoid loading all admin modules & datasets upfront
+const AdminReviewQueuePanel = lazy(() => import('./admin/AdminReviewQueuePanel').then((m) => ({ default: m.AdminReviewQueuePanel })));
 const AdminExamBankPanel = lazy(() => import('./admin/AdminExamBankPanel').then((m) => ({ default: m.AdminExamBankPanel })));
 const AdminLinksPanel = lazy(() => import('./admin/AdminLinksPanel').then((m) => ({ default: m.AdminLinksPanel })));
 const AdminSpeciesPanel = lazy(() => import('./admin/AdminSpeciesPanel').then((m) => ({ default: m.AdminSpeciesPanel })));
@@ -54,7 +57,9 @@ import {
   Loader2,
   ArrowRight,
   LogOut,
-  AlertCircle
+  AlertCircle,
+  Inbox,
+  PlusCircle
 } from 'lucide-react';
 
 interface AdminViewProps {
@@ -77,7 +82,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     description: 'Master administrative suite for academic materials, exam questions, botanical flora, field galleries, monographs, and notice circulars.',
   });
 
-  // Authentication State (guarded against restricted iframe sessionStorage)
+  // Authentication State (sessionStorage-persisted across tab switches, clears on browser close)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
       return typeof window !== 'undefined' && window.sessionStorage?.getItem('sust_fes_admin_session_unlocked') === 'true';
@@ -90,8 +95,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
   // Active Management Tab
   const [activeTab, setActiveTab] = useState<
-    'pyq' | 'links' | 'species' | 'gallery' | 'studentPhotos' | 'theses' | 'notices' | 'routine' | 'backup'
-  >('pyq');
+    'review' | 'pyq' | 'links' | 'species' | 'gallery' | 'studentPhotos' | 'theses' | 'notices' | 'routine' | 'backup'
+  >('review');
 
   // Multi-collection data stores
   const [species, setSpecies] = useState<TreeSpecies[]>([]);
@@ -100,6 +105,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const [theses, setTheses] = useState<ThesisItem[]>([]);
   const [notices, setNotices] = useState<NoticeItem[]>([]);
   const [quickLinks, setQuickLinks] = useState<QuickLinkItem[]>([]);
+  const [pendingContributionCount, setPendingContributionCount] = useState<number>(
+    () => getStoredContributionRequests().filter((r) => r.status === 'pending').length
+  );
 
   // Load all collection stores (deferred until authenticated to save memory & bandwidth)
   const loadAllCollections = async (isMountedCheck?: () => boolean) => {
@@ -119,6 +127,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
       setNotices(Array.isArray(notData) ? notData.filter(Boolean) : []);
       const linksData = getStoredQuickLinks();
       setQuickLinks(Array.isArray(linksData) ? linksData.filter(Boolean) : []);
+      setPendingContributionCount(
+        getStoredContributionRequests().filter((r) => r.status === 'pending').length
+      );
     } catch (err) {
       console.error('Failed to load collections in AdminView:', err);
     }
@@ -136,6 +147,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
       if (!collection || collection === 'all') {
         loadAllCollections(check);
+      } else if (collection === 'contributions') {
+        setPendingContributionCount(
+          getStoredContributionRequests().filter((r) => r.status === 'pending').length
+        );
       } else if (collection === 'species') {
         getStoredSpecies().then((d) => isMounted && setSpecies(Array.isArray(d) ? d.filter(Boolean) : [])).catch(() => {});
       } else if (collection === 'gallery') {
@@ -164,6 +179,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     if (verifyAdminPin(pinInput)) {
       try {
         window.sessionStorage?.setItem('sust_fes_admin_session_unlocked', 'true');
+        window.sessionStorage?.removeItem('sust_fes_otp_session_code');
       } catch {
         // Ignore restricted sessionStorage errors
       }
@@ -171,13 +187,14 @@ export const AdminView: React.FC<AdminViewProps> = ({
       setPinError('');
       setPinInput('');
     } else {
-      setPinError('Incorrect Admin Passcode. Default passcode is sustfes.');
+      setPinError('Incorrect Departmental Admin Passcode. Default passcode is sustfes.');
     }
   };
 
   const handleLockSession = () => {
     try {
       window.sessionStorage?.removeItem('sust_fes_admin_session_unlocked');
+      window.sessionStorage?.removeItem('sust_fes_otp_session_code');
     } catch {
       // Ignore restricted sessionStorage errors
     }
@@ -193,10 +210,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
     0
   );
 
-  // 1. PIN UNLOCK SCREEN
+  // 1. PIN AUTHENTICATION GATEWAY
   if (!isAuthenticated) {
     return (
-      <div className="py-12 sm:py-20 flex items-center justify-center animate-fade-in">
+      <div className="py-12 sm:py-16 flex flex-col items-center justify-center gap-5 animate-fade-in">
         <div className="max-w-md w-full bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-lg p-6 sm:p-8 shadow-sm text-center space-y-6">
           <div className="relative w-16 h-16 mx-auto">
             <SustLogo size="xl" />
@@ -207,16 +224,16 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
           <div>
             <h2 className="font-editorial text-xl sm:text-2xl font-semibold text-[#19382B] dark:text-[#F3F1E8] tracking-tight">
-              FES Master Admin Suite
+              FES Master Admin Console
             </h2>
             <p className="text-xs text-[#42684D] dark:text-[#BBC4A6] mt-1.5 leading-relaxed">
-              Enter the administrative passcode to manage study resources, past exam questions, tree species, gallery albums, theses, and notices.
+              Department of Forestry and Environmental Science · Enter administrative PIN to review submitted contributions and manage archive resources.
             </p>
           </div>
 
           {pinError && (
-            <div className="p-3 bg-[#EAE7DA] dark:bg-[#142D22] border border-[#987453]/60 rounded-md text-[#987453] dark:text-[#F3F1E8] text-xs flex items-center gap-2 text-left">
-              <AlertCircle className="w-4 h-4 shrink-0 text-[#987453]" />
+            <div className="p-3 bg-[#FEE2E2] dark:bg-[#7F1D1D]/60 border border-[#F87171]/70 rounded-md text-[#991B1B] dark:text-[#FECACA] text-xs flex items-start gap-2 text-left">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{pinError}</span>
             </div>
           )}
@@ -244,8 +261,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
             </button>
           </form>
 
-          <div className="pt-2 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 text-[11px] text-[#8A9C74]">
-            Default passcode: <code className="font-mono text-[#19382B] dark:text-[#BBC4A6] bg-[#EAE7DA] dark:bg-[#142D22] px-1.5 py-0.5 rounded-sm">sustfes</code>
+          <div className="pt-3 border-t border-[#BBC4A6]/50 dark:border-[#BBC4A6]/15 space-y-2 text-[11px] text-[#8A9C74]">
+            <div>
+              Default PIN: <code className="font-mono text-[#19382B] dark:text-[#BBC4A6] bg-[#EAE7DA] dark:bg-[#142D22] px-1.5 py-0.5 rounded-sm">sustfes</code>
+            </div>
+            <div>
+              <Link
+                to="/contribute"
+                className="inline-flex items-center gap-1.5 font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:underline"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>Submit a resource without a PIN in Contribute</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -289,6 +317,30 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
       {/* Navigation Tabs with Live Badges */}
       <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-lg border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 p-1.5 shadow-xs flex items-center gap-1.5 overflow-x-auto text-xs font-medium">
+        {/* 0. Review Queue */}
+        <button
+          onClick={() => setActiveTab('review')}
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'review'
+              ? 'bg-[#D97706] text-[#FFFBEB] font-semibold shadow-xs'
+              : 'text-[#92400E] dark:text-[#FDE68A] hover:bg-[#FEF3C7]/60 dark:hover:bg-[#142D22]'
+          }`}
+        >
+          <Inbox className="w-3.5 h-3.5" />
+          <span>Review Queue</span>
+          {pendingContributionCount > 0 && (
+            <span
+              className={`font-mono text-[10px] px-1.5 py-0.5 rounded-sm font-bold ${
+                activeTab === 'review'
+                  ? 'bg-[#78350F] text-[#FFFBEB]'
+                  : 'bg-[#FEE2E2] text-[#991B1B] border border-[#F87171]/70'
+              }`}
+            >
+              {pendingContributionCount}
+            </span>
+          )}
+        </button>
+
         {/* 1. Exam Questions (PYQ) */}
         <button
           onClick={() => setActiveTab('pyq')}
@@ -445,6 +497,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
             </div>
           }
         >
+          {activeTab === 'review' && <AdminReviewQueuePanel />}
+
           {activeTab === 'pyq' && (
             <AdminExamBankPanel
               resources={safeResources}

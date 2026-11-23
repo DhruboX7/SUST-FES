@@ -157,6 +157,11 @@ export const RecentNoticesBar: React.FC = () => {
   const activeNotice = eligibleNotices[safeIndex];
   if (!activeNotice) return null;
 
+  const isActiveUrgent =
+    Boolean(activeNotice.pinned) ||
+    (Array.isArray(activeNotice.tags) &&
+      activeNotice.tags.some((t) => typeof t === 'string' && t.toLowerCase() === 'important'));
+
   const handlePrev = () => {
     const prevIdx = (safeIndex - 1 + eligibleNotices.length) % eligibleNotices.length;
     transitionToIndex(prevIdx, 'prev');
@@ -177,27 +182,28 @@ export const RecentNoticesBar: React.FC = () => {
             return (
               <span
                 key={tag.id}
-                className={`inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider border ${style.badge}`}
+                className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider border ${style.badge}`}
               >
+                <span className={`w-1.5 h-1.5 rounded-xs shrink-0 ${style.dot}`} />
                 <span>{tag.label}</span>
               </span>
             );
           })}
 
           {tags.length === 0 && notice.pinned && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider bg-[#987453]/12 text-[#987453] border border-[#987453]/35 dark:bg-[#987453]/20 dark:text-[#F3F1E8] dark:border-[#987453]/45">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-[#FEF3C7] text-[#92400E] border border-[#F59E0B]/70 dark:bg-[#78350F]/60 dark:text-[#FDE68A] dark:border-[#FBBF24]/50">
               <Pin className="w-2.5 h-2.5" />
               <span>Pinned</span>
             </span>
           )}
         </div>
 
-        <span className="text-xs sm:text-[13px] font-medium text-[#19382B] dark:text-[#F3F1E8] group-hover:text-[#42684D] dark:group-hover:text-[#BBC4A6] transition-colors truncate min-w-0">
+        <span className="text-xs sm:text-[13px] font-semibold text-[#19382B] dark:text-[#F3F1E8] group-hover:text-[#92400E] dark:group-hover:text-[#FDE68A] transition-colors truncate min-w-0">
           {notice.title}
         </span>
 
         {notice.date && (
-          <span className="hidden md:inline-block text-[11px] font-mono text-[#987453] dark:text-[#8A9C74] shrink-0">
+          <span className="hidden md:inline-block text-[11px] font-mono font-semibold text-[#92400E] dark:text-[#FDE68A]/80 shrink-0">
             · {notice.date}
           </span>
         )}
@@ -223,22 +229,26 @@ export const RecentNoticesBar: React.FC = () => {
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
-      className="relative w-full bg-[#EAE7DA] dark:bg-[#152E23] border-b border-[#BBC4A6]/60 dark:border-[#BBC4A6]/15 transition-colors"
+      className="relative w-full bg-[#FDF7E7] dark:bg-[#173326] border-b border-[#F59E0B]/45 dark:border-[#FBBF24]/25 transition-colors"
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2">
-        <div className="flex items-center justify-between gap-2 sm:gap-3 min-h-[28px]">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-1.5 sm:py-2">
+        <div className="flex items-center justify-between gap-2 sm:gap-3 min-h-[36px]">
           {/* Left Title Badge */}
           <Link
             to="/notices"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] text-[11px] font-semibold tracking-wide uppercase shrink-0 hover:bg-[#42684D] dark:hover:bg-[#8A9C74] dark:hover:text-[#11261D] transition-colors"
+            className={`inline-flex items-center gap-1.5 px-2.5 min-h-[34px] rounded-md text-[11px] font-bold tracking-wide uppercase shrink-0 transition-colors shadow-xs active:scale-95 ${
+              isActiveUrgent
+                ? 'bg-[#B91C1C] hover:bg-[#991B1B] dark:bg-[#DC2626] dark:hover:bg-[#B91C1C] text-[#FFF5F5]'
+                : 'bg-[#D97706] hover:bg-[#B45309] dark:bg-[#D97706] dark:hover:bg-[#F59E0B] text-[#FFFBEB]'
+            }`}
           >
-            <Megaphone className="w-3.5 h-3.5 text-[#BBC4A6] shrink-0" />
+            <Megaphone className="w-3.5 h-3.5 text-[#FEF3C7] shrink-0" />
             <span className="hidden xs:inline sm:inline">{settings.title || 'Latest Notices'}</span>
             <span className="xs:hidden sm:hidden">Notices</span>
           </Link>
 
           {/* Animated Crossfade + Slide Notice Viewport */}
-          <div className="relative flex-1 min-w-0 h-7 overflow-hidden flex items-center">
+          <div className="relative flex-1 min-w-0 h-9 sm:h-7 overflow-hidden flex items-center">
             {exitingNotice && (
               <div
                 key={`exit-${exitingNotice.id}-${transitionTick}`}
@@ -252,7 +262,7 @@ export const RecentNoticesBar: React.FC = () => {
             <Link
               key={`active-${activeNotice.id}-${transitionTick}`}
               to={`/notices?tab=notices&notice=${encodeURIComponent(activeNotice.id)}`}
-              className={`w-full min-w-0 flex items-center gap-2 group py-0.5 rounded-md focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D] ${enterClass}`}
+              className={`w-full min-w-0 min-h-[36px] flex items-center gap-2 group py-1 sm:py-0.5 rounded-md focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#D97706] ${enterClass}`}
               title={activeNotice.title}
             >
               {renderNoticeRow(activeNotice)}
@@ -262,34 +272,34 @@ export const RecentNoticesBar: React.FC = () => {
           {/* Right Controls: Stepper + All Notices Link */}
           <div className="flex items-center gap-1.5 shrink-0">
             {eligibleNotices.length > 1 && (
-              <div className="flex items-center gap-0.5 bg-[#FAF9F4] dark:bg-[#19382B] border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 rounded-md p-0.5">
+              <div className="flex items-center gap-0.5 bg-[#FFFBEB] dark:bg-[#19382B] border border-[#F59E0B]/45 dark:border-[#FBBF24]/25 rounded-md p-0.5">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="p-1 text-[#42684D] hover:text-[#19382B] dark:text-[#BBC4A6] dark:hover:text-[#F3F1E8] rounded-sm transition-colors cursor-pointer"
+                  className="min-w-[34px] min-h-[34px] sm:min-w-[28px] sm:min-h-[28px] flex items-center justify-center text-[#92400E] hover:text-[#19382B] dark:text-[#FDE68A] dark:hover:text-[#F3F1E8] rounded-sm transition-colors cursor-pointer active:scale-90"
                   aria-label="Previous notice"
                   title="Previous notice"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <ChevronLeft className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 </button>
-                <span className="hidden sm:inline px-1 text-[10px] font-mono font-semibold text-[#987453] dark:text-[#BBC4A6] select-none">
+                <span className="hidden sm:inline px-1 text-[10px] font-mono font-bold text-[#92400E] dark:text-[#FDE68A] select-none">
                   {safeIndex + 1}/{eligibleNotices.length}
                 </span>
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="p-1 text-[#42684D] hover:text-[#19382B] dark:text-[#BBC4A6] dark:hover:text-[#F3F1E8] rounded-sm transition-colors cursor-pointer"
+                  className="min-w-[34px] min-h-[34px] sm:min-w-[28px] sm:min-h-[28px] flex items-center justify-center text-[#92400E] hover:text-[#19382B] dark:text-[#FDE68A] dark:hover:text-[#F3F1E8] rounded-sm transition-colors cursor-pointer active:scale-90"
                   aria-label="Next notice"
                   title="Next notice"
                 >
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                 </button>
               </div>
             )}
 
             <Link
               to="/notices"
-              className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#FAF9F4] dark:hover:bg-[#19382B] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1 px-2.5 min-h-[34px] rounded-md text-[11px] font-bold text-[#92400E] dark:text-[#FDE68A] hover:bg-[#FEF3C7] dark:hover:bg-[#19382B] hover:text-[#78350F] dark:hover:text-[#FFFBEB] transition-colors whitespace-nowrap"
             >
               <span>All Notices</span>
               <ArrowRight className="w-3 h-3" />
@@ -302,11 +312,13 @@ export const RecentNoticesBar: React.FC = () => {
       {settings.autoRotate && eligibleNotices.length > 1 && !isPaused && (
         <div
           aria-hidden="true"
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#BBC4A6]/40 dark:bg-[#19382B] overflow-hidden pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#F59E0B]/20 dark:bg-[#FBBF24]/15 overflow-hidden pointer-events-none"
         >
           <div
             key={`progress-${safeIndex}-${intervalMs}`}
-            className="h-full w-full bg-[#42684D] dark:bg-[#8A9C74] origin-left"
+            className={`h-full w-full origin-left ${
+              isActiveUrgent ? 'bg-[#DC2626] dark:bg-[#F87171]' : 'bg-[#D97706] dark:bg-[#FBBF24]'
+            }`}
             style={{
               animation: `noticeProgressFill ${intervalMs}ms linear forwards`,
             }}

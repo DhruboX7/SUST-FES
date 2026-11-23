@@ -186,6 +186,33 @@ export interface MasterLibraryBackup {
   noticeBarSettings?: NoticeBarSettings;
   quickLinks: QuickLinkItem[];
   studentPhotos?: StudentPhotoItem[];
+  contributionRequests?: ContributionRequest[];
+}
+
+export type ContributionEntityType =
+  | 'resource'
+  | 'species'
+  | 'gallery'
+  | 'student_photo'
+  | 'thesis'
+  | 'notice'
+  | 'quick_link';
+
+export type ContributionStatus = 'pending' | 'approved' | 'rejected';
+
+export interface ContributionRequest {
+  id: string;
+  entityType: ContributionEntityType;
+  title: string;
+  contributorName: string;
+  contributorBatch?: string;
+  contributorContact?: string;
+  summary: string;
+  payload: Record<string, any>;
+  status: ContributionStatus;
+  submittedAt: string;
+  reviewedAt?: string;
+  reviewNote?: string;
 }
 
 export interface BotanyAiResult {

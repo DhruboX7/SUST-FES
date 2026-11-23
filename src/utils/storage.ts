@@ -11,7 +11,9 @@ import {
   StudentPhotoItem,
   MasterLibraryBackup,
   YearRoutine,
-  RoutineSlot
+  RoutineSlot,
+  ContributionEntityType,
+  ContributionRequest
 } from '../types';
 import { INITIAL_RESOURCE_ARCHIVE } from '../data/coursesData';
 
@@ -27,6 +29,7 @@ const STORAGE_KEY_QUICKLINKS = 'sust_fes_quicklinks_v1';
 const STORAGE_KEY_STUDENT_PHOTOS = 'sust_fes_student_photos_v1';
 const STORAGE_KEY_BOOKMARKS = 'sust_fes_bookmarks_v1';
 const STORAGE_KEY_PIN = 'sust_fes_admin_pin_v1';
+const STORAGE_KEY_CONTRIBUTION_REQUESTS = 'sust_fes_contribution_requests_v1';
 const DEFAULT_PIN = 'sustfes';
 
 export const DEFAULT_NOTICE_TYPES: NoticeTypeDefinition[] = [
@@ -817,6 +820,7 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
   const noticeBarSettings = getStoredNoticeBarSettings();
   const quickLinks = getStoredQuickLinks();
   const studentPhotos = getStoredStudentPhotosSync();
+  const contributionRequests = getStoredContributionRequests();
 
   const backupData: MasterLibraryBackup = {
     exportedAt: new Date().toISOString(),
@@ -832,6 +836,7 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
     noticeBarSettings: customData?.noticeBarSettings || noticeBarSettings,
     quickLinks: customData?.quickLinks || quickLinks,
     studentPhotos: customData?.studentPhotos || studentPhotos,
+    contributionRequests: customData?.contributionRequests || contributionRequests,
   };
 
   const jsonStr = JSON.stringify(backupData, null, 2);
@@ -875,6 +880,7 @@ export function importMasterBackupFromJson(
         let noticeBarSettings: NoticeBarSettings | null = null;
         let links: QuickLinkItem[] = [];
         let studentPhotos: StudentPhotoItem[] = [];
+        let contributionRequests: ContributionRequest[] = [];
 
         // Support both old resource-only backups and new Master backups
         if (Array.isArray(parsed)) {
@@ -891,6 +897,9 @@ export function importMasterBackupFromJson(
           }
           if (Array.isArray(parsed.quickLinks)) links = parsed.quickLinks;
           if (Array.isArray(parsed.studentPhotos)) studentPhotos = parsed.studentPhotos;
+          if (Array.isArray(parsed.contributionRequests)) {
+            contributionRequests = parsed.contributionRequests;
+          }
         }
 
         if (
@@ -900,7 +909,8 @@ export function importMasterBackupFromJson(
           theses.length === 0 &&
           notices.length === 0 &&
           links.length === 0 &&
-          studentPhotos.length === 0
+          studentPhotos.length === 0 &&
+          contributionRequests.length === 0
         ) {
           return resolve({
             success: false,
@@ -918,6 +928,7 @@ export function importMasterBackupFromJson(
         if (noticeBarSettings) saveStoredNoticeBarSettings(noticeBarSettings);
         if (links.length > 0) saveStoredQuickLinks(links);
         if (studentPhotos.length > 0) saveStoredStudentPhotos(studentPhotos);
+        if (contributionRequests.length > 0) saveStoredContributionRequests(contributionRequests);
 
         resolve({
           success: true,
@@ -1022,6 +1033,8 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   safeStorageRemove(STORAGE_KEY_ROUTINES);
   safeStorageRemove(STORAGE_KEY_QUICKLINKS);
   safeStorageRemove(STORAGE_KEY_STUDENT_PHOTOS);
+  safeStorageRemove('sust_fes_otp_manage_passwords_v1');
+  safeStorageRemove(STORAGE_KEY_CONTRIBUTION_REQUESTS);
 
   resetStoredResourcesToDefaults(false);
   await Promise.all([
@@ -1035,4 +1048,253 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   getStoredQuickLinks();
 
   notifyDataUpdate('all');
+}
+
+// ==========================================
+// 9. OPEN CONTRIBUTION SUBMISSION & ADMIN REVIEW QUEUE
+// ==========================================
+
+export function getStoredContributionRequests(): ContributionRequest[] {
+  try {
+    const raw = safeStorageGet(STORAGE_KEY_CONTRIBUTION_REQUESTS);
+    if (!raw) return [];
+    return sanitizeObjectArray<ContributionRequest>(JSON.parse(raw));
+  } catch {
+    return [];
+  }
+}
+
+export function saveStoredContributionRequests(
+  requests: ContributionRequest[],
+  notify = true
+): void {
+  try {
+    safeStorageSet(
+      STORAGE_KEY_CONTRIBUTION_REQUESTS,
+      JSON.stringify(sanitizeObjectArray<ContributionRequest>(requests))
+    );
+    if (notify) {
+      notifyDataUpdate('contributions');
+    }
+  } catch (err) {
+    console.error('Failed to save contribution requests:', err);
+  }
+}
+
+export function submitContributionRequest(params: {
+  entityType: ContributionEntityType;
+  title: string;
+  contributorName: string;
+  contributorBatch?: string;
+  contributorContact?: string;
+  summary: string;
+  payload: Record<string, any>;
+}): { ok: true; request: ContributionRequest } | { ok: false; error: string } {
+  if (!params.title?.trim() || !params.contributorName?.trim()) {
+    return {
+      ok: false,
+      error: 'Title and contributor name are required to submit a contribution.',
+    };
+  }
+
+  const now = new Date().toISOString();
+  const requestId = `contrib-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
+  const newRequest: ContributionRequest = {
+    id: requestId,
+    entityType: params.entityType,
+    title: params.title.trim(),
+    contributorName: params.contributorName.trim(),
+    contributorBatch: params.contributorBatch?.trim() || undefined,
+    contributorContact: params.contributorContact?.trim() || undefined,
+    summary: params.summary.trim(),
+    payload: params.payload,
+    status: 'pending',
+    submittedAt: now,
+  };
+
+  const requests = getStoredContributionRequests();
+  saveStoredContributionRequests([newRequest, ...requests], true);
+
+  return {
+    ok: true,
+    request: newRequest,
+  };
+}
+
+export async function approveContributionRequest(
+  requestId: string,
+  reviewNote?: string
+): Promise<{ ok: boolean; error?: string }> {
+  const requests = getStoredContributionRequests();
+  const target = requests.find((r) => r.id === requestId);
+  if (!target) {
+    return { ok: false, error: 'Contribution request not found.' };
+  }
+  if (target.status !== 'pending') {
+    return { ok: false, error: 'This request has already been reviewed.' };
+  }
+
+  const payload = target.payload || {};
+  const suffix = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+
+  try {
+    if (target.entityType === 'resource') {
+      const current = getStoredResources();
+      const newRes: ResourceItem = {
+        id: payload.id || `res-${suffix}`,
+        title: payload.title || target.title,
+        courseCode: payload.courseCode || 'FES-GENERAL',
+        courseTitle: payload.courseTitle || 'Departmental Archive',
+        year: payload.year ?? 'general',
+        semester: payload.semester ?? 'all',
+        category: payload.category || 'notes',
+        driveUrl: payload.driveUrl || '',
+        fileId: payload.fileId || '',
+        fileType: payload.fileType || 'link',
+        previewUrl: payload.previewUrl || payload.driveUrl || '',
+        downloadUrl: payload.downloadUrl || payload.driveUrl || '',
+        sessionYear: payload.sessionYear || undefined,
+        authorOrTeacher: payload.authorOrTeacher || target.contributorName,
+        description: payload.description || undefined,
+        examTerm: payload.category === 'pyq' ? payload.examTerm || 'final' : undefined,
+        createdAt: new Date().toISOString(),
+      };
+      saveStoredResources([newRes, ...current]);
+    } else if (target.entityType === 'species') {
+      const current = await getStoredSpecies();
+      const newSpecies: TreeSpecies = {
+        id: payload.id || `sp-${suffix}`,
+        scientificName: payload.scientificName || target.title,
+        commonName: payload.commonName || target.title,
+        banglaName: payload.banglaName || '',
+        family: payload.family || 'Unclassified',
+        uses: Array.isArray(payload.uses) ? payload.uses : [],
+        habitat: payload.habitat || '',
+        conservationStatus: payload.conservationStatus || 'Least Concern (LC)',
+        distribution: payload.distribution || 'Bangladesh',
+        silviculturalNotes: payload.silviculturalNotes || '',
+        imageUrl: payload.imageUrl || undefined,
+        photoCredit: payload.photoCredit || target.contributorName,
+        forestEcosystem: payload.forestEcosystem || undefined,
+      };
+      saveStoredSpecies([newSpecies, ...current]);
+    } else if (target.entityType === 'gallery') {
+      const current = await getStoredGallery();
+      const newGallery: GalleryItem = {
+        id: payload.id || `gal-${suffix}`,
+        title: payload.title || target.title,
+        caption: payload.caption || '',
+        location: payload.location || 'SUST Campus, Sylhet',
+        year: payload.year || String(new Date().getFullYear()),
+        category: payload.category || 'field-tour',
+        imageUrl: payload.imageUrl || '',
+        photographer: payload.photographer || target.contributorName,
+      };
+      saveStoredGallery([newGallery, ...current]);
+    } else if (target.entityType === 'student_photo') {
+      await getStoredStudentPhotos();
+      addStudentPhotoSubmission(
+        {
+          studentName: payload.studentName || target.contributorName,
+          studentBatch: payload.studentBatch || target.contributorBatch,
+          studentRegNo: payload.studentRegNo || undefined,
+          title: payload.title || target.title,
+          caption: payload.caption || '',
+          location: payload.location || 'SUST Campus, Sylhet',
+          date: payload.date || new Date().toISOString().split('T')[0],
+          imageUrl: payload.imageUrl || '',
+          treeSpeciesId: payload.treeSpeciesId || undefined,
+          speciesScientificName: payload.speciesScientificName || undefined,
+        },
+        'approved'
+      );
+    } else if (target.entityType === 'thesis') {
+      const current = await getStoredTheses();
+      const newThesis: ThesisItem = {
+        id: payload.id || `thesis-${suffix}`,
+        title: payload.title || target.title,
+        author: payload.author || target.contributorName,
+        supervisor: payload.supervisor || 'Department Faculty',
+        degree: payload.degree || 'B.Sc. (Honours)',
+        year: payload.year || String(new Date().getFullYear()),
+        researchArea: payload.researchArea || 'Forestry & Environmental Science',
+        abstract: payload.abstract || '',
+        driveUrl: payload.driveUrl || undefined,
+      };
+      saveStoredTheses([newThesis, ...current]);
+    } else if (target.entityType === 'notice') {
+      const current = await getStoredNotices();
+      const newNotice: NoticeItem = {
+        id: payload.id || `notice-${suffix}`,
+        title: payload.title || target.title,
+        date: payload.date || new Date().toISOString().split('T')[0],
+        body: payload.body || '',
+        imageUrl: payload.imageUrl || undefined,
+        attachmentUrl: payload.attachmentUrl || undefined,
+        link: payload.link || undefined,
+        pinned: Boolean(payload.pinned),
+        tags: Array.isArray(payload.tags) && payload.tags.length > 0 ? payload.tags : ['new'],
+      };
+      saveStoredNotices([newNotice, ...current]);
+    } else if (target.entityType === 'quick_link') {
+      const current = getStoredQuickLinks();
+      const newLink: QuickLinkItem = {
+        id: payload.id || `link-${suffix}`,
+        title: payload.title || target.title,
+        url: payload.url || '',
+        category: payload.category || 'general',
+        description: payload.description || undefined,
+      };
+      saveStoredQuickLinks([newLink, ...current]);
+    }
+
+    const updatedRequests = requests.map((r) =>
+      r.id === requestId
+        ? {
+            ...r,
+            status: 'approved' as const,
+            reviewedAt: new Date().toISOString(),
+            reviewNote: reviewNote?.trim() || undefined,
+          }
+        : r
+    );
+    saveStoredContributionRequests(updatedRequests);
+    return { ok: true };
+  } catch (err) {
+    console.error('Failed to approve contribution request:', err);
+    return { ok: false, error: 'Failed to publish approved item.' };
+  }
+}
+
+export function rejectContributionRequest(
+  requestId: string,
+  reviewNote?: string
+): { ok: boolean; error?: string } {
+  const requests = getStoredContributionRequests();
+  const target = requests.find((r) => r.id === requestId);
+  if (!target) {
+    return { ok: false, error: 'Contribution request not found.' };
+  }
+  if (target.status !== 'pending') {
+    return { ok: false, error: 'This request has already been reviewed.' };
+  }
+
+  const updatedRequests = requests.map((r) =>
+    r.id === requestId
+      ? {
+          ...r,
+          status: 'rejected' as const,
+          reviewedAt: new Date().toISOString(),
+          reviewNote: reviewNote?.trim() || undefined,
+        }
+      : r
+  );
+  saveStoredContributionRequests(updatedRequests);
+  return { ok: true };
+}
+
+export function deleteContributionRequest(requestId: string): void {
+  const requests = getStoredContributionRequests();
+  saveStoredContributionRequests(requests.filter((r) => r.id !== requestId));
 }

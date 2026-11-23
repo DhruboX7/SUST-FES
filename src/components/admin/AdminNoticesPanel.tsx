@@ -651,10 +651,11 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                 key={typeDef.id}
                 type="button"
                 onClick={() => setTypeFilter(active ? 'all' : typeDef.id)}
-                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-all cursor-pointer ${
                   active ? style.solidBadge : style.badge
                 }`}
               >
+                <span className={`w-1.5 h-1.5 rounded-xs shrink-0 ${active ? 'bg-[#FFFBEB]' : style.dot}`} />
                 <span>{typeDef.label}</span>
               </button>
             );
@@ -768,7 +769,11 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                                     : 'bg-[#F3F1E8] dark:bg-[#142D22] text-[#8A9C74] border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                                 }`}
                               >
-                                {isAssigned && <Check className="w-2.5 h-2.5" />}
+                                {isAssigned ? (
+                                  <Check className="w-2.5 h-2.5" />
+                                ) : (
+                                  <span className={`w-1.5 h-1.5 rounded-xs shrink-0 opacity-65 ${style.dot}`} />
+                                )}
                                 <span>{typeDef.label}</span>
                               </button>
                             );
@@ -781,9 +786,9 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleTogglePin(item.id)}
-                          className={`px-2 py-0.5 text-[10px] font-semibold rounded-sm flex items-center gap-1 border transition-colors cursor-pointer ${
+                          className={`px-2 py-0.5 text-[10px] font-bold rounded-sm flex items-center gap-1 border transition-colors cursor-pointer ${
                             item.pinned
-                              ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] dark:text-[#F3F1E8] border-[#987453]/60'
+                              ? 'bg-[#FEE2E2] text-[#991B1B] border-[#F87171]/70 dark:bg-[#7F1D1D]/60 dark:text-[#FECACA] dark:border-[#F87171]/50'
                               : 'bg-[#EAE7DA]/60 dark:bg-[#142D22] text-[#8A9C74] border-[#BBC4A6]/50 dark:border-[#BBC4A6]/20 hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                           }`}
                         >
@@ -942,10 +947,14 @@ export const AdminNoticesPanel: React.FC<AdminNoticesPanelProps> = ({
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-[11px] font-semibold border transition-all cursor-pointer ${
                             active
                               ? style.solidBadge
-                              : `${style.badge} opacity-70 hover:opacity-100`
+                              : `${style.badge} opacity-85 hover:opacity-100`
                           }`}
                         >
-                          {active && <Check className="w-3 h-3" />}
+                          {active ? (
+                            <Check className="w-3 h-3" />
+                          ) : (
+                            <span className={`w-1.5 h-1.5 rounded-xs shrink-0 ${style.dot}`} />
+                          )}
                           <span>{typeDef.label}</span>
                         </button>
                       );

@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { SUST_FES_COURSES } from '../data/coursesData';
 import { ResourceItem, ResourceCategory } from '../types';
 import { ResourceCard } from './ResourceCard';
-import { CONTRIBUTE_FORM_URL } from '../config';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { 
   ArrowLeft, 
@@ -231,15 +230,13 @@ export const CoursePageView: React.FC<CoursePageViewProps> = ({
               All documents hosted in Google Drive for {course.code}
             </p>
           </div>
-          <a
-            href={CONTRIBUTE_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/contribute"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors shadow-xs"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Contribute Material</span>
-          </a>
+          </Link>
         </div>
 
         {categories.map((cat) => {
@@ -257,14 +254,12 @@ export const CoursePageView: React.FC<CoursePageViewProps> = ({
               {categoryItems.length === 0 ? (
                 <div className="p-4 rounded-md bg-[#EAE7DA]/70 dark:bg-[#142D22] border border-dashed border-[#BBC4A6] dark:border-[#BBC4A6]/25 text-xs text-[#42684D] dark:text-[#BBC4A6] flex items-center justify-between">
                   <span>No materials uploaded under this category yet.</span>
-                  <a
-                    href={CONTRIBUTE_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/contribute"
                     className="text-[#987453] dark:text-[#BBC4A6] hover:underline font-semibold"
                   >
                     + Submit {cat.label}
-                  </a>
+                  </Link>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

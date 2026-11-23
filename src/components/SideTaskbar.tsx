@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CONTRIBUTE_FORM_URL } from '../config';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FontTrialSelector } from './FontTrialSelector';
 import {
@@ -437,10 +436,12 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
                         to={item.to || '/'}
                         onClick={mode === 'mobile' ? onCloseMobile : undefined}
                         title={lang === 'bn' ? item.descBn : item.descEn}
-                        className={`flex items-center justify-between gap-2 px-2.5 min-h-[36px] rounded-md text-[13px] transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D] ${
+                        className={`group flex items-center justify-between gap-2.5 px-3 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D] active:scale-[0.99] ${
+                          mode === 'mobile' ? 'min-h-[50px] py-2' : 'min-h-[38px] py-1.5'
+                        } ${
                           isCurrent
                             ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold'
-                            : 'text-[#19382B]/85 dark:text-[#F3F1E8]/85 font-normal hover:bg-[#F3F1E8] dark:hover:bg-[#142D22] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
+                            : 'text-[#19382B]/90 dark:text-[#F3F1E8]/90 font-medium hover:bg-[#F3F1E8] dark:hover:bg-[#142D22] hover:text-[#19382B] dark:hover:text-[#F3F1E8]'
                         }`}
                       >
                         <span className="flex items-center gap-2.5 min-w-0">
@@ -451,7 +452,22 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
                                 : 'text-[#42684D] dark:text-[#8A9C74]'
                             }`}
                           />
-                          <span className="whitespace-nowrap truncate">{getItemLabel(item)}</span>
+                          <span className="min-w-0">
+                            <span className="block text-[13px] whitespace-nowrap truncate leading-snug">
+                              {getItemLabel(item)}
+                            </span>
+                            {mode === 'mobile' && (
+                              <span
+                                className={`block text-[10px] truncate leading-tight mt-0.5 ${
+                                  isCurrent
+                                    ? 'text-[#BBC4A6]'
+                                    : 'text-[#42684D] dark:text-[#BBC4A6]/80'
+                                }`}
+                              >
+                                {lang === 'bn' ? item.descBn : item.descEn}
+                              </span>
+                            )}
+                          </span>
                         </span>
                         {item.badge !== undefined && item.badge > 0 && (
                           <span
@@ -486,7 +502,7 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
             type="button"
             onClick={toggleLang}
             aria-label={`Switch to ${lang === 'en' ? 'Bangla' : 'English'}`}
-            className="flex items-center justify-center gap-1.5 px-2.5 min-h-[38px] text-xs font-medium rounded-md border border-[#BBC4A6] dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] hover:border-[#42684D] dark:hover:border-[#BBC4A6]/50 transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
+            className="flex items-center justify-center gap-1.5 px-2.5 min-h-[42px] text-xs font-medium rounded-lg border border-[#BBC4A6] dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] hover:border-[#42684D] dark:hover:border-[#BBC4A6]/50 transition-colors cursor-pointer whitespace-nowrap active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
           >
             <Languages className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74] shrink-0" />
             <span>{t('switchLangLabel')}</span>
@@ -496,7 +512,7 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
             type="button"
             onClick={onToggleDarkMode}
             aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="flex items-center justify-center gap-1.5 px-2.5 min-h-[38px] text-xs font-medium rounded-md border border-[#BBC4A6] dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] hover:border-[#42684D] dark:hover:border-[#BBC4A6]/50 transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
+            className="flex items-center justify-center gap-1.5 px-2.5 min-h-[42px] text-xs font-medium rounded-lg border border-[#BBC4A6] dark:border-[#BBC4A6]/25 bg-[#FAF9F4] dark:bg-[#19382B] text-[#19382B] dark:text-[#F3F1E8] hover:border-[#42684D] dark:hover:border-[#BBC4A6]/50 transition-colors cursor-pointer whitespace-nowrap active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
           >
             {isDarkMode ? (
               <>
@@ -516,16 +532,14 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
         <FontTrialSelector fullWidth popoverAlign="left" />
 
         {/* Contribute Material Primary Action */}
-        <a
-          href={CONTRIBUTE_FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/contribute"
           onClick={mode === 'mobile' ? onCloseMobile : undefined}
-          className="w-full flex items-center justify-center gap-2 px-4 min-h-[40px] text-xs font-semibold rounded-md bg-[#42684D] hover:bg-[#19382B] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] dark:hover:text-[#11261D] text-[#F3F1E8] transition-colors whitespace-nowrap focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
+          className="w-full flex items-center justify-center gap-2 px-4 min-h-[44px] text-xs font-semibold rounded-lg bg-[#42684D] hover:bg-[#19382B] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] dark:hover:text-[#11261D] text-[#F3F1E8] transition-colors whitespace-nowrap active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#42684D]"
         >
           <PlusCircle className="w-4 h-4 shrink-0" />
           <span>{t('contributeResource')}</span>
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -560,9 +574,10 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation and Options Drawer"
-          className={`absolute top-0 left-0 bottom-0 w-[300px] max-w-[86vw] bg-[#F3F1E8] dark:bg-[#142D22] border-r border-[#BBC4A6] dark:border-[#BBC4A6]/20 shadow-xl flex flex-col transition-transform duration-200 ease-out ${
+          className={`absolute top-0 left-0 bottom-0 w-[312px] max-w-[88vw] rounded-r-2xl overflow-hidden bg-[#F3F1E8] dark:bg-[#142D22] border-r border-[#BBC4A6] dark:border-[#BBC4A6]/20 shadow-xl flex flex-col transition-transform duration-200 ease-out ${
             isMobileOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
+          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           {renderPanelContent('mobile')}
         </aside>

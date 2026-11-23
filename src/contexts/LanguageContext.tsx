@@ -179,9 +179,25 @@ const translations: Record<Language, Record<string, string>> = {
     hillSemiEvergreen: 'Hill Semi-Evergreen',
     plainsHomestead: 'Plains & Homestead',
 
-    // Common
+    // Common & Quick Navigation Hub
     credits: 'Credits',
     newBadge: 'New',
+    quickNavHeading: 'Easy Navigation',
+    quickNavSubheading: 'Tap any section below to open directly',
+    quickNavCatalogDesc: 'Slides, notes & books',
+    quickNavPyqDesc: 'Midterm & final papers',
+    quickNavSyllabusDesc: 'Courses & credits',
+    quickNavNoticesDesc: 'Alerts & class routine',
+    quickNavSpeciesDesc: '55+ Bangladesh trees',
+    quickNavCgpaDesc: 'SUST 4.0 calculator',
+    quickNavContributeDesc: 'Share notes or PYQs',
+    quickNavManageDesc: 'Approve & edit archive',
+    mobileNavHome: 'Catalog',
+    mobileNavExams: 'Exams',
+    mobileNavNotices: 'Notices',
+    mobileNavAdd: 'Submit',
+    mobileNavMenu: 'Menu',
+    backToTop: 'Top',
   },
   bn: {
     // Navigation & App Bar
@@ -352,9 +368,25 @@ const translations: Record<Language, Record<string, string>> = {
     hillSemiEvergreen: 'পাহাড়ী আধা-চিরসবুজ',
     plainsHomestead: 'সমতল ও বসতবাড়ি',
 
-    // Common
+    // Common & Quick Navigation Hub
     credits: 'ক্রেডিট',
     newBadge: 'নতুন',
+    quickNavHeading: 'সহজ নেভিগেশন',
+    quickNavSubheading: 'সরাসরি যেতে যেকোনো বিভাগ ট্যাপ করুন',
+    quickNavCatalogDesc: 'স্লাইড, নোট ও বই',
+    quickNavPyqDesc: 'মিড ও ফাইনাল প্রশ্ন',
+    quickNavSyllabusDesc: 'কোর্স ও ক্রেডিট তালিকা',
+    quickNavNoticesDesc: 'বিজ্ঞপ্তি ও ক্লাস রুটিন',
+    quickNavSpeciesDesc: '৫৫+ দেশীয় বৃক্ষ প্রজাতি',
+    quickNavCgpaDesc: 'শাবিপ্রবি ৪.০ জিপিএ',
+    quickNavContributeDesc: 'নোট বা প্রশ্ন জমা দিন',
+    quickNavManageDesc: 'আর্কাইভ ও অনুমোদন',
+    mobileNavHome: 'ক্যাটালগ',
+    mobileNavExams: 'প্রশ্ন',
+    mobileNavNotices: 'নোটিশ',
+    mobileNavAdd: 'জমা দিন',
+    mobileNavMenu: 'মেনু',
+    backToTop: 'উপরে',
   },
 };
 

@@ -4,10 +4,10 @@ import { ResourceItem, AcademicYear, AcademicSemester, ResourceCategory, YearRou
 import { SUST_FES_COURSES } from '../data/coursesData';
 import { getStoredRoutines } from '../utils/storage';
 import { HeroSection } from './HeroSection';
+import { QuickNavHub } from './QuickNavHub';
 import { SemesterFilter } from './SemesterFilter';
 import { ResourceCard } from './ResourceCard';
 import { DatedRoutineCalendar } from './routine/DatedRoutineCalendar';
-import { CONTRIBUTE_FORM_URL } from '../config';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
 import { 
@@ -231,6 +231,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         onSwitchToExamBank={() => navigate('/pyq')}
       />
 
+      {/* Quick One-Tap Navigation Hub (2-col mobile app grid / 6-col desktop strip) */}
+      <QuickNavHub />
+
       {/* Interactive Class Routine Calendar Section (Shown when no search query is active) */}
       {!searchQuery.trim() && (
         <section aria-labelledby="catalog-routine-calendar-heading" className="space-y-4">
@@ -410,15 +413,14 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                 {t('noMaterialsDesc')}
               </p>
               <div className="flex items-center justify-center gap-3">
-                <a
-                  href={CONTRIBUTE_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors"
+                <button
+                  type="button"
+                  onClick={() => navigate('/contribute')}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5" />
                   <span>{t('contributeResource')}</span>
-                </a>
+                </button>
                 <button
                   type="button"
                   onClick={() => navigate('/manage')}
@@ -446,15 +448,14 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                 >
                   {t('resetAllFilters')}
                 </button>
-                <a
-                  href={CONTRIBUTE_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors"
+                <button
+                  type="button"
+                  onClick={() => navigate('/contribute')}
+                  className="inline-flex items-center gap-1 px-4 py-2 bg-[#42684D] hover:bg-[#19382B] text-[#F3F1E8] rounded-md text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5" />
                   <span>{t('contributeResource')}</span>
-                </a>
+                </button>
               </div>
             </div>
           ) : (

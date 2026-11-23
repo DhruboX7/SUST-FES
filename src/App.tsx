@@ -20,11 +20,12 @@ import { LanguageProvider } from './contexts/LanguageContext';
 
 import { Navbar } from './components/Navbar';
 import { SideTaskbar } from './components/SideTaskbar';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { RecentNoticesBar } from './components/RecentNoticesBar';
 import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-import { Check } from 'lucide-react';
+import { Check, ArrowUp } from 'lucide-react';
 
 function lazyWithRetry<T extends React.ComponentType<any>>(
   importer: () => Promise<{ default: T }>
@@ -59,6 +60,7 @@ const FieldGalleryView = lazyWithRetry(() => import('./components/FieldGalleryVi
 const ThesisArchiveView = lazyWithRetry(() => import('./components/ThesisArchiveView').then((m) => ({ default: m.ThesisArchiveView })));
 const FacultyDirectoryView = lazyWithRetry(() => import('./components/FacultyDirectoryView').then((m) => ({ default: m.FacultyDirectoryView })));
 const AboutView = lazyWithRetry(() => import('./components/AboutView').then((m) => ({ default: m.AboutView })));
+const ContributionView = lazyWithRetry(() => import('./components/ContributionView').then((m) => ({ default: m.ContributionView })));
 const AdminView = lazyWithRetry(() => import('./components/AdminView').then((m) => ({ default: m.AdminView })));
 const NotFoundView = lazyWithRetry(() => import('./components/NotFoundView').then((m) => ({ default: m.NotFoundView })));
 
@@ -152,10 +154,16 @@ function AppContent() {
   const [previewResource, setPreviewResource] = useState<ResourceItem | null>(null);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    const onScroll = () => {
+      setShowScrollTop(window.scrollY > 420);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
+      window.removeEventListener('scroll', onScroll);
       if (toastTimerRef.current) {
         clearTimeout(toastTimerRef.current);
       }
@@ -232,6 +240,15 @@ function AppContent() {
 
   useEffect(() => {
     fetchResources();
+
+    const handleResourceSync = (e: Event) => {
+      const col = (e as CustomEvent<{ collection?: string }>).detail?.collection;
+      if (!col || col === 'resources' || col === 'all') {
+        setResources(getStoredResources());
+      }
+    };
+    window.addEventListener('sust_fes_data_updated', handleResourceSync);
+    return () => window.removeEventListener('sust_fes_data_updated', handleResourceSync);
   }, [fetchResources]);
 
   // Bookmark Toggle
@@ -322,7 +339,7 @@ function AppContent() {
           <RecentNoticesBar />
 
           {/* Main Content Area with Lazy Loaded Routes */}
-          <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 outline-hidden">
+          <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 pt-5 sm:pt-6 pb-12 outline-hidden">
         <ErrorBoundary resetKey={location.pathname} compact>
           <Suspense fallback={<RouteLoadingFallback />}>
             <Routes>
@@ -428,6 +445,9 @@ function AppContent() {
               {/* 13. About FES Department */}
               <Route path="/about" element={<AboutView />} />
 
+              {/* 13.5 Community Contribution & One-Time Review Access */}
+              <Route path="/contribute" element={<ContributionView />} />
+
               {/* 14. In-Browser Administration */}
               <Route 
                 path="/manage" 
@@ -480,12 +500,32 @@ function AppContent() {
         </Suspense>
       )}
 
+      {/* Dedicated Mobile Fixed Thumb Navigation Dock */}
+      <MobileBottomNav
+        isMobileDrawerOpen={isMobileDrawerOpen}
+        onToggleMobileDrawer={() => setIsMobileDrawerOpen((prev) => !prev)}
+        bookmarkCount={bookmarks.length}
+      />
+
+      {/* Easy Back-to-Top Floating Trigger */}
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Scroll back to top"
+          className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-30 min-w-[44px] min-h-[44px] px-3 rounded-full bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] border border-[#BBC4A6]/50 shadow-lg flex items-center justify-center gap-1.5 text-xs font-semibold transition-transform active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#BBC4A6]"
+        >
+          <ArrowUp className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Top</span>
+        </button>
+      )}
+
       {/* Toast Feedback */}
       {toastMessage && (
         <div 
           role="status"
           aria-live="polite"
-          className="fixed bottom-5 right-5 z-50 bg-[#19382B] text-[#F3F1E8] dark:bg-[#FAF9F4] dark:text-[#19382B] px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold flex items-center gap-2 border border-[#42684D] dark:border-[#BBC4A6]"
+          className="fixed bottom-20 lg:bottom-5 right-4 lg:right-5 z-50 bg-[#19382B] text-[#F3F1E8] dark:bg-[#FAF9F4] dark:text-[#19382B] px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold flex items-center gap-2 border border-[#42684D] dark:border-[#BBC4A6]"
         >
           <Check className="w-4 h-4 text-[#8A9C74] dark:text-[#42684D]" />
           <span>{toastMessage}</span>

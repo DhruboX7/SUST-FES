@@ -156,10 +156,10 @@ export const NoticesView: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
 
       {/* Banner */}
-      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 shadow-sm">
+      <div className="bg-[#19382B] rounded-lg p-6 sm:p-8 text-[#F3F1E8] border border-[#42684D]/40 border-l-4 border-l-[#D97706] shadow-sm">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-[#BBC4A6] text-xs font-semibold uppercase tracking-wider mb-2">
-            <Bell className="w-4 h-4 text-[#8A9C74]" />
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-sm bg-[#D97706]/25 border border-[#FBBF24]/45 text-[#FDE68A] text-[11px] font-bold uppercase tracking-wider mb-3">
+            <Bell className="w-3.5 h-3.5 text-[#FBBF24]" />
             <span>FES SUST Departmental Bulletin</span>
           </div>
           <h1 className="font-editorial text-2xl sm:text-3xl font-semibold tracking-tight mb-2 text-[#F3F1E8]">
@@ -185,8 +185,8 @@ export const NoticesView: React.FC = () => {
           <span>Department Notices</span>
           <span className={`px-1.5 py-0.5 rounded-sm text-[10px] font-mono font-bold ${
             activeTab === 'notices'
-              ? 'bg-[#19382B] text-[#F3F1E8]'
-              : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#BBC4A6]'
+              ? 'bg-[#D97706] text-[#FFFBEB]'
+              : 'bg-[#FEF3C7] dark:bg-[#78350F]/60 text-[#92400E] dark:text-[#FDE68A]'
           }`}>
             {notices.length}
           </span>
@@ -237,14 +237,19 @@ export const NoticesView: React.FC = () => {
                     key={typeDef.id}
                     type="button"
                     onClick={() => setSelectedTypeFilter(isSelected ? 'all' : typeDef.id)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold border transition-colors cursor-pointer ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-bold border transition-colors cursor-pointer ${
                       isSelected
                         ? `${style.solidBadge} shadow-xs`
-                        : `${style.badge} opacity-90 hover:opacity-100`
+                        : `${style.badge} hover:brightness-95 dark:hover:brightness-110`
                     }`}
                   >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-xs shrink-0 ${
+                        isSelected ? 'bg-[#FFFBEB]' : style.dot
+                      }`}
+                    />
                     <span>{typeDef.label}</span>
-                    <span className="font-mono text-[10px] opacity-80">({count})</span>
+                    <span className="font-mono text-[10px] opacity-85">({count})</span>
                   </button>
                 );
               })}
@@ -282,24 +287,32 @@ export const NoticesView: React.FC = () => {
             filteredNotices.map((notice) => {
               const tags = resolveNoticeTagDefinitions(notice, noticeTypes);
               const isFocused = focusedNoticeId === notice.id;
+              const primaryStyle = tags.length > 0 ? getNoticeColorStyle(tags[0].color) : null;
+              const isUrgent = Boolean(notice.pinned) || tags.some((t) => t.id.toLowerCase() === 'important');
 
               return (
               <div
                 id={`notice-card-${notice.id}`}
                 key={notice.id}
-                className={`p-5 sm:p-6 rounded-lg border transition-colors ${
+                className={`p-5 sm:p-6 rounded-lg border border-l-4 transition-colors ${
                   isFocused
-                    ? 'bg-[#EAE7DA] dark:bg-[#142D22] border-[#42684D] shadow-md ring-1 ring-[#42684D]'
+                    ? 'bg-[#FEF9C3]/55 dark:bg-[#1E3B2C] border-[#F59E0B] border-l-[#D97706] shadow-md ring-1 ring-[#D97706]/60'
                     : notice.pinned
-                      ? 'bg-[#EAE7DA]/70 dark:bg-[#142D22] border-[#987453]/60 shadow-xs'
-                      : 'bg-[#FAF9F4] dark:bg-[#19382B] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 shadow-xs'
+                      ? 'bg-[#FFFDF5] dark:bg-[#1B3327] border-[#F59E0B]/55 dark:border-[#FBBF24]/35 border-l-[#DC2626] dark:border-l-[#F87171] shadow-xs'
+                      : `bg-[#FAF9F4] dark:bg-[#19382B] border-[#BBC4A6]/70 dark:border-[#BBC4A6]/20 ${
+                          primaryStyle
+                            ? primaryStyle.cardAccent
+                            : isUrgent
+                              ? 'border-l-[#DC2626] dark:border-l-[#F87171]'
+                              : 'border-l-[#42684D] dark:border-l-[#8A9C74]'
+                        } shadow-xs`
                 }`}
               >
                 {/* Header row */}
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     {notice.pinned && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-sm text-[10px] font-bold bg-[#987453] text-[#F3F1E8] uppercase tracking-wider shadow-xs">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-sm text-[10px] font-bold bg-[#B91C1C] dark:bg-[#DC2626] text-[#FFF5F5] border border-[#991B1B] dark:border-[#F87171]/60 uppercase tracking-wider shadow-xs">
                         <Pin className="w-3 h-3" />
                         <span>Pinned Notice</span>
                       </span>
@@ -309,13 +322,14 @@ export const NoticesView: React.FC = () => {
                       return (
                         <span
                           key={tag.id}
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider border ${style.badge}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm text-[10px] font-bold uppercase tracking-wider border ${style.badge}`}
                         >
+                          <span className={`w-1.5 h-1.5 rounded-xs shrink-0 ${style.dot}`} />
                           <span>{tag.label}</span>
                         </span>
                       );
                     })}
-                    <span className="text-xs text-[#987453] dark:text-[#8A9C74] font-mono font-medium">
+                    <span className="text-xs text-[#92400E] dark:text-[#FDE68A]/85 font-mono font-semibold">
                       {notice.date}
                     </span>
                   </div>

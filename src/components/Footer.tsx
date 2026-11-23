@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="mt-16 border-t border-[#42684D]/50 bg-[#19382B] text-[#BBC4A6] text-xs py-10 transition-colors">
+    <footer className="mt-16 border-t border-[#42684D]/50 bg-[#19382B] text-[#BBC4A6] text-xs pt-10 pb-24 lg:pb-10 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pb-6 border-b border-[#42684D]/40">
           {/* Brand & Department */}
@@ -38,25 +38,25 @@ export const Footer: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Navigation & Admin Links */}
-          <div className="flex items-center justify-center gap-4 sm:gap-5 text-[#BBC4A6] flex-wrap">
-            <Link to="/" className="hover:text-[#F3F1E8] transition-colors">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 text-[#BBC4A6] flex-wrap">
+            <Link to="/" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
               {t('catalog')}
             </Link>
-            <Link to="/pyq" className="hover:text-[#F3F1E8] transition-colors">
+            <Link to="/pyq" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
               {t('pyq')}
             </Link>
-            <Link to="/syllabus" className="hover:text-[#F3F1E8] transition-colors">
-              {t('syllabus')}
+            <Link to="/notices" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
+              {t('notices')}
             </Link>
-            <Link to="/species" className="hover:text-[#F3F1E8] transition-colors">
+            <Link to="/species" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
               {t('species')}
             </Link>
-            <Link to="/gallery" className="hover:text-[#F3F1E8] transition-colors">
-              {t('gallery')}
+            <Link to="/contribute" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
+              {t('contribute')}
             </Link>
             <Link
               to="/manage"
-              className="text-[#F3F1E8] font-medium hover:text-[#BBC4A6] transition-colors flex items-center gap-1"
+              className="min-h-[38px] px-2 text-[#F3F1E8] font-medium hover:text-[#BBC4A6] transition-colors inline-flex items-center gap-1"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#987453]" />
               <span>{t('adminEntry')}</span>
