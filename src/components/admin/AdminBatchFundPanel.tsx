@@ -332,7 +332,7 @@ export const AdminBatchFundPanel: React.FC = () => {
               required
               value={newBatchName}
               onChange={(e) => setNewBatchName(e.target.value)}
-              placeholder="Batch Name (e.g. FES 32nd Batch)"
+              placeholder="Batch Name (e.g. FES28 (2025-26))"
               className={inputCls}
             />
             <input

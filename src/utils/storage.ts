@@ -32,7 +32,7 @@ const STORAGE_KEY_STUDENT_PHOTOS = 'sust_fes_student_photos_v1';
 const STORAGE_KEY_BOOKMARKS = 'sust_fes_bookmarks_v1';
 const STORAGE_KEY_PIN = 'sust_fes_admin_pin_v1';
 const STORAGE_KEY_CONTRIBUTION_REQUESTS = 'sust_fes_contribution_requests_v1';
-const STORAGE_KEY_BATCH_FUNDS = 'sust_fes_batch_funds_v1';
+const STORAGE_KEY_BATCH_FUNDS = 'sust_fes_batch_funds_v2';
 const DEFAULT_PIN = 'sustfes';
 
 export const DEFAULT_NOTICE_TYPES: NoticeTypeDefinition[] = [
@@ -1317,23 +1317,23 @@ export function deleteContributionRequest(requestId: string): void {
 
 export const DEFAULT_BATCH_FUNDS: BatchFundRecord[] = [
   {
-    id: 'batch-fes-31',
-    batchName: 'FES 31st Batch (2023-24)',
+    id: 'batch-fes-28',
+    batchName: 'FES28 (2025-26)',
     treasurerName: 'Treasurer (Update in Manage)',
-    treasurerContact: 'Batch CR / Treasurer Office · FES',
+    treasurerContact: 'FES28 Treasurer · Session 2025-26',
     openingBalance: 4500,
-    notes: 'Official batch treasury ledger for semester collections, lab printing, and field tour expenses.',
+    notes: 'Official FES28 batch treasury ledger (Session 2025-26) for semester collections, lab printing, and field tour expenses.',
     updatedAt: '2026-11-24T00:00:00.000Z',
     transactions: [
       {
         id: 'bf-tx-1',
         type: 'collection',
-        title: 'Semester Subscription Collection (36 Members × ৳300)',
+        title: 'FES28 Semester Subscription Collection (36 Members × ৳300)',
         category: 'Contribution',
         amount: 10800,
         date: '2026-10-12',
-        recordedBy: 'Batch Treasurer',
-        notes: 'Collected for semester practicals and student events',
+        recordedBy: 'FES28 Treasurer',
+        notes: 'Collected for 2025-26 semester practicals and student activities',
       },
       {
         id: 'bf-tx-2',
@@ -1342,8 +1342,8 @@ export const DEFAULT_BATCH_FUNDS: BatchFundRecord[] = [
         category: 'Printing & Notes',
         amount: 2450,
         date: '2026-10-19',
-        recordedBy: 'Batch Treasurer',
-        notes: 'Batch-wide copy set from SUST print shop',
+        recordedBy: 'FES28 Treasurer',
+        notes: 'FES28 batch-wide copy set from SUST print shop',
       },
       {
         id: 'bf-tx-3',
@@ -1352,37 +1352,37 @@ export const DEFAULT_BATCH_FUNDS: BatchFundRecord[] = [
         category: 'Field Tour',
         amount: 4200,
         date: '2026-11-04',
-        recordedBy: 'Batch Treasurer',
+        recordedBy: 'FES28 Treasurer',
         notes: 'Transport coordination & drinking water crate',
       },
     ],
   },
   {
-    id: 'batch-fes-30',
-    batchName: 'FES 30th Batch (2022-23)',
+    id: 'batch-fes-27',
+    batchName: 'FES27 (2024-25)',
     treasurerName: 'Treasurer (Update in Manage)',
-    treasurerContact: 'Batch CR / Treasurer Office · FES',
+    treasurerContact: 'FES27 Treasurer · Session 2024-25',
     openingBalance: 6200,
     notes: 'Shared batch fund ledger for field surveys, workshops, and departmental events.',
     updatedAt: '2026-11-24T00:00:00.000Z',
     transactions: [
       {
-        id: 'bf-30-tx-1',
+        id: 'bf-27-tx-1',
         type: 'collection',
         title: 'Annual Batch Fund Deposit',
         category: 'Contribution',
         amount: 8500,
         date: '2026-09-25',
-        recordedBy: 'Batch Treasurer',
+        recordedBy: 'FES27 Treasurer',
       },
       {
-        id: 'bf-30-tx-2',
+        id: 'bf-27-tx-2',
         type: 'expense',
         title: 'Soil Science Practical Reagents & Containers',
         category: 'Equipment',
         amount: 3100,
         date: '2026-10-28',
-        recordedBy: 'Batch Treasurer',
+        recordedBy: 'FES27 Treasurer',
       },
     ],
   },

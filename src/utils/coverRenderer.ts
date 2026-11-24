@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf';
-import { CoverDesignId, CoverFormData } from '../types/cover';
+import { CoverColorMode, CoverDesignId, CoverFormData } from '../types/cover';
 import { SUST_LOGO_URL } from '../components/SustLogo';
 
 export interface DesignPalette {
@@ -15,8 +15,16 @@ export interface DesignPalette {
   headerText?: string;
 }
 
-export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: boolean): DesignPalette {
-  if (monochromePrint) {
+export function getCoverDesignPalette(
+  designId: CoverDesignId,
+  monochromePrint: boolean,
+  colorMode?: CoverColorMode,
+  whitePage?: boolean
+): DesignPalette {
+  const effectiveMode: CoverColorMode =
+    colorMode ?? (monochromePrint ? 'monochrome' : 'default');
+
+  if (effectiveMode === 'monochrome') {
     return {
       paper: '#FFFFFF',
       primary: '#111111',
@@ -24,16 +32,52 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
       accent: '#1F2937',
       ink: '#111111',
       mutedInk: '#374151',
-      plaqueBg: '#F9FAFB',
+      plaqueBg: whitePage ? '#FFFFFF' : '#F9FAFB',
       plaqueBorder: '#111111',
       headerBg: designId === 'emerald-banner' ? '#111111' : undefined,
       headerText: designId === 'emerald-banner' ? '#FFFFFF' : undefined,
     };
   }
 
+  if (effectiveMode === 'signature') {
+    const forcePureWhite = Boolean(whitePage) || designId === 'white-sust-signature';
+    return {
+      paper: forcePureWhite ? '#FFFFFF' : '#FCFBF7',
+      primary: '#19382B',
+      secondary: '#42684D',
+      accent: '#987453',
+      ink: '#19382B',
+      mutedInk: '#42684D',
+      plaqueBg: forcePureWhite ? '#FFFFFF' : '#F3F1E8',
+      plaqueBorder: designId === 'white-sust-signature' ? '#19382B' : '#42684D',
+      headerBg: designId === 'emerald-banner' ? '#19382B' : undefined,
+      headerText: designId === 'emerald-banner' ? '#F3F1E8' : undefined,
+    };
+  }
+
+  const withWhitePage = (p: DesignPalette): DesignPalette =>
+    whitePage
+      ? {
+          ...p,
+          paper: '#FFFFFF',
+          plaqueBg: '#FFFFFF',
+        }
+      : p;
+
   switch (designId) {
-    case 'forestry-botanical':
+    case 'white-sust-signature':
       return {
+        paper: '#FFFFFF',
+        primary: '#19382B',
+        secondary: '#42684D',
+        accent: '#987453',
+        ink: '#19382B',
+        mutedInk: '#42684D',
+        plaqueBg: '#FFFFFF',
+        plaqueBorder: '#19382B',
+      };
+    case 'forestry-botanical':
+      return withWhitePage({
         paper: '#FCFBF7',
         primary: '#19382B',
         secondary: '#42684D',
@@ -42,9 +86,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#42684D',
         plaqueBg: '#F3F1E8',
         plaqueBorder: '#42684D',
-      };
+      });
     case 'emerald-banner':
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#19382B',
         secondary: '#42684D',
@@ -55,9 +99,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         plaqueBorder: '#19382B',
         headerBg: '#19382B',
         headerText: '#F3F1E8',
-      };
+      });
     case 'swiss-minimal':
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#0F172A',
         secondary: '#334155',
@@ -66,9 +110,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#334155',
         plaqueBg: '#F8FAFC',
         plaqueBorder: '#0F172A',
-      };
+      });
     case 'royal-herbarium':
-      return {
+      return withWhitePage({
         paper: '#FAF8F2',
         primary: '#5C1E26',
         secondary: '#7C2D36',
@@ -77,9 +121,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#5C4B43',
         plaqueBg: '#F4EFE4',
         plaqueBorder: '#987453',
-      };
+      });
     case 'botanical-ribbon':
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#19382B',
         secondary: '#42684D',
@@ -88,9 +132,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#42684D',
         plaqueBg: '#F3F1E8',
         plaqueBorder: '#8A9C74',
-      };
+      });
     case 'navy-gold-formal':
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#0F2942',
         secondary: '#1E4068',
@@ -99,9 +143,9 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#334155',
         plaqueBg: '#F8F9FC',
         plaqueBorder: '#A67C37',
-      };
+      });
     case 'minimal-studio':
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#19382B',
         secondary: '#42684D',
@@ -110,10 +154,10 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#42684D',
         plaqueBg: '#FAF9F4',
         plaqueBorder: '#BBC4A6',
-      };
+      });
     case 'classic-academic':
     default:
-      return {
+      return withWhitePage({
         paper: '#FFFFFF',
         primary: '#0F172A',
         secondary: '#19382B',
@@ -122,7 +166,7 @@ export function getCoverDesignPalette(designId: CoverDesignId, monochromePrint: 
         mutedInk: '#334155',
         plaqueBg: '#F8FAFC',
         plaqueBorder: '#1E293B',
-      };
+      });
   }
 }
 
@@ -329,7 +373,12 @@ export async function renderCoverToCanvas(
   }
 
   ctx.scale(scale, scale);
-  const palette = getCoverDesignPalette(data.designId, data.monochromePrint);
+  const palette = getCoverDesignPalette(
+    data.designId,
+    data.monochromePrint,
+    data.colorMode,
+    data.whitePage
+  );
 
   // 1. Paper Base
   ctx.fillStyle = palette.paper;
@@ -340,7 +389,15 @@ export async function renderCoverToCanvas(
   const isBanner = data.designId === 'emerald-banner';
   const isMinimal = data.designId === 'minimal-studio';
 
-  if (data.designId === 'classic-academic') {
+  if (data.designId === 'white-sust-signature') {
+    ctx.strokeStyle = palette.primary;
+    ctx.lineWidth = 1.8;
+    ctx.strokeRect(36, 36, LOGICAL_W - 72, LOGICAL_H - 72);
+    ctx.strokeStyle = palette.accent;
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(43, 43, LOGICAL_W - 86, LOGICAL_H - 86);
+    drawCornerBrackets(ctx, 28, 28, LOGICAL_W - 56, LOGICAL_H - 56, 26, palette.accent, 2.2);
+  } else if (data.designId === 'classic-academic') {
     ctx.strokeStyle = palette.primary;
     ctx.lineWidth = 1.6;
     ctx.strokeRect(36, 36, LOGICAL_W - 72, LOGICAL_H - 72);
@@ -543,7 +600,8 @@ export async function renderCoverToCanvas(
   });
 
   // 7. Submission Columns (Submitted To | Submitted By) pinned cleanly toward lower third
-  const footerTop = Math.max(y + 34, 718);
+  const showSecondTeacher = Boolean(data.hasSecondTeacher);
+  const footerTop = Math.max(y + (showSecondTeacher ? 24 : 34), showSecondTeacher ? 696 : 718);
   const colGap = 36;
   const colW = (contentWidth - 36 - colGap) / 2;
   const leftColX = contentLeft + 18;
@@ -556,14 +614,6 @@ export async function renderCoverToCanvas(
   ctx.beginPath();
   ctx.moveTo(leftColX, footerTop - 16);
   ctx.lineTo(contentRight - 18, footerTop - 16);
-  ctx.stroke();
-
-  // Vertical center divider
-  ctx.strokeStyle = palette.accent;
-  ctx.lineWidth = 1.3;
-  ctx.beginPath();
-  ctx.moveTo(dividerX, footerTop);
-  ctx.lineTo(dividerX, footerTop + 265);
   ctx.stroke();
 
   // Left Column: Submitted To
@@ -580,32 +630,77 @@ export async function renderCoverToCanvas(
   ctx.lineTo(leftColX + 68, ly);
   ctx.stroke();
 
-  ly += 28;
+  ly += showSecondTeacher ? 24 : 28;
+  const tNameFont = showSecondTeacher ? `700 15px ${serifFont}` : `700 16.5px ${serifFont}`;
+  const tNameStep = showSecondTeacher ? 20 : 23;
+  const tMetaFont = showSecondTeacher ? `500 13px ${sansFont}` : `500 14.5px ${sansFont}`;
+  const tMetaStep = showSecondTeacher ? 17.5 : 21;
+
   ctx.fillStyle = palette.ink;
-  ctx.font = `700 16.5px ${serifFont}`;
+  ctx.font = tNameFont;
   wrapLines(ctx, data.teacherName || 'Course Instructor', colW - 8).forEach((l) => {
     ctx.fillText(l, leftColX, ly);
-    ly += 23;
+    ly += tNameStep;
   });
 
-  ly += 2;
+  ly += 1;
   ctx.fillStyle = palette.mutedInk;
-  ctx.font = `500 14.5px ${sansFont}`;
+  ctx.font = tMetaFont;
   if (data.teacherDesignation) {
     wrapLines(ctx, data.teacherDesignation, colW - 8).forEach((l) => {
       ctx.fillText(l, leftColX, ly);
-      ly += 21;
+      ly += tMetaStep;
     });
   }
   const tDept = formatDepartmentHeading(data.teacherDepartment || data.department);
   wrapLines(ctx, tDept, colW - 8).forEach((l) => {
     ctx.fillText(l, leftColX, ly);
-    ly += 21;
+    ly += tMetaStep;
   });
   wrapLines(ctx, data.teacherUniversity || data.universityName, colW - 8).forEach((l) => {
     ctx.fillText(l, leftColX, ly);
-    ly += 21;
+    ly += tMetaStep;
   });
+
+  if (showSecondTeacher) {
+    ly += 4;
+    ctx.strokeStyle = palette.plaqueBorder;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(leftColX, ly);
+    ctx.lineTo(leftColX + 44, ly);
+    ctx.stroke();
+    ly += 18;
+
+    ctx.fillStyle = palette.ink;
+    ctx.font = tNameFont;
+    wrapLines(ctx, data.teacher2Name?.trim() || '2nd Course Instructor', colW - 8).forEach((l) => {
+      ctx.fillText(l, leftColX, ly);
+      ly += tNameStep;
+    });
+
+    ly += 1;
+    ctx.fillStyle = palette.mutedInk;
+    ctx.font = tMetaFont;
+    if (data.teacher2Designation?.trim()) {
+      wrapLines(ctx, data.teacher2Designation.trim(), colW - 8).forEach((l) => {
+        ctx.fillText(l, leftColX, ly);
+        ly += tMetaStep;
+      });
+    }
+    const t2Dept = formatDepartmentHeading(
+      data.teacher2Department || data.teacherDepartment || data.department
+    );
+    wrapLines(ctx, t2Dept, colW - 8).forEach((l) => {
+      ctx.fillText(l, leftColX, ly);
+      ly += tMetaStep;
+    });
+    const t2Uni = data.teacher2University?.trim() || data.teacherUniversity || data.universityName;
+    wrapLines(ctx, t2Uni, colW - 8).forEach((l) => {
+      ctx.fillText(l, leftColX, ly);
+      ly += tMetaStep;
+    });
+  }
 
   // Right Column: Submitted By
   let ry = footerTop + 20;
@@ -624,13 +719,11 @@ export async function renderCoverToCanvas(
   ry += 28;
   const studentRows: Array<[string, string]> = [
     ['Name', data.studentName || 'Student Name'],
-    ['Reg. No.', data.registrationNo || '2023xxxxxx'],
+    ['Reg. No.', data.registrationNo || '2025xxxxxx'],
   ];
-  if (data.batch.trim()) studentRows.push(['Batch', data.batch.trim()]);
   if (data.group.trim()) studentRows.push(['Group', data.group.trim()]);
   if (data.semester.trim()) studentRows.push(['Semester', data.semester.trim()]);
   if (data.session.trim()) studentRows.push(['Session', data.session.trim()]);
-  studentRows.push(['Department', data.studentDepartment.trim() || 'FES, SUST']);
 
   studentRows.forEach(([lbl, val]) => {
     ctx.font = `600 13.5px ${sansFont}`;
@@ -649,15 +742,14 @@ export async function renderCoverToCanvas(
     ry += 2;
   });
 
-  // Footer micro-line
-  ctx.textAlign = 'center';
-  ctx.fillStyle = palette.mutedInk;
-  ctx.font = `500 10.5px ${sansFont}`;
-  ctx.fillText(
-    `${data.universityName || 'Shahjalal University of Science and Technology'} · ${formatDepartmentHeading(data.department)}`,
-    centerX,
-    LOGICAL_H - 52
-  );
+  // Vertical center divider sized cleanly to taller column
+  const dividerBottom = Math.min(LOGICAL_H - 60, Math.max(footerTop + 265, ly - 6, ry - 6));
+  ctx.strokeStyle = palette.accent;
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(dividerX, footerTop);
+  ctx.lineTo(dividerX, dividerBottom);
+  ctx.stroke();
 
   return canvas;
 }

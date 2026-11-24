@@ -45,7 +45,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
   const [year, setYear] = useState<AcademicYear>(1);
   const [semester, setSemester] = useState<1 | 2 | 'all'>(1);
   const [examTerm, setExamTerm] = useState<'midterm' | 'final' | 'quiz' | 'all'>('final');
-  const [sessionYear, setSessionYear] = useState('2023-2024');
+  const [sessionYear, setSessionYear] = useState('2025-26');
   const [driveUrl, setDriveUrl] = useState('');
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
@@ -82,7 +82,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
     setYear(1);
     setSemester(1);
     setExamTerm('final');
-    setSessionYear('2023-2024');
+    setSessionYear('2025-26');
     setDriveUrl('');
     setAuthor('Dept. Exam Archive');
     setDescription('');
@@ -97,7 +97,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
     setYear(item.year || 1);
     setSemester(item.semester || 1);
     setExamTerm(item.examTerm || 'final');
-    setSessionYear(item.sessionYear || '2023-2024');
+    setSessionYear(item.sessionYear || '2025-26');
     setDriveUrl(item.driveUrl || '');
     setAuthor(item.authorOrTeacher || '');
     setDescription(item.description || '');
@@ -548,7 +548,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                     type="text"
                     value={sessionYear}
                     onChange={(e) => setSessionYear(e.target.value)}
-                    placeholder="2023-2024"
+                    placeholder="2025-26"
                     className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>
@@ -561,7 +561,7 @@ export const AdminExamBankPanel: React.FC<AdminExamBankPanelProps> = ({
                     type="text"
                     value={author}
                     onChange={(e) => setAuthor(e.target.value)}
-                    placeholder="CR 29th Batch"
+                    placeholder="CR FES28"
                     className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#11261D] text-[#19382B] dark:text-[#F3F1E8]"
                   />
                 </div>

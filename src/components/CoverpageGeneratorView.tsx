@@ -26,10 +26,12 @@ import {
   Check,
   Loader2,
   FileText,
+  UserPlus,
+  X,
 } from 'lucide-react';
 
 const PROFILE_STORAGE_KEY = 'sust_fes_cover_student_profile_v1';
-const DRAFT_STORAGE_KEY = 'sust_fes_cover_draft_v1';
+const DRAFT_STORAGE_KEY = 'sust_fes_cover_draft_v2';
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
@@ -51,13 +53,18 @@ const SAMPLE_COVER_DATA: CoverFormData = {
   teacherDesignation: 'Professor & Head',
   teacherDepartment: 'Forestry and Environmental Science',
   teacherUniversity: 'Shahjalal University of Science and Technology, Sylhet',
+  hasSecondTeacher: false,
+  teacher2Name: '',
+  teacher2Designation: '',
+  teacher2Department: 'Forestry and Environmental Science',
+  teacher2University: 'Shahjalal University of Science and Technology, Sylhet',
   studentName: 'Tanvir Ahmed Chowdhury',
-  registrationNo: '2023631001',
-  batch: '31st Batch',
+  registrationNo: '2025631001',
+  batch: '',
   group: 'Group A',
   semester: '1st Year 1st Semester',
-  session: '2023-24',
-  studentDepartment: 'Forestry and Environmental Science',
+  session: '2025-26',
+  studentDepartment: '',
   showLogo: true,
   monochromePrint: false,
 };
@@ -197,16 +204,47 @@ export const CoverpageGeneratorView: React.FC = () => {
     }));
   };
 
+  const handleSelectSecondFacultyPreset = (facId: string) => {
+    if (!facId) return;
+    const match = SUST_FES_FACULTY.find((f) => f.id === facId);
+    if (!match) return;
+    setFormData((prev) => ({
+      ...prev,
+      hasSecondTeacher: true,
+      teacher2Name: match.name,
+      teacher2Designation: match.isHead ? `${match.designation} & Head` : match.designation,
+      teacher2Department: 'Forestry and Environmental Science',
+      teacher2University:
+        prev.teacher2University ||
+        prev.teacherUniversity ||
+        'Shahjalal University of Science and Technology, Sylhet',
+    }));
+  };
+
+  const handleToggleSecondTeacher = () => {
+    setFormData((prev) => {
+      const next = !prev.hasSecondTeacher;
+      return {
+        ...prev,
+        hasSecondTeacher: next,
+        teacher2Department:
+          prev.teacher2Department || prev.teacherDepartment || 'Forestry and Environmental Science',
+        teacher2University:
+          prev.teacher2University ||
+          prev.teacherUniversity ||
+          'Shahjalal University of Science and Technology, Sylhet',
+      };
+    });
+  };
+
   const handleSaveProfile = () => {
     try {
       const profile = {
         studentName: formData.studentName,
         registrationNo: formData.registrationNo,
-        batch: formData.batch,
         group: formData.group,
         semester: formData.semester,
         session: formData.session,
-        studentDepartment: formData.studentDepartment,
         universityName: formData.universityName,
         department: formData.department,
       };
@@ -227,6 +265,9 @@ export const CoverpageGeneratorView: React.FC = () => {
       experimentName: '',
       teacherName: '',
       teacherDesignation: '',
+      hasSecondTeacher: false,
+      teacher2Name: '',
+      teacher2Designation: '',
     }));
     notifyStatus('Course & topic fields cleared.');
   };
@@ -717,10 +758,39 @@ export const CoverpageGeneratorView: React.FC = () => {
 
             {/* 4. Submitted To (Instructor) */}
             <div className="bg-[#FAF9F4] dark:bg-[#19382B] rounded-xl border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 p-4 space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
-                <UserCheck className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
-                <span>4. Submitted To (Course Teacher)</span>
-              </h2>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-[#42684D] dark:text-[#8A9C74]" />
+                  <span>4. Submitted To (Course Teacher)</span>
+                </h2>
+                <button
+                  type="button"
+                  onClick={handleToggleSecondTeacher}
+                  className={`inline-flex items-center gap-1.5 px-2.5 min-h-[34px] rounded-md text-[11px] font-semibold border transition-colors cursor-pointer ${
+                    formData.hasSecondTeacher
+                      ? 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#987453] border-[#987453]/40 hover:bg-[#987453]/10'
+                      : 'bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] border-[#BBC4A6] dark:border-[#BBC4A6]/30 hover:border-[#42684D]'
+                  }`}
+                >
+                  {formData.hasSecondTeacher ? (
+                    <>
+                      <X className="w-3.5 h-3.5" />
+                      <span>Remove 2nd Teacher</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="w-3.5 h-3.5 text-[#42684D] dark:text-[#8A9C74]" />
+                      <span>+ Add 2nd Teacher</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {formData.hasSecondTeacher && (
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#987453] dark:text-[#BBC4A6]">
+                  Course Teacher 1
+                </div>
+              )}
 
               <div>
                 <label htmlFor="cover-faculty-preset" className={labelCls}>
@@ -794,6 +864,91 @@ export const CoverpageGeneratorView: React.FC = () => {
                   />
                 </div>
               </div>
+
+              {formData.hasSecondTeacher && (
+                <div className="pt-3 mt-1 border-t border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 space-y-3">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#987453] dark:text-[#BBC4A6]">
+                    Course Teacher 2 (Optional)
+                  </div>
+
+                  <div>
+                    <label htmlFor="cover-faculty2-preset" className={labelCls}>
+                      Quick Fill 2nd Teacher (SUST FES Faculty)
+                    </label>
+                    <select
+                      id="cover-faculty2-preset"
+                      defaultValue=""
+                      onChange={(e) => handleSelectSecondFacultyPreset(e.target.value)}
+                      className={inputCls}
+                    >
+                      <option value="">-- Pick 2nd faculty member --</option>
+                      {SUST_FES_FACULTY.map((f) => (
+                        <option key={f.id} value={f.id}>
+                          {f.name} ({f.isHead ? `${f.designation} & Head` : f.designation})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label htmlFor="cover-teacher2-name" className={labelCls}>
+                        2nd Instructor Name
+                      </label>
+                      <input
+                        id="cover-teacher2-name"
+                        type="text"
+                        value={formData.teacher2Name || ''}
+                        onChange={(e) => updateField('teacher2Name', e.target.value)}
+                        placeholder="e.g. Dr. Md. Habibur Rahman"
+                        className={inputCls}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="cover-teacher2-desig" className={labelCls}>
+                        Designation
+                      </label>
+                      <input
+                        id="cover-teacher2-desig"
+                        type="text"
+                        value={formData.teacher2Designation || ''}
+                        onChange={(e) => updateField('teacher2Designation', e.target.value)}
+                        placeholder="e.g. Associate Professor"
+                        className={inputCls}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label htmlFor="cover-teacher2-dept" className={labelCls}>
+                        2nd Instructor Department
+                      </label>
+                      <input
+                        id="cover-teacher2-dept"
+                        type="text"
+                        value={formData.teacher2Department ?? ''}
+                        onChange={(e) => updateField('teacher2Department', e.target.value)}
+                        placeholder="Forestry and Environmental Science"
+                        className={inputCls}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="cover-teacher2-uni" className={labelCls}>
+                        University
+                      </label>
+                      <input
+                        id="cover-teacher2-uni"
+                        type="text"
+                        value={formData.teacher2University ?? ''}
+                        onChange={(e) => updateField('teacher2University', e.target.value)}
+                        placeholder="Shahjalal University of Science and Technology, Sylhet"
+                        className={inputCls}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* 5. Submitted By (Student Profile) */}
@@ -840,20 +995,7 @@ export const CoverpageGeneratorView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                <div>
-                  <label htmlFor="cover-batch" className={labelCls}>
-                    Batch (Optional)
-                  </label>
-                  <input
-                    id="cover-batch"
-                    type="text"
-                    value={formData.batch}
-                    onChange={(e) => updateField('batch', e.target.value)}
-                    placeholder="31st Batch"
-                    className={inputCls}
-                  />
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
                   <label htmlFor="cover-group" className={labelCls}>
                     Group (Optional)
@@ -867,7 +1009,7 @@ export const CoverpageGeneratorView: React.FC = () => {
                     className={inputCls}
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+                <div>
                   <label htmlFor="cover-session" className={labelCls}>
                     Session
                   </label>
@@ -876,42 +1018,28 @@ export const CoverpageGeneratorView: React.FC = () => {
                     type="text"
                     value={formData.session}
                     onChange={(e) => updateField('session', e.target.value)}
-                    placeholder="2023-24"
+                    placeholder="2025-26"
                     className={inputCls}
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div>
-                  <label htmlFor="cover-semester" className={labelCls}>
-                    Year &amp; Semester
-                  </label>
-                  <input
-                    id="cover-semester"
-                    list="cover-semester-list"
-                    value={formData.semester}
-                    onChange={(e) => updateField('semester', e.target.value)}
-                    className={inputCls}
-                  />
-                  <datalist id="cover-semester-list">
-                    {SEMESTER_PRESETS.map((sem) => (
-                      <option key={sem} value={sem} />
-                    ))}
-                  </datalist>
-                </div>
-                <div>
-                  <label htmlFor="cover-student-dept" className={labelCls}>
-                    Student Department
-                  </label>
-                  <input
-                    id="cover-student-dept"
-                    type="text"
-                    value={formData.studentDepartment}
-                    onChange={(e) => updateField('studentDepartment', e.target.value)}
-                    className={inputCls}
-                  />
-                </div>
+              <div>
+                <label htmlFor="cover-semester" className={labelCls}>
+                  Year &amp; Semester
+                </label>
+                <input
+                  id="cover-semester"
+                  list="cover-semester-list"
+                  value={formData.semester}
+                  onChange={(e) => updateField('semester', e.target.value)}
+                  className={inputCls}
+                />
+                <datalist id="cover-semester-list">
+                  {SEMESTER_PRESETS.map((sem) => (
+                    <option key={sem} value={sem} />
+                  ))}
+                </datalist>
               </div>
             </div>
 

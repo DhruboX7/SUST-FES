@@ -1,6 +1,9 @@
 export type CoverType = 'Lab Report' | 'Assignment' | 'Field Report' | 'Term Paper';
 
+export type CoverColorMode = 'default' | 'signature' | 'monochrome';
+
 export type CoverDesignId =
+  | 'white-sust-signature'
   | 'classic-academic'
   | 'forestry-botanical'
   | 'emerald-banner'
@@ -21,6 +24,15 @@ export interface CoverDesignOption {
 }
 
 export const COVER_DESIGNS: CoverDesignOption[] = [
+  {
+    id: 'white-sust-signature',
+    title: 'White Page · SUST Logo',
+    subtitle: 'Pure crisp white A4 sheet with SUST crest & our FES signature forest palette',
+    badge: 'White + Logo',
+    swatchPrimary: '#19382B',
+    swatchAccent: '#987453',
+    swatchPaper: '#FFFFFF',
+  },
   {
     id: 'classic-academic',
     title: 'Classic SUST Academic',
@@ -116,15 +128,23 @@ export interface CoverFormData {
   teacherDesignation: string;
   teacherDepartment: string;
   teacherUniversity: string;
+  // Optional 2nd Course Teacher
+  hasSecondTeacher?: boolean;
+  teacher2Name?: string;
+  teacher2Designation?: string;
+  teacher2Department?: string;
+  teacher2University?: string;
   // Submitted By
   studentName: string;
   registrationNo: string;
-  batch: string;
+  batch?: string;
   group: string;
   semester: string;
   session: string;
-  studentDepartment: string;
-  // Presentation Options
+  studentDepartment?: string;
+  // Presentation & PDF Options
   showLogo: boolean;
   monochromePrint: boolean;
+  whitePage?: boolean;
+  colorMode?: CoverColorMode;
 }

@@ -87,7 +87,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [selectedCourseCode, setSelectedCourseCode] = useState('FES 08211121');
   const [customCourseTitle, setCustomCourseTitle] = useState('');
   const [category, setCategory] = useState<ResourceCategory>('slides');
-  const [sessionYear, setSessionYear] = useState('2023-2024');
+  const [sessionYear, setSessionYear] = useState('2025-26');
   const [authorOrTeacher, setAuthorOrTeacher] = useState('');
   const [description, setDescription] = useState('');
   const [examTerm, setExamTerm] = useState<'midterm' | 'final' | 'quiz' | 'all'>('final');
@@ -744,7 +744,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 type="text"
                                 value={editSessionYear}
                                 onChange={(e) => setEditSessionYear(e.target.value)}
-                                placeholder="e.g. 2023-2024"
+                                placeholder="e.g. 2025-26"
                                 className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                               />
                             </div>
@@ -761,7 +761,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                               type="text"
                               value={editAuthor}
                               onChange={(e) => setEditAuthor(e.target.value)}
-                              placeholder="e.g. Prof. Dr. A. Rahman or CR 28th"
+                              placeholder="e.g. Prof. Dr. A. Rahman or CR FES28"
                               className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                             />
                           </div>
@@ -1241,7 +1241,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                           type="text"
                           value={sessionYear}
                           onChange={(e) => setSessionYear(e.target.value)}
-                          placeholder="e.g. 2023-2024"
+                          placeholder="e.g. 2025-26"
                           className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                         />
                       </div>
@@ -1258,7 +1258,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         type="text"
                         value={authorOrTeacher}
                         onChange={(e) => setAuthorOrTeacher(e.target.value)}
-                        placeholder="e.g. Course Teacher or CR 28th Batch"
+                        placeholder="e.g. Course Teacher or CR FES28"
                         className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-xs focus:border-[#42684D] focus:outline-none"
                       />
                     </div>

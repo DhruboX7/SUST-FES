@@ -19,7 +19,7 @@ import {
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const SAMPLE_SCHEDULE_TEXT = `SUST Dept of Forestry and Environmental Science
-Weekly Class Schedule (Session 2024-2025)
+Weekly Class Schedule (Session 2025-26)
 Year 1, Semester 1 Routine:
 
 Sunday:

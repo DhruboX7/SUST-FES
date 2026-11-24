@@ -4,8 +4,11 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
-  const basePath = process.env.VITE_BASE_PATH || process.env.BASE_PATH || './';
+export default defineConfig(({ command }) => {
+  const basePath =
+    command === 'serve'
+      ? '/'
+      : process.env.VITE_BASE_PATH || process.env.BASE_PATH || './';
 
   return {
     base: basePath,
@@ -92,6 +95,7 @@ export default defineConfig(() => {
     server: {
       port: 3000,
       host: '0.0.0.0',
+      hmr: process.env.DISABLE_HMR !== 'true',
     },
     preview: {
       port: 3000,

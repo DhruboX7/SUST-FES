@@ -133,6 +133,11 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
   const deptLine = formatDepartmentHeading(data.department);
   const teacherDeptLine = formatDepartmentHeading(data.teacherDepartment || data.department);
   const teacherUniLine = data.teacherUniversity.trim() || universityLine;
+  const showSecondTeacher = Boolean(data.hasSecondTeacher);
+  const teacher2DeptLine = formatDepartmentHeading(
+    data.teacher2Department || data.teacherDepartment || data.department
+  );
+  const teacher2UniLine = data.teacher2University?.trim() || teacherUniLine;
 
   const detailRows: Array<{ label: string; value: string }> =
     data.coverType === 'Lab Report'
@@ -156,16 +161,11 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
 
   const studentRows: Array<{ label: string; value: string; bold?: boolean }> = [
     { label: 'Name', value: data.studentName || 'Student Name', bold: true },
-    { label: 'Reg. No.', value: data.registrationNo || '2023xxxxxx' },
+    { label: 'Reg. No.', value: data.registrationNo || '2025xxxxxx' },
   ];
-  if (data.batch.trim()) studentRows.push({ label: 'Batch', value: data.batch.trim() });
   if (data.group.trim()) studentRows.push({ label: 'Group', value: data.group.trim() });
   if (data.semester.trim()) studentRows.push({ label: 'Semester', value: data.semester.trim() });
   if (data.session.trim()) studentRows.push({ label: 'Session', value: data.session.trim() });
-  studentRows.push({
-    label: 'Department',
-    value: data.studentDepartment.trim() || 'FES, SUST',
-  });
 
   return (
     <div
@@ -571,17 +571,17 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
                   height: '1.6px',
                   backgroundColor: palette.accent,
                   marginTop: '6px',
-                  marginBottom: '16px',
+                  marginBottom: showSecondTeacher ? '12px' : '16px',
                 }}
               />
               <div
                 style={{
                   fontFamily: serifFont,
-                  fontSize: '16.5px',
+                  fontSize: showSecondTeacher ? '15px' : '16.5px',
                   fontWeight: 700,
-                  lineHeight: 1.35,
+                  lineHeight: 1.32,
                   color: palette.ink,
-                  marginBottom: '6px',
+                  marginBottom: showSecondTeacher ? '4px' : '6px',
                 }}
               >
                 {data.teacherName || 'Course Instructor'}
@@ -589,8 +589,8 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
               {data.teacherDesignation && (
                 <div
                   style={{
-                    fontSize: '14.5px',
-                    lineHeight: 1.48,
+                    fontSize: showSecondTeacher ? '13px' : '14.5px',
+                    lineHeight: showSecondTeacher ? 1.38 : 1.48,
                     color: palette.mutedInk,
                   }}
                 >
@@ -599,8 +599,8 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
               )}
               <div
                 style={{
-                  fontSize: '14.5px',
-                  lineHeight: 1.48,
+                  fontSize: showSecondTeacher ? '13px' : '14.5px',
+                  lineHeight: showSecondTeacher ? 1.38 : 1.48,
                   color: palette.mutedInk,
                 }}
               >
@@ -608,13 +608,65 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
               </div>
               <div
                 style={{
-                  fontSize: '14.5px',
-                  lineHeight: 1.48,
+                  fontSize: showSecondTeacher ? '13px' : '14.5px',
+                  lineHeight: showSecondTeacher ? 1.38 : 1.48,
                   color: palette.mutedInk,
                 }}
               >
                 {teacherUniLine}
               </div>
+
+              {showSecondTeacher && (
+                <div
+                  style={{
+                    marginTop: '11px',
+                    paddingTop: '10px',
+                    borderTop: `0.8px solid ${palette.plaqueBorder}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: serifFont,
+                      fontSize: '15px',
+                      fontWeight: 700,
+                      lineHeight: 1.32,
+                      color: palette.ink,
+                      marginBottom: '4px',
+                    }}
+                  >
+                    {data.teacher2Name?.trim() || '2nd Course Instructor'}
+                  </div>
+                  {data.teacher2Designation?.trim() && (
+                    <div
+                      style={{
+                        fontSize: '13px',
+                        lineHeight: 1.38,
+                        color: palette.mutedInk,
+                      }}
+                    >
+                      {data.teacher2Designation.trim()}
+                    </div>
+                  )}
+                  <div
+                    style={{
+                      fontSize: '13px',
+                      lineHeight: 1.38,
+                      color: palette.mutedInk,
+                    }}
+                  >
+                    {teacher2DeptLine}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '13px',
+                      lineHeight: 1.38,
+                      color: palette.mutedInk,
+                    }}
+                  >
+                    {teacher2UniLine}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Vertical Divider */}
@@ -675,18 +727,6 @@ export const CoverSheetPreview: React.FC<CoverSheetPreviewProps> = ({ data, id }
                 ))}
               </div>
             </div>
-          </div>
-
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: '28px',
-              fontSize: '10.5px',
-              fontWeight: 500,
-              color: palette.mutedInk,
-            }}
-          >
-            {universityLine} · {deptLine}
           </div>
         </div>
       </div>

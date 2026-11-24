@@ -65,7 +65,7 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
   const [resCourseCode, setResCourseCode] = useState('FES 08211121');
   const [resCategory, setResCategory] = useState<ResourceCategory>('slides');
   const [resExamTerm, setResExamTerm] = useState<'midterm' | 'final' | 'quiz' | 'all'>('final');
-  const [resSessionYear, setResSessionYear] = useState('2024-2025');
+  const [resSessionYear, setResSessionYear] = useState('2025-26');
   const [resDescription, setResDescription] = useState('');
 
   // Species fields
@@ -390,7 +390,7 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
             type="text"
             value={contributorName}
             onChange={(e) => setContributorName(e.target.value)}
-            placeholder="e.g. Nusrat Jahan (CR 29th)"
+            placeholder="e.g. Nusrat Jahan (CR FES28)"
             className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
             required
           />
@@ -403,7 +403,7 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
             type="text"
             value={contributorBatch}
             onChange={(e) => setContributorBatch(e.target.value)}
-            placeholder="e.g. 2021-22 / 29th Batch"
+            placeholder="e.g. FES28 / 2025-26"
             className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
           />
         </div>
@@ -548,7 +548,7 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
                   type="text"
                   value={resSessionYear}
                   onChange={(e) => setResSessionYear(e.target.value)}
-                  placeholder="e.g. 2024-2025"
+                  placeholder="e.g. 2025-26"
                   className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                 />
               </div>
@@ -1058,7 +1058,7 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
                   type="text"
                   value={qlTitle}
                   onChange={(e) => setQlTitle(e.target.value)}
-                  placeholder="e.g. 29th Batch Google Drive Repository"
+                  placeholder="e.g. FES28 Google Drive Repository"
                   className="w-full px-3 py-2 rounded-md border border-[#BBC4A6]/80 dark:border-[#BBC4A6]/25 bg-[#F3F1E8] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8]"
                   required
                 />
