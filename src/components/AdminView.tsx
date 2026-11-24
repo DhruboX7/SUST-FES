@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   ResourceItem, 
   TreeSpecies, 
@@ -39,6 +39,7 @@ const AdminStudentPhotosPanel = lazy(() => import('./admin/AdminStudentPhotosPan
 const AdminThesesPanel = lazy(() => import('./admin/AdminThesesPanel').then((m) => ({ default: m.AdminThesesPanel })));
 const AdminNoticesPanel = lazy(() => import('./admin/AdminNoticesPanel').then((m) => ({ default: m.AdminNoticesPanel })));
 const AdminRoutinePanel = lazy(() => import('./admin/AdminRoutinePanel').then((m) => ({ default: m.AdminRoutinePanel })));
+const AdminBatchFundPanel = lazy(() => import('./admin/AdminBatchFundPanel').then((m) => ({ default: m.AdminBatchFundPanel })));
 const AdminMasterBackupPanel = lazy(() => import('./admin/AdminMasterBackupPanel').then((m) => ({ default: m.AdminMasterBackupPanel })));
 
 import { 
@@ -59,7 +60,8 @@ import {
   LogOut,
   AlertCircle,
   Inbox,
-  PlusCircle
+  PlusCircle,
+  Wallet
 } from 'lucide-react';
 
 interface AdminViewProps {
@@ -93,10 +95,24 @@ export const AdminView: React.FC<AdminViewProps> = ({
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
 
+  const [searchParams] = useSearchParams();
+  const initialTabParam = searchParams.get('tab');
+  const validTabs = ['review', 'pyq', 'links', 'species', 'gallery', 'studentPhotos', 'theses', 'notices', 'routine', 'batchFund', 'backup'] as const;
+  type AdminTab = typeof validTabs[number];
+
   // Active Management Tab
-  const [activeTab, setActiveTab] = useState<
-    'review' | 'pyq' | 'links' | 'species' | 'gallery' | 'studentPhotos' | 'theses' | 'notices' | 'routine' | 'backup'
-  >('review');
+  const [activeTab, setActiveTab] = useState<AdminTab>(() =>
+    initialTabParam && (validTabs as readonly string[]).includes(initialTabParam)
+      ? (initialTabParam as AdminTab)
+      : 'review'
+  );
+
+  useEffect(() => {
+    const param = searchParams.get('tab');
+    if (param && (validTabs as readonly string[]).includes(param)) {
+      setActiveTab(param as AdminTab);
+    }
+  }, [searchParams]);
 
   // Multi-collection data stores
   const [species, setSpecies] = useState<TreeSpecies[]>([]);
@@ -471,6 +487,19 @@ export const AdminView: React.FC<AdminViewProps> = ({
           <span>Class Routine</span>
         </button>
 
+        {/* 6.75. Batch Fund */}
+        <button
+          onClick={() => setActiveTab('batchFund')}
+          className={`px-3 py-2 rounded-md whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer ${
+            activeTab === 'batchFund'
+              ? 'bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] font-semibold shadow-xs'
+              : 'text-[#42684D] dark:text-[#BBC4A6] hover:bg-[#EAE7DA] dark:hover:bg-[#142D22]'
+          }`}
+        >
+          <Wallet className="w-3.5 h-3.5" />
+          <span>Batch Fund</span>
+        </button>
+
         {/* 7. Master Backup & System */}
         <button
           onClick={() => setActiveTab('backup')}
@@ -566,6 +595,10 @@ export const AdminView: React.FC<AdminViewProps> = ({
 
           {activeTab === 'routine' && (
             <AdminRoutinePanel />
+          )}
+
+          {activeTab === 'batchFund' && (
+            <AdminBatchFundPanel />
           )}
 
           {activeTab === 'backup' && (

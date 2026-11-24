@@ -10,6 +10,8 @@ import {
   PlusCircle,
   ShieldCheck,
   ChevronRight,
+  FileBadge,
+  Wallet,
 } from 'lucide-react';
 
 export const QuickNavHub: React.FC = () => {
@@ -25,11 +27,27 @@ export const QuickNavHub: React.FC = () => {
       accentText: 'text-[#987453] dark:text-[#FDE68A]',
     },
     {
+      to: '/tools/coverpage',
+      label: t('coverpage'),
+      desc: t('quickNavCoverDesc'),
+      icon: FileBadge,
+      accentBg: 'bg-[#42684D]/15 dark:bg-[#42684D]/35',
+      accentText: 'text-[#19382B] dark:text-[#BBC4A6]',
+    },
+    {
+      to: '/tools/batch-fund',
+      label: t('batchFund'),
+      desc: t('quickNavBatchFundDesc'),
+      icon: Wallet,
+      accentBg: 'bg-[#D1FAE5]/70 dark:bg-[#064E3B]/55',
+      accentText: 'text-[#065F46] dark:text-[#A7F3D0]',
+    },
+    {
       to: '/syllabus',
       label: t('syllabus'),
       desc: t('quickNavSyllabusDesc'),
       icon: Compass,
-      accentBg: 'bg-[#42684D]/15 dark:bg-[#42684D]/35',
+      accentBg: 'bg-[#EAE7DA] dark:bg-[#142D22]',
       accentText: 'text-[#19382B] dark:text-[#BBC4A6]',
     },
     {
@@ -90,7 +108,7 @@ export const QuickNavHub: React.FC = () => {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {destinations.map((dest) => {
           const Icon = dest.icon;
           return (

@@ -13,7 +13,9 @@ import {
   YearRoutine,
   RoutineSlot,
   ContributionEntityType,
-  ContributionRequest
+  ContributionRequest,
+  BatchFundRecord,
+  BatchFundTransaction
 } from '../types';
 import { INITIAL_RESOURCE_ARCHIVE } from '../data/coursesData';
 
@@ -30,6 +32,7 @@ const STORAGE_KEY_STUDENT_PHOTOS = 'sust_fes_student_photos_v1';
 const STORAGE_KEY_BOOKMARKS = 'sust_fes_bookmarks_v1';
 const STORAGE_KEY_PIN = 'sust_fes_admin_pin_v1';
 const STORAGE_KEY_CONTRIBUTION_REQUESTS = 'sust_fes_contribution_requests_v1';
+const STORAGE_KEY_BATCH_FUNDS = 'sust_fes_batch_funds_v1';
 const DEFAULT_PIN = 'sustfes';
 
 export const DEFAULT_NOTICE_TYPES: NoticeTypeDefinition[] = [
@@ -821,6 +824,7 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
   const quickLinks = getStoredQuickLinks();
   const studentPhotos = getStoredStudentPhotosSync();
   const contributionRequests = getStoredContributionRequests();
+  const batchFunds = getStoredBatchFunds();
 
   const backupData: MasterLibraryBackup = {
     exportedAt: new Date().toISOString(),
@@ -837,6 +841,7 @@ export function exportMasterBackupToJson(customData?: Partial<MasterLibraryBacku
     quickLinks: customData?.quickLinks || quickLinks,
     studentPhotos: customData?.studentPhotos || studentPhotos,
     contributionRequests: customData?.contributionRequests || contributionRequests,
+    batchFunds: customData?.batchFunds || batchFunds,
   };
 
   const jsonStr = JSON.stringify(backupData, null, 2);
@@ -881,6 +886,7 @@ export function importMasterBackupFromJson(
         let links: QuickLinkItem[] = [];
         let studentPhotos: StudentPhotoItem[] = [];
         let contributionRequests: ContributionRequest[] = [];
+        let batchFunds: BatchFundRecord[] = [];
 
         // Support both old resource-only backups and new Master backups
         if (Array.isArray(parsed)) {
@@ -900,6 +906,9 @@ export function importMasterBackupFromJson(
           if (Array.isArray(parsed.contributionRequests)) {
             contributionRequests = parsed.contributionRequests;
           }
+          if (Array.isArray(parsed.batchFunds)) {
+            batchFunds = parsed.batchFunds;
+          }
         }
 
         if (
@@ -910,7 +919,8 @@ export function importMasterBackupFromJson(
           notices.length === 0 &&
           links.length === 0 &&
           studentPhotos.length === 0 &&
-          contributionRequests.length === 0
+          contributionRequests.length === 0 &&
+          batchFunds.length === 0
         ) {
           return resolve({
             success: false,
@@ -929,6 +939,7 @@ export function importMasterBackupFromJson(
         if (links.length > 0) saveStoredQuickLinks(links);
         if (studentPhotos.length > 0) saveStoredStudentPhotos(studentPhotos);
         if (contributionRequests.length > 0) saveStoredContributionRequests(contributionRequests);
+        if (batchFunds.length > 0) saveStoredBatchFunds(batchFunds);
 
         resolve({
           success: true,
@@ -1035,6 +1046,7 @@ export async function resetAllCollectionsToFactoryDefaults(): Promise<void> {
   safeStorageRemove(STORAGE_KEY_STUDENT_PHOTOS);
   safeStorageRemove('sust_fes_otp_manage_passwords_v1');
   safeStorageRemove(STORAGE_KEY_CONTRIBUTION_REQUESTS);
+  safeStorageRemove(STORAGE_KEY_BATCH_FUNDS);
 
   resetStoredResourcesToDefaults(false);
   await Promise.all([
@@ -1298,3 +1310,148 @@ export function deleteContributionRequest(requestId: string): void {
   const requests = getStoredContributionRequests();
   saveStoredContributionRequests(requests.filter((r) => r.id !== requestId));
 }
+
+// ==========================================
+// 10. BATCH FUND TREASURY & EXPENSE LEDGER
+// ==========================================
+
+export const DEFAULT_BATCH_FUNDS: BatchFundRecord[] = [
+  {
+    id: 'batch-fes-31',
+    batchName: 'FES 31st Batch (2023-24)',
+    treasurerName: 'Treasurer (Update in Manage)',
+    treasurerContact: 'Batch CR / Treasurer Office · FES',
+    openingBalance: 4500,
+    notes: 'Official batch treasury ledger for semester collections, lab printing, and field tour expenses.',
+    updatedAt: '2026-11-24T00:00:00.000Z',
+    transactions: [
+      {
+        id: 'bf-tx-1',
+        type: 'collection',
+        title: 'Semester Subscription Collection (36 Members × ৳300)',
+        category: 'Contribution',
+        amount: 10800,
+        date: '2026-10-12',
+        recordedBy: 'Batch Treasurer',
+        notes: 'Collected for semester practicals and student events',
+      },
+      {
+        id: 'bf-tx-2',
+        type: 'expense',
+        title: 'Dendrology Lab Manual & Herbarium Sheets Printing',
+        category: 'Printing & Notes',
+        amount: 2450,
+        date: '2026-10-19',
+        recordedBy: 'Batch Treasurer',
+        notes: 'Batch-wide copy set from SUST print shop',
+      },
+      {
+        id: 'bf-tx-3',
+        type: 'expense',
+        title: 'Khadimnagar Field Excursion Refreshments & Banner',
+        category: 'Field Tour',
+        amount: 4200,
+        date: '2026-11-04',
+        recordedBy: 'Batch Treasurer',
+        notes: 'Transport coordination & drinking water crate',
+      },
+    ],
+  },
+  {
+    id: 'batch-fes-30',
+    batchName: 'FES 30th Batch (2022-23)',
+    treasurerName: 'Treasurer (Update in Manage)',
+    treasurerContact: 'Batch CR / Treasurer Office · FES',
+    openingBalance: 6200,
+    notes: 'Shared batch fund ledger for field surveys, workshops, and departmental events.',
+    updatedAt: '2026-11-24T00:00:00.000Z',
+    transactions: [
+      {
+        id: 'bf-30-tx-1',
+        type: 'collection',
+        title: 'Annual Batch Fund Deposit',
+        category: 'Contribution',
+        amount: 8500,
+        date: '2026-09-25',
+        recordedBy: 'Batch Treasurer',
+      },
+      {
+        id: 'bf-30-tx-2',
+        type: 'expense',
+        title: 'Soil Science Practical Reagents & Containers',
+        category: 'Equipment',
+        amount: 3100,
+        date: '2026-10-28',
+        recordedBy: 'Batch Treasurer',
+      },
+    ],
+  },
+];
+
+export function calculateBatchFundSummary(record: BatchFundRecord): {
+  openingBalance: number;
+  totalCollections: number;
+  totalInflow: number;
+  totalExpenses: number;
+  netBalance: number;
+} {
+  const openingBalance = Math.max(0, Number(record.openingBalance) || 0);
+  const txs: BatchFundTransaction[] = Array.isArray(record.transactions) ? record.transactions : [];
+  let totalCollections = 0;
+  let totalExpenses = 0;
+
+  for (const tx of txs) {
+    const amt = Math.max(0, Number(tx?.amount) || 0);
+    if (tx?.type === 'collection') {
+      totalCollections += amt;
+    } else if (tx?.type === 'expense') {
+      totalExpenses += amt;
+    }
+  }
+
+  const totalInflow = openingBalance + totalCollections;
+  const netBalance = totalInflow - totalExpenses;
+
+  return {
+    openingBalance,
+    totalCollections,
+    totalInflow,
+    totalExpenses,
+    netBalance,
+  };
+}
+
+export function getStoredBatchFunds(): BatchFundRecord[] {
+  try {
+    const raw = safeStorageGet(STORAGE_KEY_BATCH_FUNDS);
+    if (raw !== null) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return sanitizeObjectArray<BatchFundRecord>(parsed).map((rec) => ({
+          ...rec,
+          openingBalance: Number(rec.openingBalance) || 0,
+          transactions: sanitizeObjectArray<BatchFundTransaction>(rec.transactions),
+        }));
+      }
+    }
+  } catch (err) {
+    console.error('Failed to read batch funds from storage:', err);
+  }
+  return DEFAULT_BATCH_FUNDS;
+}
+
+export function saveStoredBatchFunds(funds: BatchFundRecord[], notify = true): void {
+  try {
+    const clean = sanitizeObjectArray<BatchFundRecord>(funds);
+    safeStorageSet(STORAGE_KEY_BATCH_FUNDS, JSON.stringify(clean));
+    if (notify) notifyDataUpdate('batch_funds');
+  } catch (err) {
+    console.error('Failed to save batch funds:', err);
+  }
+}
+
+export function resetStoredBatchFunds(notify = true): BatchFundRecord[] {
+  saveStoredBatchFunds(DEFAULT_BATCH_FUNDS, notify);
+  return DEFAULT_BATCH_FUNDS;
+}
+

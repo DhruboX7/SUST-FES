@@ -26,6 +26,8 @@ import {
   ExternalLink,
   Wrench,
   PanelLeftClose,
+  FileBadge,
+  Wallet,
 } from 'lucide-react';
 
 interface SideTaskbarProps {
@@ -126,8 +128,26 @@ export const SideTaskbar: React.FC<SideTaskbarProps> = ({
         labelKey: 'navGroupTools',
         fallbackLabel: 'Student Tools',
         icon: Wrench,
-        matchPaths: ['/tools/cgpa', '/notices', '/bookmarks'],
+        matchPaths: ['/tools', '/notices', '/bookmarks'],
         items: [
+          {
+            id: 'coverpage',
+            to: '/tools/coverpage',
+            labelKey: 'coverpage',
+            fallbackLabel: 'Coverpage Generator',
+            descEn: 'Print-ready A4 report & assignment covers',
+            descBn: 'A4 ল্যাব রিপোর্ট ও অ্যাসাইনমেন্ট কভার',
+            icon: FileBadge,
+          },
+          {
+            id: 'batchFund',
+            to: '/tools/batch-fund',
+            labelKey: 'batchFund',
+            fallbackLabel: 'Batch Fund',
+            descEn: 'Batch balance, expenses & treasurer',
+            descBn: 'ব্যাচ ফান্ড ব্যালেন্স ও কোষাধ্যক্ষ',
+            icon: Wallet,
+          },
           {
             id: 'cgpa',
             to: '/tools/cgpa',

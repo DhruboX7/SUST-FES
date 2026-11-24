@@ -187,6 +187,7 @@ export interface MasterLibraryBackup {
   quickLinks: QuickLinkItem[];
   studentPhotos?: StudentPhotoItem[];
   contributionRequests?: ContributionRequest[];
+  batchFunds?: BatchFundRecord[];
 }
 
 export type ContributionEntityType =
@@ -315,3 +316,37 @@ export interface YearRoutine {
 }
 
 export type RoutineItem = YearRoutine;
+
+export type BatchFundTransactionType = 'collection' | 'expense';
+
+export type BatchFundCategory =
+  | 'Contribution'
+  | 'Field Tour'
+  | 'Printing & Notes'
+  | 'Event & Cultural'
+  | 'Sports'
+  | 'Equipment'
+  | 'Other';
+
+export interface BatchFundTransaction {
+  id: string;
+  type: BatchFundTransactionType;
+  title: string;
+  category: BatchFundCategory;
+  amount: number;
+  date: string;
+  recordedBy?: string;
+  notes?: string;
+}
+
+export interface BatchFundRecord {
+  id: string;
+  batchName: string;
+  treasurerName: string;
+  treasurerContact?: string;
+  openingBalance: number;
+  transactions: BatchFundTransaction[];
+  notes?: string;
+  updatedAt: string;
+}
+

@@ -55,6 +55,8 @@ const SyllabusProgressTracker = lazyWithRetry(() => import('./components/Syllabu
 const BookmarksView = lazyWithRetry(() => import('./components/BookmarksView').then((m) => ({ default: m.BookmarksView })));
 const NoticesView = lazyWithRetry(() => import('./components/NoticesView').then((m) => ({ default: m.NoticesView })));
 const CgpaCalculatorView = lazyWithRetry(() => import('./components/CgpaCalculatorView').then((m) => ({ default: m.CgpaCalculatorView })));
+const CoverpageGeneratorView = lazyWithRetry(() => import('./components/CoverpageGeneratorView').then((m) => ({ default: m.CoverpageGeneratorView })));
+const BatchFundView = lazyWithRetry(() => import('./components/BatchFundView').then((m) => ({ default: m.BatchFundView })));
 const SpeciesDatabaseView = lazyWithRetry(() => import('./components/SpeciesDatabaseView').then((m) => ({ default: m.SpeciesDatabaseView })));
 const FieldGalleryView = lazyWithRetry(() => import('./components/FieldGalleryView').then((m) => ({ default: m.FieldGalleryView })));
 const ThesisArchiveView = lazyWithRetry(() => import('./components/ThesisArchiveView').then((m) => ({ default: m.ThesisArchiveView })));
@@ -429,6 +431,8 @@ function AppContent() {
 
               {/* 8. CGPA & Academic Tools */}
               <Route path="/tools/cgpa" element={<CgpaCalculatorView />} />
+              <Route path="/tools/coverpage" element={<CoverpageGeneratorView />} />
+              <Route path="/tools/batch-fund" element={<BatchFundView />} />
 
               {/* 9. Tree Species Database */}
               <Route path="/species" element={<SpeciesDatabaseView />} />
@@ -513,7 +517,7 @@ function AppContent() {
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label="Scroll back to top"
-          className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-30 min-w-[44px] min-h-[44px] px-3 rounded-full bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] border border-[#BBC4A6]/50 shadow-lg flex items-center justify-center gap-1.5 text-xs font-semibold transition-transform active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#BBC4A6]"
+          className="no-print fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-30 min-w-[44px] min-h-[44px] px-3 rounded-full bg-[#19382B] hover:bg-[#42684D] dark:bg-[#42684D] dark:hover:bg-[#8A9C74] text-[#F3F1E8] border border-[#BBC4A6]/50 shadow-lg flex items-center justify-center gap-1.5 text-xs font-semibold transition-transform active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#BBC4A6]"
         >
           <ArrowUp className="w-4 h-4 shrink-0" />
           <span className="hidden sm:inline">Top</span>

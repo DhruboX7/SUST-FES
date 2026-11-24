@@ -51,6 +51,12 @@ export const Footer: React.FC = () => {
             <Link to="/species" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
               {t('species')}
             </Link>
+            <Link to="/tools/coverpage" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
+              {t('coverpage')}
+            </Link>
+            <Link to="/tools/batch-fund" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
+              {t('batchFund')}
+            </Link>
             <Link to="/contribute" className="min-h-[38px] px-2 inline-flex items-center hover:text-[#F3F1E8] transition-colors">
               {t('contribute')}
             </Link>
