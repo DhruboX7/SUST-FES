@@ -1,41 +1,13 @@
 import { Course, ResourceItem } from '../types';
 
-export interface OfficialFaculty {
-  id: string;
-  name: string;
-  designation: 'Professor' | 'Associate Professor' | 'Assistant Professor' | 'Lecturer';
-  isHead?: boolean;
-  email?: string;
-  researchAreas?: string[];
-}
-
-export const SUST_FES_FACULTY: OfficialFaculty[] = [
-  { id: 'fac-1', name: 'Dr. Narayan Saha', designation: 'Professor' },
-  { id: 'fac-2', name: 'Dr. A. Z. M. Manzoor Rashid', designation: 'Professor' },
-  { id: 'fac-3', name: 'Dr. Md. Qumruzzaman Chowdhury', designation: 'Professor' },
-  { id: 'fac-4', name: 'Dr. Mohammad Belal Uddin', designation: 'Professor' },
-  { id: 'fac-5', name: 'Dr. Romel Ahmed', designation: 'Professor' },
-  { id: 'fac-6', name: 'Dr. Mohammad Redowan', designation: 'Professor', isHead: true },
-  { id: 'fac-7', name: 'Dr. Mizanur Rahman', designation: 'Professor' },
-  { id: 'fac-8', name: 'Dr. Swapan Kumar Sarker', designation: 'Professor' },
-  { id: 'fac-9', name: 'Dr. Mohammed Abu Sayed Arfin Khan', designation: 'Professor' },
-  { id: 'fac-10', name: 'Dr. Kazi Mohammad Masum', designation: 'Professor' },
-  { id: 'fac-11', name: 'Dr. Farzana Raihan', designation: 'Professor' },
-  { id: 'fac-12', name: 'Dr. Mahmuda Islam', designation: 'Professor' },
-  { id: 'fac-13', name: 'Dr. Mahmuda Sharmin', designation: 'Professor' },
-  { id: 'fac-14', name: 'Dr. Mohammad Golam Kibria', designation: 'Professor' },
-  { id: 'fac-15', name: 'Ms. Fahmida Sultana', designation: 'Associate Professor' },
-  { id: 'fac-16', name: 'Dr. Mohammed Masum Ul Haque', designation: 'Associate Professor' },
-  { id: 'fac-17', name: 'Ms. Nusrat Islam', designation: 'Associate Professor' },
-  { id: 'fac-18', name: 'Mr. Anup Datta', designation: 'Assistant Professor' },
-  { id: 'fac-19', name: 'Mr. Md. Saifuzzaman Bhuiyan', designation: 'Assistant Professor' },
-  { id: 'fac-20', name: 'Mr. Abdur Rakib Bhuiyan', designation: 'Assistant Professor' },
-  { id: 'fac-21', name: 'Ms. Rabeya Sultana', designation: 'Assistant Professor' },
-  { id: 'fac-22', name: 'Ms. Rahela Khatun', designation: 'Assistant Professor' },
-  { id: 'fac-23', name: 'Mr. Md. Shamim Reza Saimun', designation: 'Lecturer' },
-  { id: 'fac-24', name: 'Ms. Farhana Bintay Hye', designation: 'Lecturer' },
-  { id: 'fac-25', name: 'Ms. Nilima Ferdous', designation: 'Lecturer' },
-];
+export type {
+  FacultyEducation,
+  FacultyExternalLink,
+  FacultyPublication,
+  FacultyAward,
+  OfficialFaculty,
+} from './facultyData';
+export { SUST_FES_FACULTY, FES_DEPARTMENT_OFFICE } from './facultyData';
 
 export interface DetailedCourse extends Course {
   shortCode: string;
