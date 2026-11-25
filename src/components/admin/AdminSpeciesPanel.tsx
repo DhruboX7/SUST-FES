@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { TreeSpecies, TreePhoto, BotanyAiResult } from '../../types';
-import { isMatchedPhotoForSpecies, fetchStaticJson } from '../../utils/storage';
+import { isMatchedPhotoForSpecies, sanitizeSpeciesPhotos, fetchStaticJson } from '../../utils/storage';
 import { verifyAndEnrichSpeciesWithAI, validateBinomialNomenclature } from '../../utils/botanyAi';
 import { getOptimizedImageUrl, getFallbackImageUrl, handleImageError } from '../../utils/imageUtils';
 import { AdminSpeciesPhotosModal } from './AdminSpeciesPhotosModal';
@@ -68,79 +68,98 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
         string,
         { imageUrl: string; sourceUrl: string; sourceName: string; allPhotos?: string[] }
       >>('flora_bangladesh_photos.json');
-      if (floraMap) {
-        let speciesCount = 0;
-        let totalPlatesImported = 0;
+      if (!floraMap || typeof floraMap !== 'object') {
+        showFloraNotice('Could not load Flora of Bangladesh photo index.');
+        return;
+      }
 
-        const updated = species.map((sp) => {
-          const sciLower = (sp.scientificName || '').trim().toLowerCase();
-          const matchKey = sciLower
-            ? Object.keys(floraMap).find(
-                (k) =>
-                  k.toLowerCase() === sciLower ||
-                  k.toLowerCase().includes(sciLower) ||
-                  sciLower.includes(k.toLowerCase())
-              )
-            : undefined;
+      const normalizedFloraEntries = new Map<
+        string,
+        { imageUrl: string; sourceUrl: string; sourceName: string; allPhotos?: string[] }
+      >();
+      Object.entries(floraMap).forEach(([k, val]) => {
+        if (val) normalizedFloraEntries.set(k.trim().toLowerCase().replace(/\s+/g, ' '), val);
+      });
 
-          if (matchKey && floraMap[matchKey]) {
-            speciesCount++;
-            const entry = floraMap[matchKey];
-            const allUrls: string[] = entry.allPhotos || (entry.imageUrl ? [entry.imageUrl] : []);
+      let speciesCount = 0;
+      let totalPlatesImported = 0;
 
-            const existingUrls = new Set([
-              entry.imageUrl,
-              sp.imageUrl,
-              ...(sp.morePhotos?.map((p) => p.url) || [])
-            ]);
+      const updated = species.map((rawSp) => {
+        const sp = sanitizeSpeciesPhotos(rawSp);
+        const sciLower = (sp.scientificName || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        const entry = sciLower ? normalizedFloraEntries.get(sciLower) : undefined;
 
-            const currentPlates: TreePhoto[] = [...(sp.morePhotos || [])];
+        if (!entry) return sp;
 
-            allUrls.forEach((url, i) => {
-              if (
-                url !== entry.imageUrl &&
-                isMatchedPhotoForSpecies(url, sp.scientificName) &&
-                !currentPlates.some((p) => p.url === url)
-              ) {
-                let tag: TreePhoto['tag'] = 'leaf';
-                if (i === 1) tag = 'leaf';
-                else if (i === 2) tag = 'bark';
-                else if (i === 3) tag = 'flower';
-                else if (i === 4) tag = 'fruit';
-                else tag = 'general';
+        speciesCount++;
+        const allUrls: string[] = Array.isArray(entry.allPhotos)
+          ? entry.allPhotos
+          : entry.imageUrl
+            ? [entry.imageUrl]
+            : [];
 
-                currentPlates.push({
-                  url,
-                  caption: `${sp.commonName} - Botanical Plate #${currentPlates.length + 1}`,
-                  tag,
-                  credit: entry.sourceName || 'Flora of Bangladesh',
-                });
-                totalPlatesImported++;
-              }
-            });
+        const matchedCoverFromFlora =
+          entry.imageUrl && isMatchedPhotoForSpecies(entry.imageUrl, sp.scientificName)
+            ? entry.imageUrl.trim()
+            : '';
 
-            const nextCover = isMatchedPhotoForSpecies(sp.imageUrl || '', sp.scientificName)
-              ? sp.imageUrl
-              : (isMatchedPhotoForSpecies(entry.imageUrl, sp.scientificName) ? entry.imageUrl : (currentPlates[0]?.url || sp.imageUrl));
+        const nextCover =
+          sp.imageUrl && isMatchedPhotoForSpecies(sp.imageUrl, sp.scientificName)
+            ? sp.imageUrl.trim()
+            : matchedCoverFromFlora;
 
-            return {
-              ...sp,
-              imageUrl: nextCover,
-              photoCredit: sp.photoCredit || entry.sourceName,
-              floraUrl: sp.floraUrl || entry.sourceUrl,
-              morePhotos: currentPlates,
-            };
-          }
-          return sp;
+        const existingUrls = new Set<string>();
+        if (nextCover) existingUrls.add(nextCover);
+        (sp.morePhotos || []).forEach((p) => {
+          if (p?.url) existingUrls.add(p.url.trim());
         });
 
-        onUpdateSpecies(updated);
-        showFloraNotice(
-          `Synced ${speciesCount} tree species and enriched ${totalPlatesImported} authentic botanical plates from floraofbangladesh.com!`
-        );
-      }
+        const currentPlates: TreePhoto[] = [...(sp.morePhotos || [])];
+
+        allUrls.forEach((rawUrl, i) => {
+          const url = (rawUrl || '').trim();
+          if (
+            !url ||
+            existingUrls.has(url) ||
+            !isMatchedPhotoForSpecies(url, sp.scientificName)
+          ) {
+            return;
+          }
+
+          existingUrls.add(url);
+          let tag: TreePhoto['tag'] = 'leaf';
+          if (i === 0) tag = 'habit';
+          else if (i === 1) tag = 'leaf';
+          else if (i === 2) tag = 'bark';
+          else if (i === 3) tag = 'flower';
+          else if (i === 4) tag = 'fruit';
+          else tag = 'general';
+
+          currentPlates.push({
+            url,
+            caption: `${sp.commonName} - Botanical Plate #${currentPlates.length + 1}`,
+            tag,
+            credit: entry.sourceName || 'Flora of Bangladesh',
+          });
+          totalPlatesImported++;
+        });
+
+        return sanitizeSpeciesPhotos({
+          ...sp,
+          imageUrl: nextCover || currentPlates[0]?.url || undefined,
+          photoCredit: sp.photoCredit || entry.sourceName,
+          floraUrl: sp.floraUrl || entry.sourceUrl,
+          morePhotos: currentPlates,
+        });
+      });
+
+      onUpdateSpecies(updated);
+      showFloraNotice(
+        `Synced ${speciesCount} tree species and imported ${totalPlatesImported} new matched botanical plates from floraofbangladesh.com!`
+      );
     } catch (err) {
       console.error('Failed to sync with flora database:', err);
+      showFloraNotice('Failed to sync with Flora of Bangladesh photo database.');
     } finally {
       setIsSyncingFlora(false);
     }
@@ -149,26 +168,22 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
   const handlePurgeAllUnmatched = () => {
     let totalRemoved = 0;
     const cleaned = species.map((sp) => {
-      const sciName = sp.scientificName || '';
-      const initialPhotos = sp.morePhotos || [];
-      const filtered = initialPhotos.filter((p) => p && isMatchedPhotoForSpecies(p.url, sciName));
-      totalRemoved += (initialPhotos.length - filtered.length);
-
-      let nextCover = sp.imageUrl;
-      if (!isMatchedPhotoForSpecies(sp.imageUrl || '', sciName)) {
-        nextCover = filtered[0]?.url || sp.imageUrl;
+      const beforeCount =
+        (sp.imageUrl ? 1 : 0) + (Array.isArray(sp.morePhotos) ? sp.morePhotos.length : 0);
+      const sanitized = sanitizeSpeciesPhotos(sp);
+      const afterCount =
+        (sanitized.imageUrl ? 1 : 0) +
+        (Array.isArray(sanitized.morePhotos) ? sanitized.morePhotos.length : 0);
+      if (beforeCount > afterCount) {
+        totalRemoved += beforeCount - afterCount;
       }
-      return {
-        ...sp,
-        imageUrl: nextCover,
-        morePhotos: filtered
-      };
+      return sanitized;
     });
 
     onUpdateSpecies(cleaned);
     showFloraNotice(
       totalRemoved > 0
-        ? `Purged ${totalRemoved} unmatched photo(s) across catalog! Only verified species plates kept.`
+        ? `Purged ${totalRemoved} unmatched or duplicate photo(s) across the catalog!`
         : 'All tree photos across the catalog are strictly verified and matched!'
     );
   };
@@ -906,15 +921,15 @@ export const AdminSpeciesPanel: React.FC<AdminSpeciesPanelProps> = ({
                         try {
                           const floraMap = await fetchStaticJson<Record<string, any>>('flora_bangladesh_photos.json');
                           if (floraMap) {
-                            const key = Object.keys(floraMap).find(k => 
-                              k.toLowerCase() === scientificName.trim().toLowerCase() ||
-                              k.toLowerCase().includes(scientificName.trim().toLowerCase()) ||
-                              scientificName.trim().toLowerCase().includes(k.toLowerCase())
+                            const normalizedSci = scientificName.trim().toLowerCase().replace(/\s+/g, ' ');
+                            const key = Object.keys(floraMap).find(
+                              (k) => k.trim().toLowerCase().replace(/\s+/g, ' ') === normalizedSci
                             );
-                            if (key && floraMap[key]) {
+                            if (key && floraMap[key]?.imageUrl && isMatchedPhotoForSpecies(floraMap[key].imageUrl, scientificName)) {
+                              setFormError('');
                               setImageUrl(floraMap[key].imageUrl);
                             } else {
-                              setFormError(`No photo found on Flora of Bangladesh for ${scientificName}`);
+                              setFormError(`No verified photo found on Flora of Bangladesh for ${scientificName}`);
                             }
                           }
                         } catch (err) {

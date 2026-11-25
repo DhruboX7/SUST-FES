@@ -220,19 +220,169 @@ export function resetStoredResourcesToDefaults(notify = true): ResourceItem[] {
 // 2. TREE SPECIES MANAGEMENT
 // ==========================================
 
+const SPECIES_SYNONYM_SLUGS: Record<string, string[]> = {
+  'albizia saman': ['samanea_saman', 'albizia_saman'],
+  'lannea grandis': ['lannea_coromandelica', 'lannea_grandis'],
+  'aquilaria malaccensis': ['aquilaria_agallocha', 'aquilaria_malaccensis'],
+  'elaeocarpus robustus': ['elaeocarpus_serratus', 'elaeocarpus_floribundus', 'elaeocarpus_robustus'],
+  'artocarpus chaplasha': ['artocarpus_chama', 'artocarpus_chaplasha'],
+  'magnolia champaca': ['michelia_champaca', 'magnolia_champaca'],
+};
+
+const KNOWN_SPECIES_SLUGS = [
+  'samanea_saman',
+  'albizia_saman',
+  'artocarpus_heterophyllus',
+  'elaeocarpus_serratus',
+  'elaeocarpus_floribundus',
+  'elaeocarpus_robustus',
+  'albizia_richardiana',
+  'paraserianthes_falcataria',
+  'ficus_benghalensis',
+  'neolamarckia_cadamba',
+  'terminalia_arjuna',
+  'lagerstroemia_speciosa',
+  'polyalthia_longifolia',
+  'azadirachta_indica',
+  'pongamia_pinnata',
+  'magnolia_champaca',
+  'michelia_champaca',
+  'tamarindus_indica',
+  'hopea_odorata',
+  'terminalia_catappa',
+  'acacia_auriculiformis',
+  'swietenia_mahagoni',
+  'dillenia_indica',
+  'dipterocarpus_turbinatus',
+  'artocarpus_chaplasha',
+  'artocarpus_chama',
+  'aquilaria_malaccensis',
+  'aquilaria_agallocha',
+  'bauhinia_variegata',
+  'lannea_grandis',
+  'lannea_coromandelica',
+  'alstonia_scholaris',
+  'tectona_grandis',
+  'shorea_robusta',
+  'bombax_ceiba',
+  'phyllanthus_emblica',
+  'albizia_procera',
+  'albizia_lebbeck',
+  'butea_monosperma',
+  'mesua_ferrea',
+  'cassia_fistula',
+  'podocarpus_neriifolius',
+  'dalbergia_sissoo',
+  'terminalia_chebula',
+  'terminalia_bellirica',
+  'couroupita_guianensis',
+  'syzygium_grande',
+  'xylocarpus_granatum',
+  'sonneratia_apetala',
+  'xylocarpus_moluccensis',
+  'avicennia_officinalis',
+  'excoecaria_agallocha',
+  'ceriops_decandra',
+  'nypa_fruticans',
+  'bruguiera_gymnorrhiza',
+  'aegiceras_corniculatum',
+  'heritiera_fomes',
+  'swintonia_floribunda',
+  'toona_ciliata',
+  'gmelina_arborea',
+  'anisoptera_scaphula',
+  'mangifera_indica',
+];
+
 export function isMatchedPhotoForSpecies(url: string, scientificName: string): boolean {
-  if (!url) return false;
-  const u = decodeURIComponent(url).toLowerCase();
+  if (!url || typeof url !== 'string') return false;
+  let u = '';
+  try {
+    u = decodeURIComponent(url).trim().toLowerCase();
+  } catch {
+    u = url.trim().toLowerCase();
+  }
+  if (!u) return false;
   if (u.includes('images.unsplash.com')) return false;
   if (u.includes('tripura_sundri_temple') || u.includes('temple')) return false;
   if (u.endsWith('.svg') || u.includes('.svg?')) return false;
   if (u.includes('sunderbans_tiger_reserve_india_david_raju_(49)')) return false;
-  if (u.includes('tinospora_cordifolia') || u.includes('trichosanthes_tricuspidata') || u.includes('makal_mahakal')) return false;
-  if (u.includes('bombax_ceiba') && scientificName !== 'Bombax ceiba') return false;
-  if (u.includes('terminalia_catappa') && scientificName !== 'Terminalia catappa') return false;
-  if (u.includes('artocarpus_heterophyllus') && scientificName !== 'Artocarpus heterophyllus') return false;
-  if (u.includes('albizia_lebbeck') && scientificName !== 'Albizia lebbeck') return false;
+  if (u.includes('sundarbans_02.jpg')) return false;
+  if (u.includes('dscf5278') || u.includes('dsc06770')) return false;
+  if (
+    u.includes('tinospora_cordifolia') ||
+    u.includes('trichosanthes_tricuspidata') ||
+    u.includes('makal_mahakal')
+  ) {
+    return false;
+  }
+
+  const sciLower = (scientificName || '').trim().toLowerCase();
+  if (!sciLower) return true;
+
+  const sciParts = sciLower.split(/\s+/).filter(Boolean);
+  const canonicalSlug = sciParts.length >= 2 ? `${sciParts[0]}_${sciParts[1]}` : sciLower.replace(/\s+/g, '_');
+  const allowedSlugs = new Set<string>([
+    canonicalSlug,
+    ...(SPECIES_SYNONYM_SLUGS[sciLower] || []),
+  ]);
+
+  // If URL is a BFIS TreeInfo upload, verify the uploaded species filename matches
+  if (u.includes('bfis.bforest.gov.bd/treeinfo/public/uploads/')) {
+    const filePart = u.split('/uploads/')[1]?.split(/[?#]/)[0] || '';
+    const fileBase = filePart.replace(/\.(jpg|jpeg|png|webp)$/i, '');
+    if (fileBase && !allowedSlugs.has(fileBase)) {
+      return false;
+    }
+  }
+
+  // Reject if URL explicitly contains another known tree species binomial slug
+  for (const slug of KNOWN_SPECIES_SLUGS) {
+    if (!allowedSlugs.has(slug) && u.includes(slug)) {
+      return false;
+    }
+  }
+
   return true;
+}
+
+export function sanitizeSpeciesPhotos(sp: TreeSpecies): TreeSpecies {
+  const sciName = sp.scientificName || '';
+  const seenUrls = new Set<string>();
+
+  let nextPrimary = typeof sp.imageUrl === 'string' ? sp.imageUrl.trim() : '';
+  if (nextPrimary && !isMatchedPhotoForSpecies(nextPrimary, sciName)) {
+    nextPrimary = '';
+  }
+  if (nextPrimary) {
+    seenUrls.add(nextPrimary);
+  }
+
+  const cleanMore: TreePhoto[] = [];
+  if (Array.isArray(sp.morePhotos)) {
+    for (const plate of sp.morePhotos) {
+      if (!plate || typeof plate.url !== 'string') continue;
+      const cleanUrl = plate.url.trim();
+      if (!cleanUrl || !isMatchedPhotoForSpecies(cleanUrl, sciName)) continue;
+      if (seenUrls.has(cleanUrl)) continue;
+      seenUrls.add(cleanUrl);
+      cleanMore.push({
+        ...plate,
+        url: cleanUrl,
+      });
+    }
+  }
+
+  if (!nextPrimary && cleanMore.length > 0) {
+    nextPrimary = cleanMore[0].url;
+    cleanMore.shift();
+  }
+
+  return {
+    ...sp,
+    imageUrl: nextPrimary || undefined,
+    morePhotos: cleanMore,
+  };
 }
 
 export async function getStoredSpecies(): Promise<TreeSpecies[]> {
@@ -256,55 +406,47 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
     const defaultData = await fetchStaticJson<TreeSpecies[]>('species.json');
 
     if (defaultData && Array.isArray(defaultData) && defaultData.length > 0) {
-      const cleanDefaults = sanitizeObjectArray<TreeSpecies>(defaultData);
+      const cleanDefaults = sanitizeObjectArray<TreeSpecies>(defaultData).map(sanitizeSpeciesPhotos);
+
       if (localData.length > 0) {
-        // Merge default enriched species data with local custom contributions
+        // Merge official metadata with local curated photos WITHOUT re-injecting deleted/unmatched plates
         const localMap = new Map<string, TreeSpecies>(localData.map((sp: TreeSpecies) => [sp.id, sp]));
         const mergedList: TreeSpecies[] = [];
 
-        // Process all official default species
         for (const def of cleanDefaults) {
           const local = localMap.get(def.id);
           if (!local) {
             mergedList.push(def);
           } else {
-            // Clean local photos: only keep matched photos
-            const defUrls = new Set((def.morePhotos || []).map((p) => p.url));
-            const customMatchedPhotos = (local.morePhotos || []).filter(
-              (p) => p && isMatchedPhotoForSpecies(p.url, def.scientificName || '')
+            const sciName = local.scientificName || def.scientificName || '';
+            const hasLocalPhotosArray = Array.isArray(local.morePhotos);
+            const rawLocalPrimary = typeof local.imageUrl === 'string' ? local.imageUrl.trim() : '';
+            const resolvedPrimary =
+              rawLocalPrimary === ''
+                ? ''
+                : isMatchedPhotoForSpecies(rawLocalPrimary, sciName)
+                  ? rawLocalPrimary
+                  : (def.imageUrl || '');
+
+            mergedList.push(
+              sanitizeSpeciesPhotos({
+                ...local,
+                sourceUrl: def.sourceUrl || local.sourceUrl,
+                forestEcosystem: def.forestEcosystem || local.forestEcosystem,
+                photoCredit: local.photoCredit || def.photoCredit,
+                imageUrl: resolvedPrimary,
+                morePhotos: hasLocalPhotosArray ? local.morePhotos : (def.morePhotos || []),
+              })
             );
-
-            const allMatchedPhotos = [...(def.morePhotos || []), ...customMatchedPhotos];
-
-            mergedList.push({
-              ...local,
-              sourceUrl: def.sourceUrl || local.sourceUrl,
-              forestEcosystem: def.forestEcosystem || local.forestEcosystem,
-              imageUrl: isMatchedPhotoForSpecies(def.imageUrl || '', def.scientificName || '')
-                ? def.imageUrl
-                : (allMatchedPhotos[0]?.url || def.imageUrl),
-              photoCredit: def.photoCredit || local.photoCredit,
-              morePhotos: allMatchedPhotos
-            });
             localMap.delete(def.id);
           }
         }
 
-        // Add any custom species added by user (cleaning unmatched photos)
+        // Preserve any custom species added by user (cleaned & deduplicated)
         for (const remaining of localMap.values()) {
-          const cleanedPhotos = (remaining.morePhotos || []).filter((p) =>
-            p && isMatchedPhotoForSpecies(p.url, remaining.scientificName || '')
-          );
-          mergedList.push({
-            ...remaining,
-            morePhotos: cleanedPhotos,
-            imageUrl: isMatchedPhotoForSpecies(remaining.imageUrl || '', remaining.scientificName || '')
-              ? remaining.imageUrl
-              : (cleanedPhotos[0]?.url || remaining.imageUrl)
-          });
+          mergedList.push(sanitizeSpeciesPhotos(remaining));
         }
 
-        // Only write back to localStorage if merged data actually changed
         try {
           const prevRaw = safeStorageGet(STORAGE_KEY_SPECIES);
           const nextRaw = JSON.stringify(mergedList);
@@ -327,7 +469,7 @@ export async function getStoredSpecies(): Promise<TreeSpecies[]> {
 
   // 3. Fallback to cached local data if fetch was unavailable
   if (localData.length > 0) {
-    return localData;
+    return localData.map(sanitizeSpeciesPhotos);
   }
 
   return [];
@@ -337,7 +479,7 @@ export function getStoredSpeciesSync(): TreeSpecies[] {
   try {
     const raw = safeStorageGet(STORAGE_KEY_SPECIES);
     if (raw) {
-      return sanitizeObjectArray<TreeSpecies>(JSON.parse(raw));
+      return sanitizeObjectArray<TreeSpecies>(JSON.parse(raw)).map(sanitizeSpeciesPhotos);
     }
   } catch (err) {
     console.error('Failed to get species sync:', err);
@@ -347,7 +489,8 @@ export function getStoredSpeciesSync(): TreeSpecies[] {
 
 export function saveStoredSpecies(species: TreeSpecies[], notify = true): void {
   try {
-    safeStorageSet(STORAGE_KEY_SPECIES, JSON.stringify(sanitizeObjectArray<TreeSpecies>(species)));
+    const sanitized = sanitizeObjectArray<TreeSpecies>(species).map(sanitizeSpeciesPhotos);
+    safeStorageSet(STORAGE_KEY_SPECIES, JSON.stringify(sanitized));
     if (notify) {
       notifyDataUpdate('species');
     }
@@ -361,12 +504,12 @@ export function addPhotoToTreeSpecies(speciesId: string, photo: TreePhoto): Tree
   let updatedSpecies: TreeSpecies | null = null;
   const next = current.map((sp) => {
     if (sp.id === speciesId) {
-      const photos = sp.morePhotos || [];
-      updatedSpecies = {
+      const candidate = sanitizeSpeciesPhotos({
         ...sp,
-        morePhotos: [...photos, photo]
-      };
-      return updatedSpecies;
+        morePhotos: [...(sp.morePhotos || []), photo]
+      });
+      updatedSpecies = candidate;
+      return candidate;
     }
     return sp;
   });

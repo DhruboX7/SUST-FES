@@ -79,14 +79,6 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Backward compatibility: automatically migrate any old /#/path URLs to clean path URLs
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.hash && window.location.hash.startsWith('#/')) {
-      const cleanPath = window.location.hash.substring(1);
-      navigate(cleanPath, { replace: true });
-    }
-  }, [navigate]);
-
   // Theme State (Warm Paper #F3F1E8 editorial light default, toggleable to Forest Ink dark mode)
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {

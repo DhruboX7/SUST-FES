@@ -80,3 +80,56 @@ export function handleImageError(e: React.SyntheticEvent<HTMLImageElement>): voi
     img.src = fallback;
   }
 }
+
+const MAX_PRELOADED_CACHE = 240;
+const preloadedUrlSet = new Set<string>();
+const inFlightPreloads = new Map<string, Promise<boolean>>();
+const cachedImageElements = new Map<string, HTMLImageElement>();
+
+export function isImageCached(url?: string | null): boolean {
+  return Boolean(url && preloadedUrlSet.has(url));
+}
+
+export function markImageCached(url?: string | null): void {
+  if (!url) return;
+  preloadedUrlSet.add(url);
+}
+
+export function preloadImageUrl(url?: string | null): Promise<boolean> {
+  if (!url || typeof window === 'undefined') return Promise.resolve(false);
+  if (preloadedUrlSet.has(url)) return Promise.resolve(true);
+
+  const existing = inFlightPreloads.get(url);
+  if (existing) return existing;
+
+  const promise = new Promise<boolean>((resolve) => {
+    const img = new Image();
+    img.referrerPolicy = 'no-referrer';
+    img.decoding = 'async';
+
+    const finish = (ok: boolean) => {
+      inFlightPreloads.delete(url);
+      if (ok) {
+        preloadedUrlSet.add(url);
+        if (cachedImageElements.size >= MAX_PRELOADED_CACHE) {
+          const oldestKey = cachedImageElements.keys().next().value;
+          if (oldestKey) cachedImageElements.delete(oldestKey);
+        }
+        cachedImageElements.set(url, img);
+      }
+      resolve(ok);
+    };
+
+    img.onload = () => finish(true);
+    img.onerror = () => finish(false);
+    img.src = url;
+
+    if (img.complete && img.naturalWidth > 0) {
+      finish(true);
+    }
+  });
+
+  inFlightPreloads.set(url, promise);
+  return promise;
+}
+

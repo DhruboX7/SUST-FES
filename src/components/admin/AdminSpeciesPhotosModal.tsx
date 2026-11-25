@@ -255,13 +255,10 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     try {
       const floraMap = await fetchStaticJson<Record<string, any>>('flora_bangladesh_photos.json');
       if (floraMap) {
-        const sciLower = (species.scientificName || '').trim().toLowerCase();
+        const sciLower = (species.scientificName || '').trim().toLowerCase().replace(/\s+/g, ' ');
         const key = sciLower
           ? Object.keys(floraMap).find(
-              (k) =>
-                k.toLowerCase() === sciLower ||
-                k.toLowerCase().includes(sciLower) ||
-                sciLower.includes(k.toLowerCase())
+              (k) => k.trim().toLowerCase().replace(/\s+/g, ' ') === sciLower
             )
           : undefined;
 
@@ -275,9 +272,18 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
               photos: allUrls,
             });
 
-            // If primary is empty, set primary
-            if (!primaryUrl && entry.imageUrl) {
-              setPrimaryUrl(entry.imageUrl);
+            const matchedEntryPrimary =
+              entry.imageUrl && isMatchedPhotoForSpecies(entry.imageUrl, species.scientificName)
+                ? entry.imageUrl
+                : '';
+
+            let activePrimary =
+              primaryUrl && isMatchedPhotoForSpecies(primaryUrl, species.scientificName)
+                ? primaryUrl
+                : matchedEntryPrimary;
+
+            if (!primaryUrl && matchedEntryPrimary) {
+              setPrimaryUrl(matchedEntryPrimary);
             }
             if (!floraUrl && entry.sourceUrl) {
               setFloraUrl(entry.sourceUrl);
@@ -288,9 +294,13 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
 
             // Filter only verified matched URLs
             const matchedUrls = allUrls.filter((url) => isMatchedPhotoForSpecies(url, species.scientificName));
+            if (!activePrimary && matchedUrls.length > 0) {
+              activePrimary = matchedUrls[0];
+              setPrimaryUrl(activePrimary);
+            }
 
             // Automatically import missing photos into morePhotos
-            const currentUrls = new Set([primaryUrl || entry.imageUrl, ...morePhotos.map((p) => p.url)]);
+            const currentUrls = new Set([activePrimary, ...morePhotos.map((p) => p.url)].filter(Boolean));
             const newPlates: TreePhoto[] = [];
 
             matchedUrls.forEach((url, i) => {
@@ -391,24 +401,42 @@ export const AdminSpeciesPhotosModal: React.FC<AdminSpeciesPhotosModalProps> = (
     }
   };
 
-  // Remove any unmatched photos from current species gallery
+  // Remove any unmatched or duplicate photos from current species gallery
   const handleRemoveUnmatched = () => {
-    const beforeCount = morePhotos.length;
-    const filtered = morePhotos.filter((p) => isMatchedPhotoForSpecies(p.url, species.scientificName));
-    const removedCount = beforeCount - filtered.length;
-    setMorePhotos(filtered);
+    const prevPrimary = primaryUrl.trim();
+    const isPrimaryMatched = !prevPrimary || isMatchedPhotoForSpecies(prevPrimary, species.scientificName);
+    let nextPrimary = isPrimaryMatched ? prevPrimary : '';
 
-    // Also sanitize primaryUrl
-    let nextPrimary = primaryUrl;
-    if (!isMatchedPhotoForSpecies(primaryUrl, species.scientificName)) {
-      nextPrimary = filtered[0]?.url || '';
-      setPrimaryUrl(nextPrimary);
+    const seen = new Set<string>();
+    if (nextPrimary) seen.add(nextPrimary);
+
+    const filtered: TreePhoto[] = [];
+    for (const p of morePhotos) {
+      const cleanUrl = (p?.url || '').trim();
+      if (!cleanUrl || !isMatchedPhotoForSpecies(cleanUrl, species.scientificName)) continue;
+      if (seen.has(cleanUrl)) continue;
+      seen.add(cleanUrl);
+      filtered.push({ ...p, url: cleanUrl });
     }
 
-    if (removedCount > 0 || nextPrimary !== primaryUrl) {
-      setSuccessMsg(`Purged ${removedCount} unmatched photos. Kept strictly verified species plates!`);
+    if (!nextPrimary && filtered.length > 0) {
+      nextPrimary = filtered.shift()!.url;
+    }
+
+    const beforeTotal = (prevPrimary ? 1 : 0) + morePhotos.length;
+    const afterTotal = (nextPrimary ? 1 : 0) + filtered.length;
+    const removedCount = Math.max(0, beforeTotal - afterTotal);
+
+    setPrimaryUrl(nextPrimary);
+    setMorePhotos(filtered);
+
+    if (removedCount > 0 || !isPrimaryMatched) {
+      showSuccess(
+        `Purged ${removedCount} unmatched or duplicate photo(s). Click "Save Photo Changes" below to apply.`,
+        4000
+      );
     } else {
-      setSuccessMsg('All photos in this species gallery are strictly verified and matched!');
+      showSuccess('All photos in this species gallery are strictly verified and matched!', 3000);
     }
   };
 

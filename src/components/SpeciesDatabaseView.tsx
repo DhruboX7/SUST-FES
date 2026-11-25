@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 
 import { TreeSpecies, StudentPhotoItem } from '../types';
-import { getStoredSpecies, getStoredStudentPhotos } from '../utils/storage';
-import { getOptimizedImageUrl, handleImageError } from '../utils/imageUtils';
+import { getStoredSpecies, getStoredStudentPhotos, isMatchedPhotoForSpecies } from '../utils/storage';
+import { getOptimizedImageUrl, handleImageError, markImageCached } from '../utils/imageUtils';
 import { SubmitStudentPhotoModal } from './SubmitStudentPhotoModal';
 import { TreeSpeciesDetailModal } from './TreeSpeciesDetailModal';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -50,6 +50,12 @@ export const SpeciesDatabaseView: React.FC = () => {
 
   // Selected Tree Species Detail Modal (with multi-photo gallery)
   const [selectedTreeDetail, setSelectedTreeDetail] = useState<TreeSpecies | null>(null);
+  const [selectedTreePhotoIndex, setSelectedTreePhotoIndex] = useState<number>(0);
+
+  const handleOpenSpeciesDetail = (sp: TreeSpecies, photoIdx = 0) => {
+    setSelectedTreePhotoIndex(Math.max(0, photoIdx));
+    setSelectedTreeDetail(sp);
+  };
 
   // Student Photo Submission Modal
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -330,11 +336,20 @@ export const SpeciesDatabaseView: React.FC = () => {
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredSpecies.slice(0, visibleCount).map((sp) => {
-              const studentObs = studentPhotosBySpecies.get(sp.id) || 
+              const rawStudentObs = studentPhotosBySpecies.get(sp.id) ||
                                  studentPhotosBySpecies.get((sp.scientificName || '').toLowerCase()) || [];
+              const studentObs = rawStudentObs.filter((obs) =>
+                isMatchedPhotoForSpecies(obs.imageUrl, sp.scientificName || '')
+              );
 
-              const photoUrl = sp.imageUrl || '/assets/hero_forestry_sust.webp';
-              const totalPhotos = 1 + (sp.morePhotos?.length || 0) + studentObs.length;
+              const photoUrl =
+                sp.imageUrl && isMatchedPhotoForSpecies(sp.imageUrl, sp.scientificName || '')
+                  ? sp.imageUrl
+                  : '/assets/hero_forestry_sust.webp';
+              const validPlates = (sp.morePhotos || []).filter(
+                (p) => p?.url && p.url !== sp.imageUrl && isMatchedPhotoForSpecies(p.url, sp.scientificName || '')
+              );
+              const totalPhotos = (sp.imageUrl ? 1 : 0) + validPlates.length + studentObs.length;
 
             return (
               <article
@@ -345,11 +360,12 @@ export const SpeciesDatabaseView: React.FC = () => {
                   {/* Prominent Botanical Photograph with Consistent 4:3 Aspect Ratio */}
                   <div 
                     className="relative aspect-[4/3] bg-[#19382B] overflow-hidden cursor-pointer group"
-                    onClick={() => setSelectedTreeDetail(sp)}
+                    onClick={() => handleOpenSpeciesDetail(sp, 0)}
                   >
                     <img
                       src={getOptimizedImageUrl(photoUrl, 720)}
                       alt={`${sp.scientificName} — ${sp.commonName}`}
+                      onLoad={(e) => markImageCached(e.currentTarget.getAttribute('src'))}
                       onError={handleImageError}
                       loading="lazy"
                       decoding="async"
@@ -378,7 +394,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                       className="absolute bottom-3 left-3.5 right-3.5 text-[#F3F1E8] flex items-end justify-between gap-2"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedTreeDetail(sp);
+                        handleOpenSpeciesDetail(sp, 0);
                       }}
                     >
                       <div className="min-w-0 pr-2">
@@ -474,7 +490,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                           </span>
                           <button
                             type="button"
-                            onClick={() => setSelectedTreeDetail(sp)}
+                            onClick={() => handleOpenSpeciesDetail(sp, 0)}
                             className="text-[10px] font-semibold text-[#42684D] dark:text-[#8A9C74] hover:underline flex items-center gap-0.5 cursor-pointer"
                           >
                             <Plus className="w-2.5 h-2.5" />
@@ -484,13 +500,14 @@ export const SpeciesDatabaseView: React.FC = () => {
                         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
                           <button
                             type="button"
-                            onClick={() => setSelectedTreeDetail(sp)}
+                            onClick={() => handleOpenSpeciesDetail(sp, 0)}
                             className="relative w-14 h-12 rounded-md overflow-hidden shrink-0 border border-[#42684D] bg-[#19382B] cursor-pointer"
                             title="Primary Specimen Habit"
                           >
                             <img
                               src={getOptimizedImageUrl(photoUrl, 240)}
                               alt={sp.scientificName}
+                              onLoad={(e) => markImageCached(e.currentTarget.getAttribute('src'))}
                               onError={handleImageError}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -501,32 +518,39 @@ export const SpeciesDatabaseView: React.FC = () => {
                               Habit
                             </span>
                           </button>
-                          {sp.morePhotos.slice(0, 4).map((p, pIdx) => (
-                            <button
-                              key={pIdx}
-                              type="button"
-                              onClick={() => setSelectedTreeDetail(sp)}
-                              className="relative w-14 h-12 rounded-md overflow-hidden shrink-0 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#19382B] hover:border-[#42684D] transition-colors cursor-pointer"
-                              title={p.caption || `Plate ${pIdx + 1}`}
-                            >
-                              <img
-                                src={getOptimizedImageUrl(p.url, 240)}
-                                alt={p.caption || `Plate ${pIdx + 1}`}
-                                loading="lazy"
-                                decoding="async"
-                                referrerPolicy="no-referrer"
-                                onError={handleImageError}
-                                className="w-full h-full object-cover"
-                              />
-                              <span className="absolute bottom-0 inset-x-0 bg-[#19382B]/85 text-[8px] text-[#BBC4A6] text-center font-mono capitalize">
-                                {p.tag || `#${pIdx + 1}`}
-                              </span>
-                            </button>
-                          ))}
+                          {sp.morePhotos.slice(0, 4).map((p, pIdx) => {
+                            const dedupedBefore = sp.morePhotos!
+                              .slice(0, pIdx)
+                              .filter((prev) => prev.url !== sp.imageUrl).length;
+                            const targetIdx = p.url === sp.imageUrl ? 0 : 1 + dedupedBefore;
+                            return (
+                              <button
+                                key={pIdx}
+                                type="button"
+                                onClick={() => handleOpenSpeciesDetail(sp, targetIdx)}
+                                className="relative w-14 h-12 rounded-md overflow-hidden shrink-0 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#19382B] hover:border-[#42684D] transition-colors cursor-pointer"
+                                title={p.caption || `Plate ${pIdx + 1}`}
+                              >
+                                <img
+                                  src={getOptimizedImageUrl(p.url, 240)}
+                                  alt={p.caption || `Plate ${pIdx + 1}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
+                                  onLoad={(e) => markImageCached(e.currentTarget.getAttribute('src'))}
+                                  onError={handleImageError}
+                                  className="w-full h-full object-cover"
+                                />
+                                <span className="absolute bottom-0 inset-x-0 bg-[#19382B]/85 text-[8px] text-[#BBC4A6] text-center font-mono capitalize">
+                                  {p.tag || `#${pIdx + 1}`}
+                                </span>
+                              </button>
+                            );
+                          })}
                           {sp.morePhotos.length > 4 && (
                             <button
                               type="button"
-                              onClick={() => setSelectedTreeDetail(sp)}
+                              onClick={() => handleOpenSpeciesDetail(sp, 5)}
                               className="w-14 h-12 rounded-md bg-[#EAE7DA] dark:bg-[#142D22] text-[#19382B] dark:text-[#F3F1E8] text-[10px] font-semibold flex flex-col items-center justify-center shrink-0 border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 hover:bg-[#BBC4A6]/40 transition-colors cursor-pointer"
                             >
                               <span>+{sp.morePhotos.length - 4}</span>
@@ -548,27 +572,34 @@ export const SpeciesDatabaseView: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-                          {studentObs.map((obs) => (
-                            <div
-                              key={obs.id}
-                              onClick={() => setSelectedTreeDetail(sp)}
-                              className="relative group shrink-0 w-24 h-16 rounded-md overflow-hidden border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#19382B] cursor-pointer hover:border-[#42684D]"
-                              title={`${obs.title} by ${obs.studentName}`}
-                            >
-                              <img
-                                src={getOptimizedImageUrl(obs.imageUrl, 240)}
-                                alt={obs.title}
-                                loading="lazy"
-                                decoding="async"
-                                referrerPolicy="no-referrer"
-                                onError={handleImageError}
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute inset-0 bg-[#19382B]/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#F3F1E8]">
-                                <ZoomIn className="w-3.5 h-3.5" />
+                          {studentObs.map((obs, obsIdx) => {
+                            const dedupedMoreCount = (sp.morePhotos || []).filter(
+                              (mp) => mp.url !== sp.imageUrl
+                            ).length;
+                            const studentStartIdx = (sp.imageUrl ? 1 : 0) + dedupedMoreCount + obsIdx;
+                            return (
+                              <div
+                                key={obs.id}
+                                onClick={() => handleOpenSpeciesDetail(sp, studentStartIdx)}
+                                className="relative group shrink-0 w-24 h-16 rounded-md overflow-hidden border border-[#BBC4A6]/70 dark:border-[#BBC4A6]/25 bg-[#19382B] cursor-pointer hover:border-[#42684D]"
+                                title={`${obs.title} by ${obs.studentName}`}
+                              >
+                                <img
+                                  src={getOptimizedImageUrl(obs.imageUrl, 240)}
+                                  alt={obs.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  referrerPolicy="no-referrer"
+                                  onLoad={(e) => markImageCached(e.currentTarget.getAttribute('src'))}
+                                  onError={handleImageError}
+                                  className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-[#19382B]/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[#F3F1E8]">
+                                  <ZoomIn className="w-3.5 h-3.5" />
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
@@ -591,7 +622,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                   <div className="flex items-center justify-between pt-2 border-t border-[#BBC4A6]/45 dark:border-[#BBC4A6]/15 gap-2 flex-wrap">
                     <button
                       type="button"
-                      onClick={() => setSelectedTreeDetail(sp)}
+                      onClick={() => handleOpenSpeciesDetail(sp, 0)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-[#19382B] dark:bg-[#42684D] text-[#F3F1E8] hover:bg-[#42684D] transition-colors cursor-pointer"
                     >
                       <Camera className="w-3.5 h-3.5" />
@@ -601,7 +632,7 @@ export const SpeciesDatabaseView: React.FC = () => {
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => setSelectedTreeDetail(sp)}
+                        onClick={() => handleOpenSpeciesDetail(sp, 0)}
                         className="inline-flex items-center gap-1 text-xs font-semibold text-[#42684D] dark:text-[#8A9C74] hover:text-[#19382B] dark:hover:text-[#F3F1E8] transition-colors cursor-pointer"
                         title="Add more photos to this tree species"
                       >
@@ -726,6 +757,7 @@ export const SpeciesDatabaseView: React.FC = () => {
         species={selectedTreeDetail}
         studentPhotos={studentPhotos}
         isOpen={!!selectedTreeDetail}
+        initialPhotoIndex={selectedTreePhotoIndex}
         onClose={() => setSelectedTreeDetail(null)}
         onOpenStudentSubmit={(speciesId) => {
           setSelectedTreeDetail(null);

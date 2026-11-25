@@ -144,12 +144,12 @@ export const CourseDetailModal: React.FC<CourseDetailModalProps> = ({
               {(course.contents || []).map((topic, i) => (
                 <div
                   key={i}
-                  className="p-2.5 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-xs font-medium text-[#19382B] dark:text-[#F3F1E8] flex items-center gap-2"
+                  className="p-2.5 rounded-md bg-[#F3F1E8] dark:bg-[#142D22] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/20 text-xs font-medium text-[#19382B] dark:text-[#F3F1E8] flex items-start gap-2 min-w-0"
                 >
-                  <span className="w-5 h-5 rounded-sm bg-[#EAE7DA] dark:bg-[#19382B] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#BBC4A6] flex items-center justify-center font-mono text-[10px] font-bold shrink-0">
+                  <span className="w-5 h-5 rounded-sm bg-[#EAE7DA] dark:bg-[#19382B] border border-[#BBC4A6]/60 dark:border-[#BBC4A6]/25 text-[#42684D] dark:text-[#BBC4A6] flex items-center justify-center font-mono text-[10px] font-bold shrink-0 mt-0.5">
                     {i + 1}
                   </span>
-                  <span className="truncate">{topic}</span>
+                  <span className="min-w-0 flex-1 whitespace-normal break-words leading-snug">{topic}</span>
                 </div>
               ))}
             </div>
